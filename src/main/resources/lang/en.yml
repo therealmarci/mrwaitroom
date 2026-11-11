@@ -1,0 +1,93 @@
+# ==============================================================================
+#   MRwaitroom - language file: English (en)
+# ==============================================================================
+#   Activate: in config.yml  general.language: en  (or auto)
+#   Own language: copy this file (e.g. as fr.yml), translate it and set language: fr.
+#   Missing texts are added automatically on updates - your changes are kept.
+#
+#   Format: MiniMessage - https://docs.advntr.dev/minimessage/format.html
+#   Empty text ("") = the message is not sent.
+#   Placeholders of the display: <server> <reason> <since> <time> <estimate> <title> <end>
+# ==============================================================================
+
+# Do not change - tells the plugin which texts need to be renewed on updates.
+lang-version: 1
+
+prefix: "<dark_gray>[<aqua>Waiting room</aqua>]</dark_gray> "
+
+# Plain texts (no formatting) - put into other texts.
+reason-none: "no reason given"
+server-name: "the server"
+maintenance-no-title: "Maintenance"
+
+# ---------------------------------------------------------------- Hotbar item
+item-restart: "<yellow>⏳ Restart <gray>· about <white><time></white> left"
+item-restart-late: "<yellow>⏳ Back in a moment <gray>· since <white><since>"
+item-stop: "<red>■ Server is off <gray>· since <white><since>"
+item-crash: "<gold>↻ Server is restarting <gray>· since <white><since>"
+item-starting: "<green>↻ Server is starting <gray>· almost there"
+item-ready: "<green>➜ Back to the server …"
+item-maintenance: "<aqua>🛠 Maintenance <gray>· until <white><end>"
+item-maintenance-open: "<aqua>🛠 Maintenance <gray>· open end"
+item-lore:
+  - "<gray>You are in the waiting room."
+  - "<gray>As soon as it goes on, you go"
+  - "<gray>back by yourself."
+
+# ---------------------------------------------------------------------- Bossbar
+bossbar-restart: "<yellow>Restart <gray>– <white><reason>"
+bossbar-stop: "<red>Server shut down <gray>– <white><reason>"
+bossbar-crash: "<gold>Server not reachable <gray>– hopefully restarting soon"
+bossbar-starting: "<green>Server is starting …"
+bossbar-ready: "<green>Server is ready – going back"
+bossbar-maintenance: "<aqua>Maintenance <gray>– <white><title>"
+
+# -------------------------------------------------------------------- On joining
+join-restart: "<prefix><yellow>Restart – you go back by yourself. <hover:show_text:'<gray>Reason: <white><reason><newline><gray>Usually takes about <white><estimate>'><dark_gray>[Info]</dark_gray></hover>"
+join-stop: "<prefix><red>The server is shut down. <hover:show_text:'<gray>Reason: <white><reason><newline><gray>Off since <white><since><newline><gray>You go back as soon as it runs again.'><dark_gray>[Info]</dark_gray></hover>"
+join-crash: "<prefix><gold>The server cannot be reached right now. <hover:show_text:'<gray>Since <white><since><newline><gray>You go back by yourself as soon as it runs again.'><dark_gray>[Info]</dark_gray></hover>"
+join-starting: "<prefix><green>The server is starting – almost there."
+join-ready: "<prefix><green>The server is ready – going back in a moment."
+join-maintenance: "<prefix><aqua>Maintenance until <white><end></white>. <hover:show_text:'<gray><white><title></white><newline><gray>About <white><time></white> left<newline><gray>Afterwards you go back by yourself.'><dark_gray>[Info]</dark_gray></hover>"
+join-maintenance-open: "<prefix><aqua>Maintenance – no end set yet. <hover:show_text:'<gray><white><title></white><newline><gray>Afterwards you go back by yourself.'><dark_gray>[Info]</dark_gray></hover>"
+alert: "<prefix><red>⚠ <white><title>"
+
+# -------------------------------------------------------------------- Going back
+returning: "<prefix><green>Going back to the server …"
+main-not-ready: "<prefix><gray>The server is not ready yet – you go back by yourself."
+kick-refused: "<red>You cannot join the server right now.<newline><newline><gray>It turned you away several times (e.g. whitelist or ban)."
+chat-off: "<prefix><gray>The chat is off in the waiting room."
+
+# ---------------------------------------------------------------------- Commands
+usage: "<prefix><gray>Commands: <aqua>/mrwaitroom status</aqua>, <aqua>send <player|all></aqua>, <aqua>reload</aqua>, <aqua>version</aqua>"
+no-permission: "<prefix><red>You do not have permission to do that."
+players-only: "<prefix><red>Only players can use this command."
+player-not-found: "<prefix><red>Player <white><player></white> was not found."
+reload-done: "<prefix><green>Configuration reloaded."
+send-done: "<prefix><green>Sent <count> players to the server."
+status: "<prefix><gray>Main server: <white><phase></white> <dark_gray>|</dark_gray> Waiting: <white><players></white> <hover:show_text:'<gray>Down since: <white><since><newline><gray>Port: <white><port><newline><gray>MRadmin: <white><link><newline><gray>A restart usually takes: <white><estimate>'><dark_gray>[Details]</dark_gray></hover>"
+status-link-none: "not set up"
+status-link-ok: "connected"
+status-link-failed: "no answer (<error>)"
+status-port-open: "reachable"
+status-port-closed: "not reachable"
+phase-restart: "restart"
+phase-stop: "shut down"
+phase-crash: "not reachable"
+phase-starting: "starting"
+phase-maintenance: "maintenance"
+phase-ready: "ready"
+
+# --------------------------------------------------------------- Version & updates
+version: "<prefix><gray>MRwaitroom <white>v<version></white> <dark_gray>(MC <mc>)</dark_gray> by <white><author></white>"
+version-latest: "<prefix><green>You are running the latest version."
+version-outdated: "<prefix><gold>New version available: <white><latest></white> <gray>(installed: <current>) <download>"
+version-unknown: "<prefix><gray>Update status unknown: <reason>"
+version-checking: "<prefix><gray>Checking for updates ..."
+version-links: "<prefix><website> <dark_gray>| <github>"
+update-download-label: "<aqua><u>[Download]</u></aqua>"
+update-join-notify: "<prefix><gold>An update for MRwaitroom is available: <white><latest></white> <gray>(installed: <current>) <download>"
+update-reason-disabled: "the update check is disabled"
+update-reason-not-found: "project not found (HTTP 404) - not published yet?"
+update-reason-no-release: "no published version found"
+update-reason-no-repository: "no GitHub repository configured"

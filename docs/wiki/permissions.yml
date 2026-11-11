@@ -1,0 +1,27 @@
+# Texte der Permission-Tabellen im Wiki (Platzhalter <!-- auto:permissions --> und <!-- auto:permission-groups -->).
+# Die Tabelle selbst (Permissions, Standard, Gruppe) erzeugt die Website aus plugin.yml - hier steht nur, wofür eine
+# Permission ist, auf Deutsch (de) und optional Englisch (en). Ohne Eintrag gilt die description aus plugin.yml.
+mrwaitroom.player:
+  de: "`/main`, `/mrwaitroom version` - hat jeder von Haus aus"
+mrwaitroom.groups.support:
+  de: "Spieler + Chat im Warteraum, `/mrwaitroom status`"
+mrwaitroom.groups.staff:
+  de: "Support + Spieler zum Hauptserver schicken (`/mrwaitroom send`)"
+mrwaitroom.groups.admin:
+  de: "Alles: Staff + Reload, Update-Hinweis"
+mrwaitroom.main:
+  de: "`/main` - sofort zurück, wenn der Hauptserver bereit ist"
+mrwaitroom.version:
+  de: "`/mrwaitroom version`"
+mrwaitroom.chat:
+  de: "Im Warteraum schreiben, auch wenn `room.chat` aus ist"
+mrwaitroom.stay:
+  de: "Wird nicht automatisch zurückgeschickt - in keiner Gruppe"
+mrwaitroom.admin.status:
+  de: "`/mrwaitroom status`"
+mrwaitroom.admin.send:
+  de: "`/mrwaitroom send <spieler|all>`"
+mrwaitroom.admin.reload:
+  de: "`/mrwaitroom reload`"
+mrwaitroom.admin.update:
+  de: "Hinweis auf neue Versionen beim Betreten"

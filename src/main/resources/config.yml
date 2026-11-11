@@ -1,0 +1,117 @@
+# ==============================================================================
+#   MRwaitroom - configuration
+# ==============================================================================
+#   Waiting room behind a proxy (Velocity): while the main server restarts, is stopped or in maintenance, players
+#   wait here and go back by themselves as soon as it is ready again.
+#   Guide: https://mrtechnology.marcelr.at/wiki/mrwaitroom/
+#   Texts are in lang/de.yml and lang/en.yml.
+# ==============================================================================
+
+# Do not change - tells the plugin which settings need to be carried over on updates.
+config-version: 1
+
+
+# ------------------------------------------------------------------------------
+#   1) GENERAL
+# ------------------------------------------------------------------------------
+general:
+  # "auto" = every player gets the language of their Minecraft client (German -> de, English -> en,
+  # otherwise fallback-language). Or a fixed language for everyone: "de", "en".
+  language: auto
+  # Language for players whose game language has no file of its own.
+  fallback-language: en
+  # Language of texts without a single player (e.g. the console stays English anyway).
+  server-language: en
+  # Time zone for times like "maintenance until 18:00", e.g. "Europe/Vienna". "" = time zone of this machine.
+  timezone: ""
+
+
+# ------------------------------------------------------------------------------
+#   2) MAIN SERVER
+# ------------------------------------------------------------------------------
+main:
+  # Name of the main server in the proxy (section [servers] of velocity.toml) - players go back there.
+  server: "main"
+  # Address of the main server in the internal network (host:port of Minecraft) - shows whether it is up.
+  address: "127.0.0.1:25565"
+  # MRadmin on the main server (section waiting-room.link there): address of the endpoint and the shared key.
+  # It tells the waiting room about restarts, maintenance and warnings. The last answer is kept while the main
+  # server is down. Empty link-url = without MRadmin (the waiting room then only sees whether the server is up).
+  link-url: "http://127.0.0.1:8126"
+  link-key: ""
+  # How often to ask (seconds).
+  poll-seconds: 2
+
+
+# ------------------------------------------------------------------------------
+#   3) GOING BACK
+# ------------------------------------------------------------------------------
+return:
+  # Wait this long after the main server is ready before sending players back (seconds).
+  delay-seconds: 5
+  # Players per batch and pause between two batches (seconds).
+  batch-size: 5
+  batch-seconds: 2
+  # Whoever could not get back this many times is disconnected (e.g. banned or not on the whitelist there).
+  max-attempts: 3
+  # Expected length of a restart until enough restarts were measured (seconds). Afterwards the waiting room uses
+  # the typical length of the last restarts.
+  estimate-seconds: 90
+
+
+# ------------------------------------------------------------------------------
+#   4) THE ROOM
+# ------------------------------------------------------------------------------
+room:
+  # World of the waiting room. Created empty (void) if it does not exist yet.
+  world: "waitroom"
+  # Build a small platform at the spawn of a newly created world.
+  platform: true
+  platform-block: SMOOTH_STONE
+  # Chat between waiting players. Players with mrwaitroom.chat may always write.
+  chat: false
+  # Hide the other waiting players from each other.
+  hide-players: false
+
+
+# ------------------------------------------------------------------------------
+#   5) DISPLAY
+# ------------------------------------------------------------------------------
+display:
+  # Item in the hotbar that shows how long it takes. Its name is renewed every second, so it stays visible above
+  # the hotbar.
+  item: CLOCK
+  # Slot in the hotbar (0-8); it stays selected.
+  slot: 4
+  # Bossbar with the reason and the progress.
+  bossbar: true
+  # Colour of the bossbar: PINK, BLUE, RED, GREEN, YELLOW, PURPLE, WHITE
+  bossbar-color: BLUE
+
+
+# ------------------------------------------------------------------------------
+#   6) XAERO'S MINIMAP / WORLD MAP
+# ------------------------------------------------------------------------------
+xaero:
+  # The proxy shows the main server and the waiting room under the same address. With its own map ID the waiting
+  # room does not draw over the maps of the main server.
+  enabled: true
+  # Map ID of the waiting room. 0 = created on the first start.
+  world-id: 0
+
+
+# ------------------------------------------------------------------------------
+#   7) UPDATES
+# ------------------------------------------------------------------------------
+updates:
+  # Look for new versions on startup and regularly afterwards.
+  # If a newer version is available, a notice appears in the console.
+  enabled: true
+  # Source: "github" (GitHub Releases, default) or "modrinth"
+  source: github
+  # Also report beta versions (BET-...); while a 0.x beta runs they are always reported.
+  beta: false
+  # How often to check again (in hours).
+  interval-hours: 6
+  # Notify players with "mrwaitroom.admin.update" when they join the server.
+  notify-on-join: true

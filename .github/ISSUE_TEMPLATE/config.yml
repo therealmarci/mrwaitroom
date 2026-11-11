@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📖 Anleitung zu MRwaitroom
+    url: https://mrtechnology.marcelr.at/docs/mrwaitroom/
+    about: Installation, Befehle, Permissions, Konfiguration und häufige Fragen.
+  - name: 🐞 Fehler bequem über die Website melden
+    url: https://mrtechnology.marcelr.at/report/mrwaitroom/
+    about: Formular mit Versionsauswahl, die hochgeladene Config wird vorher im Browser geschwärzt.

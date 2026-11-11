@@ -1,0 +1,93 @@
+# ==============================================================================
+#   MRwaitroom - Sprachdatei: Deutsch (de)
+# ==============================================================================
+#   Aktivieren: in der config.yml  general.language: de  (oder auto)
+#   Eigene Sprache: diese Datei kopieren (z.B. als fr.yml), übersetzen und language: fr setzen.
+#   Fehlende Texte werden bei Updates automatisch ergänzt - deine Änderungen bleiben erhalten.
+#
+#   Format: MiniMessage - https://docs.advntr.dev/minimessage/format.html
+#   Leerer Text ("") = die Nachricht wird nicht gesendet.
+#   Platzhalter der Anzeige: <server> <reason> <since> <time> <estimate> <title> <end>
+# ==============================================================================
+
+# Nicht ändern - sagt dem Plugin, welche Texte bei Updates erneuert werden müssen.
+lang-version: 1
+
+prefix: "<dark_gray>[<aqua>Warteraum</aqua>]</dark_gray> "
+
+# Reine Texte (ohne Formatierung) - werden in andere Texte eingesetzt.
+reason-none: "kein Grund angegeben"
+server-name: "der Server"
+maintenance-no-title: "Wartungsarbeiten"
+
+# ------------------------------------------------------------- Item in der Hotbar
+item-restart: "<yellow>⏳ Neustart <gray>· noch ca. <white><time>"
+item-restart-late: "<yellow>⏳ Gleich wieder da <gray>· seit <white><since>"
+item-stop: "<red>■ Server ist aus <gray>· seit <white><since>"
+item-crash: "<gold>↻ Server startet neu <gray>· seit <white><since>"
+item-starting: "<green>↻ Server startet <gray>· gleich geht es los"
+item-ready: "<green>➜ Zurück zum Server …"
+item-maintenance: "<aqua>🛠 Wartung <gray>· bis <white><end>"
+item-maintenance-open: "<aqua>🛠 Wartung <gray>· Ende offen"
+item-lore:
+  - "<gray>Du wartest im Warteraum."
+  - "<gray>Sobald es weitergeht, kommst du"
+  - "<gray>automatisch zurück."
+
+# ---------------------------------------------------------------------- Bossbar
+bossbar-restart: "<yellow>Neustart <gray>– <white><reason>"
+bossbar-stop: "<red>Server heruntergefahren <gray>– <white><reason>"
+bossbar-crash: "<gold>Server nicht erreichbar <gray>– startet hoffentlich gleich neu"
+bossbar-starting: "<green>Server startet …"
+bossbar-ready: "<green>Server ist bereit – es geht zurück"
+bossbar-maintenance: "<aqua>Wartung <gray>– <white><title>"
+
+# ------------------------------------------------------------- Beim Betreten
+join-restart: "<prefix><yellow>Neustart – du kommst automatisch zurück. <hover:show_text:'<gray>Grund: <white><reason><newline><gray>Dauert meist ca. <white><estimate>'><dark_gray>[Info]</dark_gray></hover>"
+join-stop: "<prefix><red>Der Server ist heruntergefahren. <hover:show_text:'<gray>Grund: <white><reason><newline><gray>Aus seit <white><since><newline><gray>Du kommst zurück, sobald er wieder läuft.'><dark_gray>[Info]</dark_gray></hover>"
+join-crash: "<prefix><gold>Der Server ist gerade nicht erreichbar. <hover:show_text:'<gray>Seit <white><since><newline><gray>Du kommst automatisch zurück, sobald er wieder läuft.'><dark_gray>[Info]</dark_gray></hover>"
+join-starting: "<prefix><green>Der Server startet – gleich geht es weiter."
+join-ready: "<prefix><green>Der Server ist bereit – es geht gleich zurück."
+join-maintenance: "<prefix><aqua>Wartung bis <white><end></white>. <hover:show_text:'<gray><white><title></white><newline><gray>Noch ca. <white><time><newline><gray>Danach kommst du automatisch zurück.'><dark_gray>[Info]</dark_gray></hover>"
+join-maintenance-open: "<prefix><aqua>Wartung – Ende noch offen. <hover:show_text:'<gray><white><title></white><newline><gray>Danach kommst du automatisch zurück.'><dark_gray>[Info]</dark_gray></hover>"
+alert: "<prefix><red>⚠ <white><title>"
+
+# -------------------------------------------------------------------- Rückkehr
+returning: "<prefix><green>Es geht zurück zum Server …"
+main-not-ready: "<prefix><gray>Der Server ist noch nicht bereit – du kommst automatisch zurück."
+kick-refused: "<red>Du kannst den Server gerade nicht betreten.<newline><newline><gray>Er hat dich mehrmals abgewiesen (z.B. Whitelist oder Sperre)."
+chat-off: "<prefix><gray>Im Warteraum ist der Chat aus."
+
+# ------------------------------------------------------------------- Befehle
+usage: "<prefix><gray>Befehle: <aqua>/mrwaitroom status</aqua>, <aqua>send <spieler|all></aqua>, <aqua>reload</aqua>, <aqua>version</aqua>"
+no-permission: "<prefix><red>Dazu hast du keine Berechtigung."
+players-only: "<prefix><red>Dieser Befehl kann nur von Spielern genutzt werden."
+player-not-found: "<prefix><red>Spieler <white><player></white> wurde nicht gefunden."
+reload-done: "<prefix><green>Konfiguration neu geladen."
+send-done: "<prefix><green><count> Spieler zum Server geschickt."
+status: "<prefix><gray>Hauptserver: <white><phase></white> <dark_gray>|</dark_gray> Wartende: <white><players></white> <hover:show_text:'<gray>Aus seit: <white><since><newline><gray>Port: <white><port><newline><gray>MRadmin: <white><link><newline><gray>Neustart dauert meist: <white><estimate>'><dark_gray>[Details]</dark_gray></hover>"
+status-link-none: "nicht eingerichtet"
+status-link-ok: "verbunden"
+status-link-failed: "keine Antwort (<error>)"
+status-port-open: "erreichbar"
+status-port-closed: "nicht erreichbar"
+phase-restart: "Neustart"
+phase-stop: "heruntergefahren"
+phase-crash: "nicht erreichbar"
+phase-starting: "startet"
+phase-maintenance: "Wartung"
+phase-ready: "bereit"
+
+# ------------------------------------------------------------- Version & Updates
+version: "<prefix><gray>MRwaitroom <white>v<version></white> <dark_gray>(MC <mc>)</dark_gray> von <white><author></white>"
+version-latest: "<prefix><green>Du nutzt die neueste Version."
+version-outdated: "<prefix><gold>Neue Version verfügbar: <white><latest></white> <gray>(installiert: <current>) <download>"
+version-unknown: "<prefix><gray>Update-Status unbekannt: <reason>"
+version-checking: "<prefix><gray>Suche nach Updates …"
+version-links: "<prefix><website> <dark_gray>| <github>"
+update-download-label: "<aqua><u>[Download]</u></aqua>"
+update-join-notify: "<prefix><gold>Ein Update für MRwaitroom ist verfügbar: <white><latest></white> <gray>(installiert: <current>) <download>"
+update-reason-disabled: "die Update-Prüfung ist ausgeschaltet"
+update-reason-not-found: "Projekt nicht gefunden (HTTP 404) - noch nicht veröffentlicht?"
+update-reason-no-release: "keine veröffentlichte Version gefunden"
+update-reason-no-repository: "kein GitHub-Repository eingestellt"

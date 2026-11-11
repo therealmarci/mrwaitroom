@@ -1,0 +1,75 @@
+name: MRwaitroom
+version: '${version}'
+main: at.marcelr.mrwaitroom.MRwaitroom
+api-version: '${mcVersion}'
+author: _therealmarci
+website: ${website}/docs/${websiteSlug}/
+description: "Waiting room behind a proxy: players wait here during restarts and maintenance of the main server and go back by themselves."
+
+commands:
+  main:
+    description: Back to the main server right away (only when it is ready).
+    usage: /main
+    aliases: [hauptserver]
+  mrwaitroom:
+    description: Management of MRwaitroom.
+    usage: /mrwaitroom <status|send|reload|version>
+    aliases: [waitroom, warteraum]
+
+permissions:
+  # ------------------------------------------------------------------ Groups
+  # The same in every MRtechnology plugin: <plugin>.player for players, <plugin>.groups.support / staff / admin for
+  # the team - each group contains the one below. Unlike the other plugins mrwaitroom.player is given to everyone
+  # by default: waiting players are often new and have no group yet. mrwaitroom.stay is in no group on purpose.
+  mrwaitroom.player:
+    description: "Player: /main and /mrwaitroom version."
+    default: true
+    children:
+      mrwaitroom.main: true
+      mrwaitroom.version: true
+  mrwaitroom.groups.support:
+    description: "Group support: player + chat in the waiting room and /mrwaitroom status."
+    default: op
+    children:
+      mrwaitroom.player: true
+      mrwaitroom.chat: true
+      mrwaitroom.admin.status: true
+  mrwaitroom.groups.staff:
+    description: "Group staff: support + send players to the main server (/mrwaitroom send)."
+    default: op
+    children:
+      mrwaitroom.groups.support: true
+      mrwaitroom.admin.send: true
+  mrwaitroom.groups.admin:
+    description: "Group admin: everything of MRwaitroom - reload and update notice."
+    default: op
+    children:
+      mrwaitroom.groups.staff: true
+      mrwaitroom.admin.reload: true
+      mrwaitroom.admin.update: true
+
+  # ------------------------------------------------------------- Single ones
+  mrwaitroom.main:
+    description: "/main - back to the main server right away when it is ready."
+    default: true
+  mrwaitroom.version:
+    description: "/mrwaitroom version - version and update status."
+    default: true
+  mrwaitroom.chat:
+    description: "Write in the chat of the waiting room even if room.chat is off."
+    default: op
+  mrwaitroom.stay:
+    description: "Is not sent back to the main server by itself (e.g. to look at the waiting room). In no group."
+    default: false
+  mrwaitroom.admin.status:
+    description: "/mrwaitroom status - state of the main server and of the connection to MRadmin."
+    default: op
+  mrwaitroom.admin.send:
+    description: "/mrwaitroom send <player|all> - send players to the main server now."
+    default: op
+  mrwaitroom.admin.reload:
+    description: "/mrwaitroom reload - reload config.yml and the language files."
+    default: op
+  mrwaitroom.admin.update:
+    description: "Notice about new versions when joining."
+    default: op

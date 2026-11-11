@@ -1,0 +1,52 @@
+name: 🐞 Fehler melden
+description: Etwas funktioniert nicht wie erwartet.
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Danke fürs Melden! Bitte prüfe vorher mit `/mrwaitroom status`, ob der Warteraum den Hauptserver erreicht
+        (häufigste Ursache: falsche `link.url` oder falscher `link.key` in der config.yml).
+  - type: input
+    id: version
+    attributes:
+      label: MRwaitroom-Version
+      description: Ausgabe von `/mrwaitroom version`
+      placeholder: "1.3.2"
+    validations:
+      required: true
+  - type: input
+    id: server
+    attributes:
+      label: Server-Version
+      description: Ausgabe von `/version`
+      placeholder: "Paper 26.3 Build 200"
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: Was ist passiert?
+      description: Was hast du gemacht, was hast du erwartet, was ist stattdessen passiert?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Schritte zum Nachstellen
+      placeholder: |
+        1. /time set 13000
+        2. Spieler A legt sich hin
+        3. ...
+  - type: textarea
+    id: logs
+    attributes:
+      label: Konsole / /mrwaitroom status
+      description: Relevante Konsolenausgabe oder Ausgabe von `/mrwaitroom status`.
+      render: text
+  - type: textarea
+    id: config
+    attributes:
+      label: Geänderte Config-Werte (optional)
+      description: Nur die Werte, die du gegenüber dem Standard geändert hast. Keine Passwörter, Tokens oder Webhook-URLs posten!
+      render: yaml

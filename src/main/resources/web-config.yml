@@ -1,0 +1,215 @@
+# Form of config.yml for the web interface of MRadmin (Plugins -> MRwaitroom -> Configuration).
+# Every field names a key of config.yml, its type and limits, and a name and help text in German and English.
+# Format: docs/MODULE-API.md of MRadmin, section "Konfiguration im Browser". Texts with a comma need quotes.
+sections:
+  - id: general
+    name: {de: Allgemein, en: General}
+    help: {de: "Sprache der Texte und Zeitzone.", en: "Language of the texts and time zone."}
+    fields:
+      - key: general.language
+        type: choice
+        name: {de: Sprache der Spieler, en: Language of the players}
+        help: {de: "Automatisch = jeder Spieler bekommt die Sprache seines Minecraft-Clients.", en: "Automatic = every player gets the language of their Minecraft client."}
+        options:
+          - {value: auto, de: Automatisch, en: Automatic}
+          - {value: de, de: Deutsch, en: German}
+          - {value: en, de: Englisch, en: English}
+      - key: general.fallback-language
+        type: choice
+        when: general.language=auto
+        name: {de: Ersatzsprache, en: Fallback language}
+        help: {de: Für Spieler mit einer Sprache ohne eigene Datei., en: For players whose language has no file of its own.}
+        options:
+          - {value: de, de: Deutsch, en: German}
+          - {value: en, de: Englisch, en: English}
+      - key: general.server-language
+        type: choice
+        advanced: true
+        name: {de: Server-Sprache, en: Server language}
+        help: {de: Für Texte ohne einzelnen Spieler., en: For texts without a single player.}
+        options:
+          - {value: de, de: Deutsch, en: German}
+          - {value: en, de: Englisch, en: English}
+      - key: general.timezone
+        type: string
+        max-length: 60
+        name: {de: Zeitzone, en: Time zone}
+        help: {de: "Für Zeiten wie „Wartung bis 18:00“, z.B. Europe/Vienna. Leer = Zeitzone des Rechners.", en: "For times like “maintenance until 18:00”, e.g. Europe/Vienna. Empty = time zone of this machine."}
+
+  - id: main
+    name: {de: Hauptserver, en: Main server}
+    help: {de: "Wohin die Spieler zurückgehen und woher der Warteraum weiß, was los ist.", en: "Where players go back to and how the waiting room knows what is going on."}
+    fields:
+      - key: main.server
+        type: string
+        max-length: 64
+        name: {de: Name im Proxy, en: Name in the proxy}
+        help: {de: "Name des Hauptservers im Abschnitt [servers] der velocity.toml.", en: "Name of the main server in the section [servers] of velocity.toml."}
+      - key: main.address
+        type: string
+        max-length: 100
+        name: {de: Adresse, en: Address}
+        help: {de: "Host:Port des Hauptservers im internen Netz - zeigt, ob er läuft.", en: "Host:port of the main server in the internal network - shows whether it is up."}
+      - key: main.link-url
+        type: string
+        max-length: 200
+        name: {de: MRadmin-Verbindung, en: MRadmin connection}
+        help: {de: "Adresse von waiting-room.link in MRadmin, z.B. http://10.0.0.5:8126. Leer = ohne MRadmin.", en: "Address of waiting-room.link in MRadmin, e.g. http://10.0.0.5:8126. Empty = without MRadmin."}
+      - key: main.link-key
+        type: secret
+        max-length: 200
+        name: {de: Schlüssel, en: Key}
+        help: {de: "Derselbe Wert wie waiting-room.link.key in MRadmin.", en: "The same value as waiting-room.link.key in MRadmin."}
+      - key: main.poll-seconds
+        type: int
+        advanced: true
+        min: 1
+        max: 30
+        unit: {de: Sekunden, en: seconds}
+        name: {de: Nachfragen alle, en: Ask every}
+
+  - id: return
+    name: {de: Zurückschicken, en: Going back}
+    help: {de: "Wie die Spieler zurückgehen, sobald der Hauptserver bereit ist.", en: "How players go back once the main server is ready."}
+    fields:
+      - key: return.delay-seconds
+        type: int
+        min: 0
+        max: 300
+        unit: {de: Sekunden, en: seconds}
+        name: {de: Wartezeit nach dem Start, en: Wait after the start}
+        help: {de: "So lange nach „bereit“ geht es los.", en: "This long after “ready” it starts."}
+      - key: return.batch-size
+        type: int
+        min: 1
+        max: 100
+        name: {de: Spieler pro Schub, en: Players per batch}
+      - key: return.batch-seconds
+        type: int
+        min: 1
+        max: 60
+        unit: {de: Sekunden, en: seconds}
+        name: {de: Pause zwischen Schüben, en: Pause between batches}
+      - key: return.max-attempts
+        type: int
+        advanced: true
+        min: 1
+        max: 20
+        name: {de: Versuche pro Spieler, en: Tries per player}
+        help: {de: "Wer so oft nicht zurückkommt (z.B. gesperrt), wird getrennt.", en: "Whoever does not get back this often (e.g. banned) is disconnected."}
+      - key: return.estimate-seconds
+        type: int
+        min: 10
+        max: 3600
+        unit: {de: Sekunden, en: seconds}
+        name: {de: Erwartete Neustartdauer, en: Expected restart length}
+        help: {de: "Bis genug Neustarts gemessen sind. Danach zählt die typische Dauer der letzten.", en: "Until enough restarts were measured. Afterwards the typical length of the last ones counts."}
+
+  - id: room
+    name: {de: Raum, en: Room}
+    help: {de: Die Welt des Warteraums., en: The world of the waiting room.}
+    fields:
+      - key: room.world
+        type: string
+        restart: true
+        max-length: 64
+        name: {de: Welt, en: World}
+        help: {de: "Wird leer angelegt, wenn es sie noch nicht gibt.", en: "Created empty if it does not exist yet."}
+      - key: room.platform
+        type: bool
+        restart: true
+        name: {de: Plattform bauen, en: Build a platform}
+        help: {de: Kleine Plattform am Spawn einer neu angelegten Welt., en: Small platform at the spawn of a newly created world.}
+      - key: room.platform-block
+        type: string
+        when: room.platform
+        restart: true
+        max-length: 64
+        name: {de: Block der Plattform, en: Block of the platform}
+      - key: room.chat
+        type: bool
+        name: {de: Chat erlauben, en: Allow chat}
+        help: {de: "Mit mrwaitroom.chat darf man immer schreiben.", en: "With mrwaitroom.chat one may always write."}
+      - key: room.hide-players
+        type: bool
+        name: {de: Andere Spieler ausblenden, en: Hide other players}
+
+  - id: display
+    name: {de: Anzeige, en: Display}
+    help: {de: "Item in der Hotbar und Bossbar.", en: "Item in the hotbar and bossbar."}
+    fields:
+      - key: display.item
+        type: string
+        max-length: 64
+        name: {de: Item, en: Item}
+        help: {de: "Zeigt im Namen, wie lange es noch dauert, z.B. CLOCK.", en: "Shows in its name how long it takes, e.g. CLOCK."}
+      - key: display.slot
+        type: int
+        min: 0
+        max: 8
+        name: {de: Platz in der Hotbar, en: Slot in the hotbar}
+        help: {de: "0-8, bleibt ausgewählt.", en: "0-8, stays selected."}
+      - key: display.bossbar
+        type: bool
+        name: {de: Bossbar zeigen, en: Show the bossbar}
+      - key: display.bossbar-color
+        type: choice
+        when: display.bossbar
+        name: {de: Farbe der Bossbar, en: Colour of the bossbar}
+        options:
+          - {value: BLUE, de: Blau, en: Blue}
+          - {value: GREEN, de: Grün, en: Green}
+          - {value: YELLOW, de: Gelb, en: Yellow}
+          - {value: RED, de: Rot, en: Red}
+          - {value: PURPLE, de: Lila, en: Purple}
+          - {value: PINK, de: Rosa, en: Pink}
+          - {value: WHITE, de: Weiß, en: White}
+
+  - id: xaero
+    name: {de: Xaero-Karten, en: Xaero maps}
+    help: {de: "Eigene Karten-ID, damit Xaero den Warteraum nicht über die Karte des Hauptservers zeichnet.", en: "Own map ID, so Xaero does not draw the waiting room over the map of the main server."}
+    fields:
+      - key: xaero.enabled
+        type: bool
+        name: {de: Eigene Karten-ID senden, en: Send an own map ID}
+      - key: xaero.world-id
+        type: int
+        when: xaero.enabled
+        advanced: true
+        min: -2147483648
+        max: 2147483647
+        name: {de: Karten-ID, en: Map ID}
+        help: {de: "0 = beim ersten Start erzeugen.", en: "0 = create on the first start."}
+
+  - id: updates
+    name: {de: Updates, en: Updates}
+    help: {de: Nach neuen Versionen von MRwaitroom suchen., en: Look for new versions of MRwaitroom.}
+    fields:
+      - key: updates.enabled
+        type: bool
+        name: {de: Nach Updates suchen, en: Look for updates}
+        help: {de: Beim Start und danach regelmäßig. Ein Hinweis erscheint in der Konsole., en: On start and regularly afterwards. A notice appears in the console.}
+      - key: updates.source
+        type: choice
+        when: updates.enabled
+        name: {de: Quelle, en: Source}
+        options:
+          - {value: github, de: GitHub, en: GitHub}
+          - {value: modrinth, de: Modrinth, en: Modrinth}
+      - key: updates.beta
+        type: bool
+        when: updates.enabled
+        name: {de: Auch Betas, en: Betas too}
+        help: {de: "Meldet auch Beta-Versionen (BET-…). Läuft eine 0.x-Beta, werden sie immer gemeldet.", en: "Also reports beta versions (BET-...). While a 0.x beta runs they are always reported."}
+      - key: updates.interval-hours
+        type: int
+        when: updates.enabled
+        min: 1
+        max: 168
+        unit: {de: Stunden, en: hours}
+        name: {de: Prüfen alle, en: Check every}
+      - key: updates.notify-on-join
+        type: bool
+        when: updates.enabled
+        name: {de: Team beim Betreten informieren, en: Tell the team on join}
+        help: {de: Spieler mit mrwaitroom.admin.update bekommen einen Hinweis., en: Players with mrwaitroom.admin.update get a notice.}

@@ -1,0 +1,29 @@
+# Seitenbaum des Wikis (https://mrtechnology.marcelr.at/wiki/mrwaitroom/).
+# Abschnitte mit Seiten; "file" relativ zu docs/wiki/, mit "/" am Anfang relativ zum Repo.
+# id "" = Einstieg. audience: player | admin | dev (Etikett und Einordnung auf der Wiki-Startseite).
+sections:
+  - title: {de: Einstieg, en: Getting started}
+    pages:
+      - {id: "", file: einstieg.md, title: {de: Überblick, en: Overview}}
+      - {id: schnellstart, file: schnellstart.md, title: {de: Schnellstart, en: Quick start}}
+  - title: {de: Für Spieler, en: For players}
+    audience: player
+    pages:
+      - {id: warten, file: warten.md, title: {de: Im Warteraum, en: In the waiting room}}
+  - title: {de: Für Admins, en: For admins}
+    audience: admin
+    pages:
+      - {id: einrichten, file: einrichten.md, title: {de: Einrichten (Velocity & Server), en: Setting up (Velocity & servers)}}
+      - {id: ablauf, file: ablauf.md, title: {de: Ablauf & Anzeige, en: How it works & display}}
+      - {id: befehle, file: befehle.md, title: {de: Befehle, en: Commands}}
+      - {id: permissions, file: permissions.md, title: {de: Permissions, en: Permissions}}
+      - {id: konfiguration, file: konfiguration.md, title: {de: Konfiguration, en: Configuration}}
+      - {id: zusammenarbeit, file: zusammenarbeit.md, title: {de: Zusammenarbeit mit MRadmin, en: Working with MRadmin}}
+      - {id: faq, file: faq.md, title: {de: Häufige Fragen, en: FAQ}}
+  - title: {de: Mehr, en: More}
+    pages:
+      - {id: changelog, file: /CHANGELOG.md, title: {de: Changelog, en: Changelog}}
+  - title: {de: Für Entwickler, en: For developers}
+    audience: dev
+    pages:
+      - {id: dev, file: /docs/DOKUMENTATION.md, title: {de: Code-Aufbau, en: Code structure}}

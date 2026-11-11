@@ -1,0 +1,131 @@
+# MRwaitroom-Release: beim Pushen eines Tags "mc<minecraft>-STA-<version>-bu<build>" (stabil) bzw.
+# "mc<minecraft>-BET-..." (Beta), z.B. mc26.3-STA-1.4.0-bu002, ein GitHub-Release mit der JAR erstellen.
+# Stable nur von main (oder dem Wartungs-Branch mc/<minecraft>), Beta nur von beta. Ablauf: docs/RELEASES.md
+#
+# Vorher läuft die ganze Prüfrunde (checks.yml: Bauen + Tests, Bibliotheken, CodeQL) - ist etwas rot, entsteht kein
+# Release. Veröffentlicht wird genau die dort gebaute und geprüfte JAR, mit Herkunftsnachweis (Attestation: GitHub
+# bestätigt, dass sie aus diesem Tag gebaut wurde; prüfen mit "gh attestation verify <jar> -R therealmarci/mrwaitroom").
+name: Release
+
+on:
+  push:
+    tags: ['mc*-STA-*', 'mc*-BET-*']
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    uses: ./.github/workflows/checks.yml
+    # contents: write only as upper limit for the dev-channel job of checks.yml, which never runs for a release
+    permissions:
+      contents: write
+      security-events: write
+
+  release:
+    needs: checks
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write       # Release anlegen
+      id-token: write       # Herkunftsnachweis
+      attestations: write
+    env:
+      MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0   # nötig, um zu prüfen, auf welchem Branch der Tag liegt
+          persist-credentials: false
+
+      - name: Tag mit gradle.properties abgleichen
+        run: |
+          prop() { grep "^$1=" gradle.properties | cut -d= -f2 | tr -d '[:space:]'; }
+          VERSION=$(prop version)
+          MC=$(prop mcVersion)
+          FULL="mc$MC-$VERSION"
+          # Schema: STA-<MAJOR>.<MINOR>.<PATCH>-bu<BUILD> (stabil) bzw. BET-... (Beta), siehe docs/RELEASES.md
+          if ! printf '%s' "$VERSION" | grep -Eq '^(STA|BET)-[0-9]+\.[0-9]+\.[0-9]+-bu[0-9]{3,}$'; then
+            echo "::error::version=$VERSION in gradle.properties hat nicht das Format STA-1.4.0-bu001 bzw. BET-1.4.0-bu001"
+            exit 1
+          fi
+          if [ "$FULL" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME passt nicht zu gradle.properties (erwartet: $FULL)"
+            exit 1
+          fi
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+          echo "MC=$MC" >> "$GITHUB_ENV"
+          echo "FULL=$FULL" >> "$GITHUB_ENV"
+          case "$VERSION" in
+            BET-*) echo "PRERELEASE=true" >> "$GITHUB_ENV" ;;
+            *)     echo "PRERELEASE=false" >> "$GITHUB_ENV" ;;
+          esac
+
+      # Stable (STA) nur von main (neueste Minecraft-Version) oder dem Wartungs-Branch mc/<version>, Beta (BET) nur von
+      # beta bzw. mc/<version>. Als "Latest" gilt nur eine Stable von main.
+      - name: Branch prüfen
+        run: |
+          on() { git merge-base --is-ancestor "$GITHUB_SHA" "origin/$1" 2>/dev/null; }
+          LATEST=false
+          if [ "$PRERELEASE" = "false" ]; then
+            if on main; then
+              LATEST=true
+            elif ! on "mc/$MC"; then
+              echo "::error::Stable $FULL muss auf main oder mc/$MC getaggt werden."
+              exit 1
+            fi
+          elif ! on beta && ! on "mc/$MC"; then
+            echo "::error::Beta $FULL muss auf beta (oder mc/$MC) getaggt werden."
+            exit 1
+          fi
+          echo "LATEST=$LATEST" >> "$GITHUB_ENV"
+
+      - name: Geprüfte JAR aus der Prüfrunde holen
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: MRwaitroom
+          path: ./release-jar
+
+      - name: JAR prüfen
+        run: |
+          JAR="release-jar/MRwaitroom-$FULL.jar"
+          if [ ! -f "$JAR" ]; then
+            echo "::error::$JAR fehlt im Ergebnis der Prüfrunde (vorhanden: $(ls release-jar | tr '\n' ' '))"
+            exit 1
+          fi
+          echo "JAR=./$JAR" >> "$GITHUB_ENV"
+          sha256sum "$JAR"
+
+      - name: Changelog-Abschnitt auslesen
+        run: |
+          awk -v v="$VERSION" '/^## \[/ { p = index($0, "[" v "]") > 0; next } p' CHANGELOG.md > release-notes.md
+          if [ ! -s release-notes.md ]; then
+            echo "::error::Kein Abschnitt '## [$VERSION]' in CHANGELOG.md gefunden"
+            exit 1
+          fi
+
+      - name: Herkunftsnachweis
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: ${{ env.JAR }}
+
+      - name: GitHub-Release erstellen
+        uses: softprops/action-gh-release@8a0cd651e5b2365bd640854a3fa5dfc70e4875f3 # v3.0.4
+        with:
+          name: MRwaitroom ${{ env.VERSION }} (MC ${{ env.MC }})
+          body_path: ./release-notes.md
+          files: |
+            ${{ env.JAR }}
+          prerelease: ${{ env.PRERELEASE == 'true' }}
+          make_latest: ${{ env.LATEST }}
+
+      # Modrinth wird derzeit nicht benutzt (kein MODRINTH_TOKEN). Achtung: lädt eine neu gebaute JAR hoch.
+      - if: ${{ env.MODRINTH_TOKEN != '' }}
+        uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
+        with:
+          distribution: temurin
+          java-version: '25'
+      - if: ${{ env.MODRINTH_TOKEN != '' }}
+        uses: gradle/actions/setup-gradle@0723195856401067f7a2779048b490ace7a47d7c # v5.0.2
+      - name: Auf Modrinth veröffentlichen
+        if: ${{ env.MODRINTH_TOKEN != '' }}
+        run: chmod +x gradlew && ./gradlew modrinth

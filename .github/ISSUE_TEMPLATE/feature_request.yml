@@ -1,0 +1,15 @@
+name: 💡 Neue Funktion
+description: Vorschlag für eine Funktion, die es noch nicht gibt.
+labels: ["Feature - New Request"]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: Was wünschst du dir?
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Wofür brauchst du das?
+      description: Welches Problem auf deinem Server würde das lösen?

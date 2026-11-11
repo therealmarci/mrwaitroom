@@ -15,10 +15,6 @@ mrwaitroom.version:
   de: "`/mrwaitroom version`"
 mrwaitroom.chat:
   de: "Im Warteraum schreiben, auch wenn `room.chat` aus ist"
-mrwaitroom.stay:
-  de: "Wird nicht automatisch zurückgeschickt - in keiner Gruppe"
-mrwaitroom.visit:
-  de: "Freiwillig in den Warteraum (Menü von MRadmin), ohne automatisch zurückgeschickt zu werden; Item „Zurück zum Server“"
 mrwaitroom.admin.status:
   de: "`/mrwaitroom status`"
 mrwaitroom.admin.send:

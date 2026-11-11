@@ -110,29 +110,27 @@ public final class Display implements Listener {
         Messages m = plugin.messages();
         Settings.DisplaySettings s = plugin.settings().display();
         Line line = line(view, now);
-        if (player.getGameMode() != GameMode.CREATIVE) {
-            ItemStack item = new ItemStack(s.item());
-            ItemMeta meta = item.getItemMeta();
-            meta.itemName(m.as(player, () -> m.get(line.item(), line.tags())).decoration(TextDecoration.ITALIC, false));
-            meta.lore(m.as(player, () -> m.lore("item-lore", line.tags())));
-            item.setItemMeta(meta);
-            // Only when it differs: setting the same item again would replay the "take into hand" animation.
-            ItemStack current = player.getInventory().getItem(s.slot());
-            if (current == null || !current.isSimilar(item) || current.getAmount() != 1) {
-                player.getInventory().setItem(s.slot(), item);
-            }
-            boolean visit = player.hasPermission(Returner.PERM_VISIT);
-            if (visit) {
-                ItemStack back = backItem(player);
-                ItemStack there = player.getInventory().getItem(BACK_SLOT);
-                if (there == null || !there.isSimilar(back)) {
-                    player.getInventory().setItem(BACK_SLOT, back);
-                }
-            }
-            // The clock stays selected - except for players with the back item (they need to reach it).
-            if (!visit && player.getInventory().getHeldItemSlot() != s.slot()) {
-                player.getInventory().setHeldItemSlot(s.slot());
-            }
+        ItemStack item = new ItemStack(s.item());
+        ItemMeta meta = item.getItemMeta();
+        meta.itemName(m.as(player, () -> m.get(line.item(), line.tags())).decoration(TextDecoration.ITALIC, false));
+        meta.lore(m.as(player, () -> m.lore("item-lore", line.tags())));
+        item.setItemMeta(meta);
+        // Only when it differs: setting the same item again would replay the "take into hand" animation.
+        put(player, s.slot(), item);
+        // Symmetric hotbar: admin mode left, clock in the middle, back to the server right - a button without the
+        // right leaves its place empty.
+        boolean adminMode = plugin.rights().mayUseAdminMode(player);
+        boolean back = plugin.rights().mayGoByHand(player);
+        if (s.slot() != AdminMode.SLOT) {
+            put(player, AdminMode.SLOT, adminMode ? plugin.adminMode().item(player) : null);
+        }
+        if (s.slot() != BACK_SLOT) {
+            put(player, BACK_SLOT, back ? backItem(player) : null);
+        }
+        // The clock stays selected - except for players with buttons (they need to reach them).
+        if (!adminMode && !back && player.getGameMode() != GameMode.CREATIVE
+                && player.getInventory().getHeldItemSlot() != s.slot()) {
+            player.getInventory().setHeldItemSlot(s.slot());
         }
         if (!s.bossbar()) {
             BossBar old = bars.remove(player.getUniqueId());
@@ -152,6 +150,23 @@ public final class Display implements Listener {
             bar.progress(line.progress());
             bar.color(s.bossbarColor());
         }
+    }
+
+    /** Sets the slot only if it differs; null empties it (only if one of our buttons is there). */
+    private static void put(Player player, int slot, ItemStack item) {
+        ItemStack current = player.getInventory().getItem(slot);
+        if (item == null) {
+            if (isBackItem(current) || AdminMode.isItem(current)) {
+                player.getInventory().setItem(slot, null);
+            }
+        } else if (current == null || !current.isSimilar(item) || current.getAmount() != 1) {
+            player.getInventory().setItem(slot, item);
+        }
+    }
+
+    /** Whether the player has buttons in the hotbar (may then select other slots than the clock). */
+    public boolean hasButtons(Player player) {
+        return plugin.rights().mayUseAdminMode(player) || plugin.rights().mayGoByHand(player);
     }
 
     /** One chat line on joining (details in the hover) and the warnings of the main server. */
@@ -185,7 +200,7 @@ public final class Display implements Listener {
             announced = view.readySince();
             if (left > 1000) {
                 for (Player p : Bukkit.getOnlinePlayers()) {
-                    if (!plugin.returner().visitor(p)) {
+                    if (!plugin.rights().allows(p, Rights.Right.STAY)) {
                         plugin.messages().send(p, "ready-countdown", tag("time", String.valueOf((left + 999) / 1000)));
                     }
                 }
@@ -193,14 +208,14 @@ public final class Display implements Listener {
         }
         if (left > 0 && left <= 5000) {
             for (Player p : Bukkit.getOnlinePlayers()) {
-                if (!plugin.returner().visitor(p)) {
+                if (!plugin.rights().allows(p, Rights.Right.STAY)) {
                     p.playSound(p.getLocation(), org.bukkit.Sound.BLOCK_NOTE_BLOCK_HAT, 0.6f, 1.4f);
                 }
             }
         }
     }
 
-    /** Slot of the back item (players with mrwaitroom.visit). */
+    /** Slot of the back item (players who may go back by hand, see Rights#mayGoByHand). */
     static final int BACK_SLOT = 8;
     static final org.bukkit.NamespacedKey BACK = new org.bukkit.NamespacedKey("mrwaitroom", "back");
 

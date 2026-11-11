@@ -21,9 +21,12 @@ import java.util.Map;
  * @param restart     running countdown (or the one that just ended), null if none
  * @param maintenance running or next maintenance, null if none
  * @param alerts      warnings that are on (title per language)
+ * @param rights      waiting-room.rights of MRadmin: role -> right -> never/always/admin-mode (empty = defaults)
+ * @param adminMode   players in admin mode on the main server (also offline), as UUID text
  */
 public record MainStatus(long time, String name, boolean ready, boolean stopping, Restart restart,
-                         Maintenance maintenance, List<Map<String, String>> alerts) {
+                         Maintenance maintenance, List<Map<String, String>> alerts,
+                         Map<String, Map<String, String>> rights, java.util.Set<String> adminMode) {
 
     /** @param at when the server goes down; {@code restart} false = a stop (it stays down) */
     public record Restart(long at, boolean restart, String reason) {
@@ -57,8 +60,30 @@ public record MainStatus(long time, String name, boolean ready, boolean stopping
                 }
             }
         }
+        Map<String, Map<String, String>> rights = new LinkedHashMap<>();
+        if (o.get("rights") instanceof JsonObject table) {
+            for (String role : table.keySet()) {
+                if (table.get(role) instanceof JsonObject row) {
+                    Map<String, String> cells = new LinkedHashMap<>();
+                    for (String right : row.keySet()) {
+                        cells.put(right, str(row, right));
+                    }
+                    rights.put(role, Map.copyOf(cells));
+                }
+            }
+        }
+        java.util.Set<String> adminMode = new java.util.HashSet<>();
+        if (o.get("adminMode") instanceof JsonArray list) {
+            for (JsonElement e : list) {
+                try {
+                    adminMode.add(java.util.UUID.fromString(e.getAsString()).toString());
+                } catch (RuntimeException ignored) {
+                    // not a player
+                }
+            }
+        }
         return new MainStatus(num(o, "time"), str(o, "name"), bool(o, "ready", false), bool(o, "stopping", false),
-                restart, maintenance, List.copyOf(alerts));
+                restart, maintenance, List.copyOf(alerts), Map.copyOf(rights), java.util.Set.copyOf(adminMode));
     }
 
     /** Whether a maintenance is running right now. */

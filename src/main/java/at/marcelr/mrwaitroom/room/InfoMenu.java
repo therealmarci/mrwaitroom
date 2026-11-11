@@ -107,9 +107,9 @@ public final class InfoMenu implements InventoryHolder, Listener {
                 alerts.addAll(m.lore("menu-alerts-none"));
             }
             inventory.setItem(ALERTS, item(Material.BELL, m.item("menu-alerts-name"), alerts));
-            // Going back by hand only for admins (mrwaitroom.visit) - players go back automatically. Without it the
+            // Going back by hand only with the rights (stay or maintenance) - players go back automatically. Without it the
             // close button moves to the middle (symmetric).
-            if (viewer.hasPermission(Returner.PERM_VISIT)) {
+            if (plugin.rights().mayGoByHand(viewer)) {
                 boolean ready = plugin.returner().mayGo(viewer, view);
                 inventory.setItem(BACK, ready
                         ? item(Material.LIME_DYE, m.item("menu-back-name"), m.lore("menu-back-lore"))
@@ -161,7 +161,7 @@ public final class InfoMenu implements InventoryHolder, Listener {
         if (!(event.getWhoClicked() instanceof Player player) || event.getClickedInventory() != menu.inventory) {
             return;
         }
-        boolean admin = player.hasPermission(Returner.PERM_VISIT);
+        boolean admin = plugin.rights().mayGoByHand(player);
         if (event.getSlot() == (admin ? CLOSE : CLOSE_ALONE)) {
             player.closeInventory();
         } else if (admin && event.getSlot() == BACK && plugin.returner().mayGo(player, plugin.link().view())) {

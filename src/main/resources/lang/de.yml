@@ -11,7 +11,7 @@
 # ==============================================================================
 
 # Nicht ändern - sagt dem Plugin, welche Texte bei Updates erneuert werden müssen.
-lang-version: 7
+lang-version: 8
 
 prefix: "<dark_gray>[<aqua>Warteraum</aqua>]</dark_gray> "
 
@@ -95,7 +95,19 @@ ready-countdown: "<prefix><green>Der Server ist wieder bereit – in <white><tim
 back-item-name: "<green>Zurück zum Server"
 back-item-lore:
   - "<gray>Rechtsklick: sofort zurück"
-  - "<gray>(auch während einer Wartung)"
+  - "<gray>(während einer Wartung nur mit dem Recht dafür)"
+admin-mode-item-on: "<gold>Admin-Modus: <green>an"
+admin-mode-item-off: "<gold>Admin-Modus: <red>aus"
+admin-mode-item-on-lore:
+  - "<gray>Kreativ, fliegen, unsichtbar für Wartende"
+  - "<gray>Rechtsklick: ausschalten"
+admin-mode-item-off-lore:
+  - "<gray>Rechtsklick: einschalten"
+  - "<gray>Gilt auch auf dem Hauptserver"
+admin-mode-on: "<prefix><green>Admin-Modus an. <hover:show_text:'<gray>Kreativmodus, fliegen, unsichtbar für Wartende<newline><gray>Gilt auch auf dem Hauptserver'><dark_gray>[Info]</dark_gray></hover>"
+admin-mode-off: "<prefix><gray>Admin-Modus aus. <hover:show_text:'<gray>Auch auf dem Hauptserver aus<newline><gray>Dort bekommst du dein Inventar zurück'><dark_gray>[Info]</dark_gray></hover>"
+admin-mode-denied: "<prefix><red>Den Admin-Modus darfst du hier nicht nutzen."
+main-not-now: "<prefix><gray>Der Server nimmt dich gerade nicht. <hover:show_text:'<gray>Noch nicht bereit - oder Wartung ohne Recht dafür'><dark_gray>[Info]</dark_gray></hover>"
 join-maintenance: "<prefix><aqua>Wartung bis <white><end></white>. <hover:show_text:'<gray><white><title></white><newline><gray>Noch ca. <white><time><newline><gray>Danach kommst du automatisch zurück.'><dark_gray>[Info]</dark_gray></hover>"
 join-maintenance-open: "<prefix><aqua>Wartung – Ende noch offen. <hover:show_text:'<gray><white><title></white><newline><gray>Danach kommst du automatisch zurück.'><dark_gray>[Info]</dark_gray></hover>"
 alert: "<prefix><red>⚠ <white><title>"

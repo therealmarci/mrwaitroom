@@ -7,6 +7,17 @@ veröffentlicht als `mc<minecraft>-STA|BET-<version>-bu<build>` (siehe [docs/REL
 
 ## [Unveröffentlicht]
 
+### Neu
+- **Rechte aus MRadmin:** Wer im Warteraum bleiben darf, wer während einer Wartung auf den Hauptserver darf und wer den Admin-Modus nutzen darf, bestimmt jetzt die Tabelle `waiting-room.rights` in MRadmin (pro Team-Rolle Nein / Ja / Nur im Admin-Modus). Der Warteraum bekommt sie über die Verbindung und behält sie, solange der Hauptserver aus ist. Standard: Admins nur im Admin-Modus, Staff und Supporter nichts.
+- **Admin-Modus im Warteraum:** Item links in der Hotbar (Rechtsklick an/aus): Kreativmodus, fliegen, unsichtbar für Wartende. Der Admin-Modus gilt im ganzen Netzwerk - hier eingeschaltet, kommt man auf dem Hauptserver im Admin-Modus an (braucht MRadmin mit dieser Version).
+- **Symmetrische Hotbar:** links Admin-Modus, Mitte Uhr, rechts „Zurück zum Server“ - ohne Recht bleibt der Platz leer.
+
+### Entfernt
+- **Permissions `mrwaitroom.stay` und `mrwaitroom.visit`:** ersetzt durch die Rechte „Im Warteraum bleiben“ und „Bei Wartung auf den Server“ der Tabelle in MRadmin. Besuche aus MRadmins Menü braucht der Warteraum nicht mehr anzukündigen.
+
+### Behoben & geändert
+- **Während einer Wartung zurück** nur noch mit dem Recht „Bei Wartung auf den Server“ statt mit dem Wartungs-Bypass - ein Admin ohne Admin-Modus wartet wie alle.
+
 ## [BET-0.1.0-bu001] - 2026-11-11
 
 ### Neu

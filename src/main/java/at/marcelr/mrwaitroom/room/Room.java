@@ -30,6 +30,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.generator.ChunkGenerator;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * The room: an empty world (created if missing) with a small platform, everyone in adventure mode without damage or
  * hunger, the inventory locked (only the display item), chat only with mrwaitroom.chat (or room.chat). Falling into
@@ -132,11 +135,30 @@ public final class Room implements Listener {
         player.setFoodLevel(20);
         player.setFireTicks(0);
         player.getActivePotionEffects().forEach(e -> player.removePotionEffect(e.getType()));
-        if (plugin.settings().room().hidePlayers()) {
-            for (Player other : Bukkit.getOnlinePlayers()) {
-                if (other != player) {
-                    player.hidePlayer(plugin, other);
-                    other.hidePlayer(plugin, player);
+        refreshVisibility();
+    }
+
+    /**
+     * Who sees whom: players in admin mode see everyone and are invisible for the others; the others see each other
+     * unless room.hide-players is on.
+     */
+    public void refreshVisibility() {
+        boolean hideAll = plugin.settings().room().hidePlayers();
+        var online = List.copyOf(Bukkit.getOnlinePlayers());
+        Map<Player, Boolean> admin = new java.util.HashMap<>();
+        for (Player p : online) {
+            admin.put(p, plugin.adminMode().on(p));
+        }
+        for (Player viewer : online) {
+            for (Player target : online) {
+                if (viewer == target) {
+                    continue;
+                }
+                boolean see = admin.get(viewer) || !admin.get(target) && !hideAll;
+                if (see) {
+                    viewer.showPlayer(plugin, target);
+                } else {
+                    viewer.hidePlayer(plugin, target);
                 }
             }
         }
@@ -232,10 +254,10 @@ public final class Room implements Listener {
         }
     }
 
-    /** The display item stays selected, so its name stays visible above the hotbar. */
+    /** The display item stays selected, so its name stays visible above the hotbar - unless there are buttons too. */
     @EventHandler(ignoreCancelled = true)
     public void onHeld(PlayerItemHeldEvent event) {
-        if (event.getPlayer().getGameMode() != GameMode.CREATIVE && !event.getPlayer().hasPermission(Returner.PERM_VISIT)) {
+        if (event.getPlayer().getGameMode() != GameMode.CREATIVE && !plugin.display().hasButtons(event.getPlayer())) {
             event.setCancelled(true);
         }
     }

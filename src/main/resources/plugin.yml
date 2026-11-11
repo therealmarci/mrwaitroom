@@ -20,7 +20,8 @@ permissions:
   # ------------------------------------------------------------------ Groups
   # The same in every MRtechnology plugin: <plugin>.player for players, <plugin>.groups.support / staff / admin for
   # the team - each group contains the one below. Unlike the other plugins mrwaitroom.player is given to everyone
-  # by default: waiting players are often new and have no group yet. mrwaitroom.stay is in no group on purpose.
+  # by default: waiting players are often new and have no group yet. Who may stay here, use the admin mode or go to
+  # the main server during a maintenance is not decided here but by the table waiting-room.rights in MRadmin.
   mrwaitroom.player:
     description: "Player: /mrwaitroom version. Going back is automatic - only admins can go back by hand."
     default: true
@@ -40,7 +41,7 @@ permissions:
       mrwaitroom.groups.support: true
       mrwaitroom.admin.send: true
   mrwaitroom.groups.admin:
-    description: "Group admin: everything of MRwaitroom - reload, update notice, board, lobby, visiting and going back by hand (back item, /main)."
+    description: "Group admin: everything of MRwaitroom - reload, update notice, board, lobby, /main."
     default: op
     children:
       mrwaitroom.groups.staff: true
@@ -48,7 +49,6 @@ permissions:
       mrwaitroom.admin.update: true
       mrwaitroom.admin.screen: true
       mrwaitroom.admin.lobby: true
-      mrwaitroom.visit: true
       mrwaitroom.main: true
 
   # ------------------------------------------------------------- Single ones
@@ -60,12 +60,6 @@ permissions:
     default: true
   mrwaitroom.chat:
     description: "Write in the chat of the waiting room even if room.chat is off."
-    default: op
-  mrwaitroom.stay:
-    description: "Is not sent back to the main server by itself (e.g. to look at the waiting room). In no group."
-    default: false
-  mrwaitroom.visit:
-    description: "Come over on purpose (MRadmin's menu) without being sent back by itself; item 'back to the server' in the hotbar."
     default: op
   mrwaitroom.admin.status:
     description: "/mrwaitroom status - state of the main server and of the connection to MRadmin."

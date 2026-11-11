@@ -23,15 +23,12 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Sends the waiting players back to the main server once it is ready (return.delay-seconds after it said so), in
  * batches (return.batch-size every return.batch-seconds), longest waiting first. During a maintenance only players
- * with its bypass permission go back (checked here - with LuckPerms on a shared database the permission is the same
- * as on the main server). Whoever does not get back after return.max-attempts tries is disconnected: the main server
- * turned them away (ban, whitelist ...). Players with mrwaitroom.stay are never sent back by themselves.
+ * with the right "maintenance" of the table waiting-room.rights go back ({@link Rights}). Whoever does not get back
+ * after return.max-attempts tries is disconnected: the main server turned them away (ban, whitelist ...). Players
+ * with the right "stay" are never sent back by themselves (they go with the back item).
  */
 public final class Returner implements Listener {
 
-    public static final String PERM_STAY = "mrwaitroom.stay";
-    /** May come over on purpose (MRadmin's menu) and go back with the item - is not sent back by itself then. */
-    public static final String PERM_VISIT = "mrwaitroom.visit";
     private static final String CHANNEL = "BungeeCord";
     /** A try counts as failed if the player is still here this long after it. */
     private static final long TRY_MILLIS = 10_000L;
@@ -51,10 +48,6 @@ public final class Returner implements Listener {
 
     private final MRwaitroom plugin;
     private final Map<UUID, Waiting> waiting = new ConcurrentHashMap<>();
-    /** Came on purpose (MRadmin's menu) - stay until they go back themselves. */
-    private final java.util.Set<UUID> visitors = ConcurrentHashMap.newKeySet();
-    /** Visits announced by MRadmin (order "visit"): player -> when; the player arrives within a few seconds. */
-    private final Map<UUID, Long> announced = new ConcurrentHashMap<>();
     private BukkitTask task;
     private long lastBatch;
 
@@ -92,45 +85,21 @@ public final class Returner implements Listener {
         waiting.put(event.getPlayer().getUniqueId(), old != null && now - old.lastTry() < BOUNCE_MILLIS
                 ? new Waiting(old.since(), now, old.tries(), old.lastTry())
                 : new Waiting(now, now, 0, 0));
-        // Announced by MRadmin's menu (order "visit"): came on purpose - no automatic return.
-        Long at = announced.remove(event.getPlayer().getUniqueId());
-        if (at != null && now - at < 60_000L && event.getPlayer().hasPermission(PERM_VISIT)) {
-            visitors.add(event.getPlayer().getUniqueId());
-        } else {
-            visitors.remove(event.getPlayer().getUniqueId());
-        }
-    }
-
-    /** MRadmin announced that the player comes on purpose (also if the order arrives after the player). */
-    public void announceVisit(UUID player) {
-        Player online = Bukkit.getPlayer(player);
-        if (online != null && online.hasPermission(PERM_VISIT)) {
-            visitors.add(player);
-        } else {
-            announced.put(player, System.currentTimeMillis());
-        }
-    }
-
-    /** Came on purpose and is not sent back by itself. */
-    public boolean visitor(Player player) {
-        return visitors.contains(player.getUniqueId());
     }
 
     /**
-     * The back item (players with mrwaitroom.visit): to the main server right away while it is up - also during a
-     * maintenance (the team has its bypass) and without the countdown.
+     * The back item and the menu: to the main server right away while it may take the player - without the
+     * countdown, during a maintenance only with the right "maintenance".
      */
     public void goBack(Player player) {
-        MainLink.Phase phase = plugin.link().view().phase();
-        if (phase == MainLink.Phase.READY || phase == MainLink.Phase.MAINTENANCE && plugin.link().view().readySince() != 0) {
-            visitors.remove(player.getUniqueId());
+        if (mayGo(player, plugin.link().view())) {
             send(player);
         } else {
-            plugin.messages().send(player, "main-not-ready");
+            plugin.messages().send(player, "main-not-now");
         }
     }
 
-    /** Whether the player may go back right now (main server ready, or in maintenance with the bypass). */
+    /** Whether the player may go back right now (main server ready, or in maintenance with the right "maintenance"). */
     public boolean mayGo(Player player, MainLink.View view) {
         // A restart is about to come: stay (otherwise players bounce back and forth right before it).
         var restart = view.status() == null ? null : view.status().restart();
@@ -140,8 +109,7 @@ public final class Returner implements Listener {
         return switch (view.phase()) {
             case READY -> true;
             // Only while the main server is up - it may restart during the maintenance.
-            case MAINTENANCE -> view.readySince() != 0 && view.status() != null && view.status().maintenance() != null
-                    && player.hasPermission(view.status().maintenance().bypass());
+            case MAINTENANCE -> view.readySince() != 0 && plugin.rights().allows(player, Rights.Right.MAINTENANCE);
             default -> false;
         };
     }
@@ -161,7 +129,7 @@ public final class Returner implements Listener {
             Waiting w = waiting.get(player.getUniqueId());
             // Only with an answer from after the arrival: the main server may just have sent the player here
             // because it goes down - the last answer before does not know that yet.
-            if (w == null || view.checkedAt() <= w.arrived() || player.hasPermission(PERM_STAY) || visitors.contains(player.getUniqueId())
+            if (w == null || view.checkedAt() <= w.arrived() || plugin.rights().allows(player, Rights.Right.STAY)
                     || !mayGo(player, view)
                     || now - w.lastTry() < TRY_MILLIS) {
                 continue;

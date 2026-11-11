@@ -30,7 +30,7 @@ public final class MRwaitroom extends JavaPlugin implements Listener {
     private FileConfiguration config;
     private Settings settings;
     // lang-version 2: the clock keeps its name (the countdown moved to the action bar).
-    private final Messages messages = new Messages(7, Map.of(2, Set.of("item-restart", "item-restart-late", "item-stop",
+    private final Messages messages = new Messages(8, Map.of(2, Set.of("item-restart", "item-restart-late", "item-stop",
             "item-crash", "item-starting", "item-ready", "item-maintenance", "item-maintenance-open"),
             // 3: the countdown is in the bossbar, the clock opens a menu.
             3, Set.of("item-lore", "bossbar-restart", "bossbar-stop", "bossbar-crash", "bossbar-starting",
@@ -44,7 +44,9 @@ public final class MRwaitroom extends JavaPlugin implements Listener {
             6, Set.of("bossbar-restart", "bossbar-stop", "bossbar-crash", "bossbar-ready", "bossbar-maintenance",
                     "status", "join-restart", "menu-time-lore"),
             // 7: board and lobby in the command list.
-            7, Set.of("usage")));
+            7, Set.of("usage"),
+            // 8: going back by hand depends on the rights of MRadmin (waiting-room.rights).
+            8, Set.of("back-item-lore")));
     private final MainLink link = new MainLink(this);
     private final Room room = new Room(this);
     private final Display display = new Display(this);
@@ -55,6 +57,8 @@ public final class MRwaitroom extends JavaPlugin implements Listener {
     private final at.marcelr.mrwaitroom.server.Restarts restarts = new at.marcelr.mrwaitroom.server.Restarts(this);
     private final at.marcelr.mrwaitroom.room.Screen screen = new at.marcelr.mrwaitroom.room.Screen(this);
     private final at.marcelr.mrwaitroom.room.Lobby lobby = new at.marcelr.mrwaitroom.room.Lobby(this);
+    private final at.marcelr.mrwaitroom.room.Rights rights = new at.marcelr.mrwaitroom.room.Rights(this);
+    private final at.marcelr.mrwaitroom.room.AdminMode adminMode = new at.marcelr.mrwaitroom.room.AdminMode(this);
     private UpdateChecker updateChecker;
 
     @Override
@@ -81,6 +85,7 @@ public final class MRwaitroom extends JavaPlugin implements Listener {
         pm.registerEvents(xaero, this);
         pm.registerEvents(new at.marcelr.mrwaitroom.room.InfoMenu(this), this);
         pm.registerEvents(screen, this);
+        pm.registerEvents(adminMode, this);
         pm.registerEvents(this, this);
         register("mrwaitroom", new WaitroomCommand(this));
         register("main", new MainCommand(this));
@@ -93,6 +98,7 @@ public final class MRwaitroom extends JavaPlugin implements Listener {
         starter.start();
         restarts.start();
         screen.start();
+        adminMode.start();
         if (settings.main().linkUrl().isEmpty()) {
             getLogger().info("No main.link-url set - the waiting room only sees whether the main server is up.");
         } else if (settings.main().linkKey().isEmpty()) {
@@ -108,6 +114,7 @@ public final class MRwaitroom extends JavaPlugin implements Listener {
         remote.stop();
         restarts.stop();
         screen.stop();
+        adminMode.stop();
         starter.shutdown();
         if (updateChecker != null) {
             updateChecker.stop();
@@ -120,6 +127,7 @@ public final class MRwaitroom extends JavaPlugin implements Listener {
         loadConfiguration();
         screen.board().clear();
         screen.start();
+        adminMode.start();
         link.start();
         display.start();
         returner.start();
@@ -207,6 +215,14 @@ public final class MRwaitroom extends JavaPlugin implements Listener {
 
     public Display display() {
         return display;
+    }
+
+    public at.marcelr.mrwaitroom.room.Rights rights() {
+        return rights;
+    }
+
+    public at.marcelr.mrwaitroom.room.AdminMode adminMode() {
+        return adminMode;
     }
 
     public Returner returner() {

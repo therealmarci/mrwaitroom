@@ -36,11 +36,23 @@ Bei einem Neustart oder Absturz zählt die Bossbar von `return.estimate-seconds`
 
 ## Zurückschicken
 - Sobald der Hauptserver **bereit** ist, läuft ein **Countdown** von `return.delay-seconds` (Standard 10 s): Bossbar „Server bereit | 0:08“, eine Chatzeile und ein Ticken in den letzten 5 Sekunden. Danach schickt der Warteraum alle **in Schüben** zurück: `return.batch-size` Spieler (5) alle `return.batch-seconds` (2 s), wer am längsten wartet zuerst.
-- **Während einer Wartung** gehen nur Spieler mit dem Wartungs-Bypass von MRadmin zurück (`mradmin.maintenance.bypass`) - die anderen warten bis zum Ende.
+- **Während einer Wartung** gehen nur Team-Mitglieder mit dem Recht „Bei Wartung auf den Server“ zurück (siehe [Rechte](#rechte-und-admin-modus)) - die anderen warten bis zum Ende.
 - **Abgewiesen?** Kommt ein Spieler `return.max-attempts`-mal (3) nicht an (Bann, Whitelist), trennt ihn der Warteraum mit einem Hinweis. Auch wer kurz hintereinander zurückprallt, zählt weiter - niemand pendelt endlos. Während einer Wartung wird nicht getrennt: Der Spieler bleibt dann einfach bis zum Ende im Warteraum.
-- Spieler mit `mrwaitroom.stay` werden nie automatisch zurückgeschickt.
-- **Besuch:** Wer über **In den Warteraum** im Admin-Menü von MRadmin kommt (Permission `mrwaitroom.visit`), bleibt, bis er selbst geht - mit dem grünen Item **Zurück zum Server** in der Hotbar (Platz 9), auch während einer Wartung.
-- Von Hand zurück nur fürs Team: Admins mit `/main`, dem grünen Item oder dem Knopf im Uhr-Menü (`mrwaitroom.main`, `mrwaitroom.visit`), Staff mit `/mrwaitroom send <spieler|all>`. Spieler können das nicht selbst anstoßen.
+- Wer das Recht „Im Warteraum bleiben“ hat, wird nie automatisch zurückgeschickt.
+- Von Hand zurück nur fürs Team: mit dem grünen Item **Zurück zum Server** (Hotbar rechts) oder dem Knopf im Uhr-Menü - wer „Im Warteraum bleiben“ oder „Bei Wartung auf den Server“ darf -, Admins mit `/main` (`mrwaitroom.main`), Staff mit `/mrwaitroom send <spieler|all>`. Spieler können das nicht selbst anstoßen.
+
+## Rechte und Admin-Modus
+Was das Team hier darf, kommt aus der Tabelle **Rechte pro Rolle** in MRadmin (`waiting-room.rights`, [Anleitung](https://mrtechnology.marcelr.at/wiki/mradmin/warteraum/#rechte-im-warteraum)) - pro Rolle Admin, Staff, Supporter je **Nein / Ja / Nur im Admin-Modus**. Der Warteraum merkt sich die Tabelle, sie gilt also auch, solange der Hauptserver aus ist. Die Rolle kommt aus `mradmin.groups.admin|staff|support` (mit LuckPerms auf einer gemeinsamen Datenbank dieselbe wie auf dem Hauptserver). Standard: Admins nur im Admin-Modus, Staff und Supporter nichts - ein Admin ohne Admin-Modus wartet wie alle.
+
+**Die Hotbar** ist symmetrisch, Plätze ohne Recht bleiben leer:
+
+| Platz | Item | Wer |
+|---|---|---|
+| links (1) | **Admin-Modus** an/aus (Rechtsklick) | Recht „Admin-Modus im Warteraum“ |
+| Mitte (`display.slot`, 5) | **Uhr** mit Zustand und Menü | alle |
+| rechts (9) | **Zurück zum Server** | Recht „Im Warteraum bleiben“ oder „Bei Wartung auf den Server“ |
+
+**Im Admin-Modus** bist du im Kreativmodus, kannst fliegen (z.B. an der Lobby bauen) und bist für Wartende unsichtbar; du siehst alle. Der Admin-Modus gilt im **ganzen Netzwerk**: Hier eingeschaltet, kommst du auf dem Hauptserver im Admin-Modus an; dort ausgeschaltet, bekommst du dein Inventar zurück. Wer auf dem Hauptserver im Admin-Modus ist, ist es auch hier.
 
 ## Der Raum
 Eine eigene Welt (`room.world`) mit der [Lobby](lobby.md) und der [Anzeigetafel](lobby.md#die-anzeigetafel). **Jeder landet beim Betreten am Spawn** - egal, wo er beim letzten Mal stand. Kein Schaden, kein Hunger, Abenteuermodus, Blöcke und Inventar gesperrt, wer runterfällt, steht wieder am Spawn. Der Chat ist aus (`room.chat`), mit `mrwaitroom.chat` darf man trotzdem schreiben. Andere Spieler lassen sich ausblenden (`room.hide-players`).

@@ -215,14 +215,8 @@ public final class Remote {
                     }
                     Bukkit.getScheduler().runTaskAsynchronously(plugin, this::report);
                 });
-                case "visit" -> Bukkit.getScheduler().runTask(plugin, () -> {
-                    try {
-                        plugin.returner().announceVisit(java.util.UUID.fromString(str(order, "player")));
-                        ok(id);
-                    } catch (IllegalArgumentException bad) {
-                        fail(id, "no player");
-                    }
-                });
+                // Older MRadmin versions announced visits; the table waiting-room.rights decides now.
+                case "visit" -> ok(id);
                 case "update" -> Bukkit.getScheduler().runTaskAsynchronously(plugin,
                         () -> update(id, str(order, "version"), str(order, "url"), str(order, "sha256")));
                 default -> fail(id, "unknown order");

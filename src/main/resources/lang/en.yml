@@ -11,7 +11,7 @@
 # ==============================================================================
 
 # Do not change - tells the plugin which texts need to be renewed on updates.
-lang-version: 7
+lang-version: 8
 
 prefix: "<dark_gray>[<aqua>Waiting room</aqua>]</dark_gray> "
 
@@ -95,7 +95,19 @@ ready-countdown: "<prefix><green>The server is ready again – going back in <wh
 back-item-name: "<green>Back to the server"
 back-item-lore:
   - "<gray>Right click: back right away"
-  - "<gray>(also during a maintenance)"
+  - "<gray>(during a maintenance only with the right for it)"
+admin-mode-item-on: "<gold>Admin mode: <green>on"
+admin-mode-item-off: "<gold>Admin mode: <red>off"
+admin-mode-item-on-lore:
+  - "<gray>Creative, flying, invisible to waiting players"
+  - "<gray>Right click: switch off"
+admin-mode-item-off-lore:
+  - "<gray>Right click: switch on"
+  - "<gray>Counts on the main server too"
+admin-mode-on: "<prefix><green>Admin mode on. <hover:show_text:'<gray>Creative mode, flying, invisible to waiting players<newline><gray>Counts on the main server too'><dark_gray>[Info]</dark_gray></hover>"
+admin-mode-off: "<prefix><gray>Admin mode off. <hover:show_text:'<gray>Off on the main server too<newline><gray>You get your inventory back there'><dark_gray>[Info]</dark_gray></hover>"
+admin-mode-denied: "<prefix><red>You may not use the admin mode here."
+main-not-now: "<prefix><gray>The server does not take you right now. <hover:show_text:'<gray>Not ready yet - or a maintenance without the right for it'><dark_gray>[Info]</dark_gray></hover>"
 join-maintenance: "<prefix><aqua>Maintenance until <white><end></white>. <hover:show_text:'<gray><white><title></white><newline><gray>About <white><time></white> left<newline><gray>Afterwards you go back by yourself.'><dark_gray>[Info]</dark_gray></hover>"
 join-maintenance-open: "<prefix><aqua>Maintenance – no end set yet. <hover:show_text:'<gray><white><title></white><newline><gray>Afterwards you go back by yourself.'><dark_gray>[Info]</dark_gray></hover>"
 alert: "<prefix><red>⚠ <white><title>"

@@ -11,7 +11,7 @@
 # ==============================================================================
 
 # Nicht ändern - sagt dem Plugin, welche Texte bei Updates erneuert werden müssen.
-lang-version: 5
+lang-version: 6
 
 prefix: "<dark_gray>[<aqua>Warteraum</aqua>]</dark_gray> "
 
@@ -26,6 +26,7 @@ item-restart: "<yellow>⏳ Neustart"
 item-restart-late: "<yellow>⏳ Neustart"
 item-stop: "<red>■ Server ist aus"
 item-crash: "<gold>↻ Server startet neu"
+item-crash-late: "<gold>↻ Server startet neu"
 item-starting: "<green>↻ Server startet"
 item-ready: "<green>➜ Zurück zum Server"
 item-returning: "<green>➜ Zurück zum Server"
@@ -37,15 +38,16 @@ item-lore:
   - "<yellow>Rechtsklick: <gray>alle Einzelheiten"
 
 # ---------------------------------------------------------------------- Bossbar
-# Oben am Bildschirm, jede Sekunde neu. Immer gleich aufgebaut: Zustand | Zeit (Grund und Einzelheiten im Uhr-Menü).
-bossbar-restart: "<yellow>Neustart</yellow> <dark_gray>|</dark_gray> <white>noch ca. <time>"
+# Oben am Bildschirm, jede Sekunde neu. Immer gleich aufgebaut: Zustand | Countdown (Grund und Einzelheiten im Uhr-Menü).
+bossbar-restart: "<yellow>Neustart</yellow> <dark_gray>|</dark_gray> <white><time>"
 bossbar-restart-late: "<yellow>Neustart</yellow> <dark_gray>|</dark_gray> <white>gleich wieder da"
-bossbar-stop: "<red>Server aus</red> <dark_gray>|</dark_gray> <white>seit <since>"
-bossbar-crash: "<gold>Server startet neu</gold> <dark_gray>|</dark_gray> <white>seit <since>"
+bossbar-stop: "<red>Server aus</red> <dark_gray>|</dark_gray> <white>Ende offen"
+bossbar-crash: "<gold>Server startet neu</gold> <dark_gray>|</dark_gray> <white><time>"
+bossbar-crash-late: "<gold>Server startet neu</gold> <dark_gray>|</dark_gray> <white>gleich wieder da"
 bossbar-starting: "<green>Server startet</green> <dark_gray>|</dark_gray> <white>gleich geht es los"
-bossbar-ready: "<green>Server bereit</green> <dark_gray>|</dark_gray> <white>zurück in <time> s"
+bossbar-ready: "<green>Server bereit</green> <dark_gray>|</dark_gray> <white><time>"
 bossbar-returning: "<green>Server bereit</green> <dark_gray>|</dark_gray> <white>es geht zurück"
-bossbar-maintenance: "<aqua>Wartung</aqua> <dark_gray>|</dark_gray> <white>bis <end>"
+bossbar-maintenance: "<aqua>Wartung</aqua> <dark_gray>|</dark_gray> <white><time>"
 bossbar-maintenance-open: "<aqua>Wartung</aqua> <dark_gray>|</dark_gray> <white>Ende offen"
 
 # --------------------------------------------------------------------- Menü
@@ -58,7 +60,7 @@ menu-time-name: "<aqua>Zeit"
 menu-time-lore:
   - "<gray>Weg seit: <white><since>"
   - "<gray>Noch ca.: <white><time>"
-  - "<gray>Ein Neustart dauert meist: <white><estimate>"
+  - "<gray>Countdown bei Neustarts: <white><estimate>"
 menu-maintenance-name: "<aqua>Wartung"
 menu-maintenance-lore:
   - "<white><title>"
@@ -84,7 +86,7 @@ menu-back-locked-lore:
 menu-close: "<red>Schließen"
 
 # ------------------------------------------------------------- Beim Betreten
-join-restart: "<prefix><yellow>Neustart – du kommst automatisch zurück. <hover:show_text:'<gray>Grund: <white><reason><newline><gray>Dauert meist ca. <white><estimate>'><dark_gray>[Info]</dark_gray></hover>"
+join-restart: "<prefix><yellow>Neustart – du kommst automatisch zurück. <hover:show_text:'<gray>Grund: <white><reason><newline><gray>Countdown <white><estimate></white>, oft schneller'><dark_gray>[Info]</dark_gray></hover>"
 join-stop: "<prefix><red>Der Server ist heruntergefahren. <hover:show_text:'<gray>Grund: <white><reason><newline><gray>Aus seit <white><since><newline><gray>Du kommst zurück, sobald er wieder läuft.'><dark_gray>[Info]</dark_gray></hover>"
 join-crash: "<prefix><gold>Der Server ist gerade nicht erreichbar. <hover:show_text:'<gray>Seit <white><since><newline><gray>Du kommst automatisch zurück, sobald er wieder läuft.'><dark_gray>[Info]</dark_gray></hover>"
 join-starting: "<prefix><green>Der Server startet – gleich geht es weiter."
@@ -111,7 +113,7 @@ players-only: "<prefix><red>Dieser Befehl kann nur von Spielern genutzt werden."
 player-not-found: "<prefix><red>Spieler <white><player></white> wurde nicht gefunden."
 reload-done: "<prefix><green>Konfiguration neu geladen."
 send-done: "<prefix><green><count> Spieler zum Server geschickt."
-status: "<prefix><gray>Hauptserver: <white><phase></white> <dark_gray>|</dark_gray> Wartende: <white><players></white> <hover:show_text:'<gray>Aus seit: <white><since><newline><gray>Port: <white><port><newline><gray>MRadmin: <white><link><newline><gray>Neustart dauert meist: <white><estimate>'><dark_gray>[Details]</dark_gray></hover>"
+status: "<prefix><gray>Hauptserver: <white><phase></white> <dark_gray>|</dark_gray> Wartende: <white><players></white> <hover:show_text:'<gray>Aus seit: <white><since><newline><gray>Port: <white><port><newline><gray>MRadmin: <white><link><newline><gray>Countdown bei Neustarts: <white><estimate>'><dark_gray>[Details]</dark_gray></hover>"
 status-link-none: "nicht eingerichtet"
 status-link-ok: "verbunden"
 status-link-failed: "keine Antwort (<error>)"

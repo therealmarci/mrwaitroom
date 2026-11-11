@@ -258,14 +258,9 @@ public final class MainLink {
         return last.restart().restart() ? "restart" : "stop";
     }
 
-    /** Typical length of a restart: the median of the last ones, otherwise return.estimate-seconds. */
-    synchronized long estimate() {
-        if (durations.size() < 2) {
-            return plugin.settings().back().estimateSeconds() * 1000L;
-        }
-        List<Long> sorted = new ArrayList<>(durations);
-        sorted.sort(null);
-        return sorted.get(sorted.size() / 2);
+    /** Length of the countdown of a restart: return.estimate-seconds (the server may well be back earlier). */
+    long estimate() {
+        return plugin.settings().back().estimateSeconds() * 1000L;
     }
 
     // --------------------------------------------------------------- state.yml

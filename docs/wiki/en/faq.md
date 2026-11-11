@@ -15,8 +15,8 @@ Too many wrong keys in a short time - MRadmin then slows down for a minute. Fix 
 **Players do not go back.**
 `main.server` must be the name of the main server in `velocity.toml`. `/mrwaitroom status` shows whether the main server is "ready". During a maintenance only players with the maintenance bypass go back.
 
-**The time left is off.**
-Until two restarts were measured, `return.estimate-seconds` applies. Afterwards the waiting room takes the typical length of the last 10 restarts.
+**The countdown does not fit my server.**
+On restarts it counts down from `return.estimate-seconds` (default 2 minutes). If your server usually takes longer, raise the value - players go back earlier anyway as soon as it is ready.
 
 **Does the waiting room need plugins like LuckPerms?**
 Recommended: LuckPerms and LibertyBans with the same database as the main server - see [Setting up](einrichten.md#5-permissions-and-bans-on-both-servers).

@@ -107,8 +107,8 @@ sections:
         min: 10
         max: 3600
         unit: {de: Sekunden, en: seconds}
-        name: {de: Erwartete Neustartdauer, en: Expected restart length}
-        help: {de: "Für „noch ca. …“, solange noch keine zwei Neustarts gemessen sind. Danach nimmt der Warteraum die typische Dauer der letzten 10 Neustarts.", en: "For “about … left” as long as fewer than two restarts were measured. Afterwards the waiting room takes the typical length of the last 10 restarts."}
+        name: {de: Countdown bei Neustarts, en: Countdown of restarts}
+        help: {de: "Von hier zählt die Bossbar bei einem Neustart oder Absturz des Hauptservers herunter. Ist er früher zurück, geht es früher los; dauert es länger, steht dort „gleich wieder da“.", en: "The bossbar counts down from here on a restart or crash of the main server. If it is back earlier, players go back earlier; if it takes longer, it says “back in a moment”."}
 
   - id: room
     name: {de: Raum, en: Room}

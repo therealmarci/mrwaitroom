@@ -30,7 +30,7 @@ public final class MRwaitroom extends JavaPlugin implements Listener {
     private FileConfiguration config;
     private Settings settings;
     // lang-version 2: the clock keeps its name (the countdown moved to the action bar).
-    private final Messages messages = new Messages(5, Map.of(2, Set.of("item-restart", "item-restart-late", "item-stop",
+    private final Messages messages = new Messages(6, Map.of(2, Set.of("item-restart", "item-restart-late", "item-stop",
             "item-crash", "item-starting", "item-ready", "item-maintenance", "item-maintenance-open"),
             // 3: the countdown is in the bossbar, the clock opens a menu.
             3, Set.of("item-lore", "bossbar-restart", "bossbar-stop", "bossbar-crash", "bossbar-starting",
@@ -39,7 +39,10 @@ public final class MRwaitroom extends JavaPlugin implements Listener {
             4, Set.of("bossbar-ready"),
             // 5: the bossbar in one simple layout - state | time.
             5, Set.of("bossbar-restart", "bossbar-restart-late", "bossbar-stop", "bossbar-crash", "bossbar-starting",
-                    "bossbar-ready", "bossbar-returning", "bossbar-maintenance", "bossbar-maintenance-open")));
+                    "bossbar-ready", "bossbar-returning", "bossbar-maintenance", "bossbar-maintenance-open"),
+            // 6: countdowns instead of times.
+            6, Set.of("bossbar-restart", "bossbar-stop", "bossbar-crash", "bossbar-ready", "bossbar-maintenance",
+                    "status", "join-restart", "menu-time-lore")));
     private final MainLink link = new MainLink(this);
     private final Room room = new Room(this);
     private final Display display = new Display(this);

@@ -15,8 +15,8 @@ In der `velocity.toml` muss `bungee-plugin-message-channel = true` stehen, und d
 **Spieler kommen nicht zurück.**
 `main.server` muss der Name des Hauptservers in der `velocity.toml` sein. `/mrwaitroom status` zeigt, ob der Hauptserver „bereit“ ist. Während einer Wartung gehen nur Spieler mit Wartungs-Bypass zurück.
 
-**Die Restzeit stimmt nicht.**
-Bis zwei Neustarts gemessen sind, gilt `return.estimate-seconds`. Danach nimmt der Warteraum die typische Dauer der letzten 10 Neustarts.
+**Der Countdown passt nicht zu meinem Server.**
+Er zählt bei Neustarts von `return.estimate-seconds` herunter (Standard 2 Minuten). Startet dein Server meist länger, den Wert erhöhen - früher zurück geht es ohnehin, sobald er bereit ist.
 
 **Braucht der Warteraum eigene Plugins wie LuckPerms?**
 Empfohlen: LuckPerms und LibertyBans mit derselben Datenbank wie der Hauptserver - siehe [Einrichten](einrichten.md#5-rechte-und-sperren-auf-beiden-servern).

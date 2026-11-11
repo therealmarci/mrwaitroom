@@ -4,9 +4,8 @@
 
 ## Was kann MRwaitroom?
 - **Warteraum** auf einem zweiten, kleinen Paper-Server: leere Welt mit Plattform, kein Schaden, kein Hunger, Chat aus.
-- **Restzeit im Blick:** Die Bossbar zeigt dauerhaft, wie lange es noch dauert und warum („Neustart · noch ca. 0:40“, „Wartung bis 18:00“), die Uhr in der Hand öffnet ein Menü mit allen Einzelheiten.
+- **Restzeit im Blick:** Die Bossbar zeigt dauerhaft, wie lange es noch dauert und warum („Neustart | 1:42“, „Wartung | 1:20:00“), die Uhr in der Hand öffnet ein Menü mit allen Einzelheiten.
 - **Automatisch zurück:** Sobald der Hauptserver bereit ist, schickt der Warteraum alle in kleinen Schüben zurück. Bei Wartungen nur, wer den Wartungs-Bypass hat.
-- **Lernt mit:** Die Restzeit schätzt er aus der Dauer der letzten Neustarts.
 - **Mit MRadmin noch besser:** MRadmin schickt die Spieler vor dem Neustart rüber, statt dass sie fliegen, und meldet Grund, Countdown, Wartung und Warnungen. Ohne MRadmin sieht der Warteraum nur, ob der Hauptserver läuft.
 - **Xaero-freundlich:** eigene Karten-ID, damit Xaero's Minimap die leere Warteraum-Welt nicht über die Karte des Hauptservers zeichnet.
 

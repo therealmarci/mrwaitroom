@@ -7,7 +7,7 @@ MRwaitroom läuft **allein**, die beiden Plugins kennen sich nicht: MRadmin lief
 | Spieler vor dem Neustart in den Warteraum | – (sie fliegen; bei Abstürzen hilft Velocity) | ✅ kurz vor dem Herunterfahren |
 | Bei Wartung in den Warteraum statt Kick | – | ✅ |
 | Grund des Neustarts | – | ✅ |
-| Restzeit | aus den gemessenen Ausfällen | ✅ aus den gemessenen Neustarts |
+| Countdown | 2:00 bei jedem Ausfall | ✅ 2:00 bei Neustarts, bei Wartung bis zu ihrem Ende |
 | Wartung mit Ende anzeigen, Bypass beachten | – | ✅ |
 | Warnungen aus „Neuigkeiten“ | – | ✅ |
 | „Bereit“ erst, wenn der Server fertig gestartet ist | sobald der Port antwortet | ✅ |

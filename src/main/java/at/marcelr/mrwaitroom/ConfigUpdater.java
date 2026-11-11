@@ -22,7 +22,7 @@ import java.util.logging.Level;
  */
 public final class ConfigUpdater {
 
-    public static final int CURRENT_VERSION = 4;
+    public static final int CURRENT_VERSION = 5;
     public static final String BOM = "﻿";
     /** Values whose default changed; the new default replaces the old value (none yet). */
     private static final Set<String> REPLACED_KEYS = Set.of();
@@ -72,6 +72,10 @@ public final class ConfigUpdater {
             // v4: the wait before going back became a visible countdown of 10 seconds (old default 5).
             if (version < 4 && existing.getInt("return.delay-seconds", 5) == 5) {
                 template.set("return.delay-seconds", 10);
+            }
+            // v5: a fixed restart countdown of 2 minutes instead of the learned length (old default 90).
+            if (version < 5 && existing.getInt("return.estimate-seconds", 90) == 90) {
+                template.set("return.estimate-seconds", 120);
             }
             template.set("config-version", CURRENT_VERSION);
             // Keep long values on one line instead of folding them.

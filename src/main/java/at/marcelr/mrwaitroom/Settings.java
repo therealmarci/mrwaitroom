@@ -100,7 +100,7 @@ public record Settings(
                 Math.clamp(c.getInt("return.batch-size", 5), 1, 100),
                 Math.clamp(c.getInt("return.batch-seconds", 2), 1, 60),
                 Math.clamp(c.getInt("return.max-attempts", 3), 1, 20),
-                Math.clamp(c.getInt("return.estimate-seconds", 90), 10, 3600));
+                Math.clamp(c.getInt("return.estimate-seconds", 120), 10, 3600));
 
         String world = c.getString("room.world", "waitroom").trim();
         RoomSettings room = new RoomSettings(world.isEmpty() ? "waitroom" : world, c.getBoolean("room.platform", true),

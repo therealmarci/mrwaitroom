@@ -7,7 +7,7 @@ MRwaitroom runs **on its own**, the two plugins do not know each other: MRadmin 
 | Players to the waiting room before a restart | – (they are kicked; on crashes Velocity helps) | ✅ right before going down |
 | Waiting room instead of a kick during maintenance | – | ✅ |
 | Reason of the restart | – | ✅ |
-| Time left | from the measured downtimes | ✅ from the measured restarts |
+| Countdown | 2:00 on every outage | ✅ 2:00 on restarts, during maintenance until its end |
 | Show maintenance with its end, respect the bypass | – | ✅ |
 | Warnings from "News" | – | ✅ |
 | "Ready" only once the server has fully started | as soon as the port answers | ✅ |

@@ -8,7 +8,7 @@
 # ==============================================================================
 
 # Do not change - tells the plugin which settings need to be carried over on updates.
-config-version: 4
+config-version: 5
 
 
 # ------------------------------------------------------------------------------
@@ -54,9 +54,9 @@ return:
   batch-seconds: 2
   # Whoever could not get back this many times is disconnected (e.g. banned or not on the whitelist there).
   max-attempts: 3
-  # Expected length of a restart until enough restarts were measured (seconds). Afterwards the waiting room uses
-  # the typical length of the last restarts.
-  estimate-seconds: 90
+  # Countdown of a restart in the bossbar (seconds). The main server may well be back earlier - then players go back
+  # right away (after the countdown above).
+  estimate-seconds: 120
 
 
 # ------------------------------------------------------------------------------

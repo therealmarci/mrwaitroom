@@ -265,13 +265,19 @@ public final class Display implements Listener {
                         : new Line("restart-late", "join-restart", 1f, tags(v));
             }
             case STOP -> new Line("stop", "join-stop", 1f, tags(v));
-            case CRASH -> new Line("crash", "join-crash", 1f, tags(v));
+            case CRASH -> {
+                long left = view.estimate() - since;
+                v.put("time", clock(Math.max(0, left)));
+                float progress = (float) Math.clamp((double) since / Math.max(1, view.estimate()), 0, 1);
+                yield left > 0 ? new Line("crash", "join-crash", progress, tags(v))
+                        : new Line("crash-late", "join-crash", 1f, tags(v));
+            }
             case STARTING -> new Line("starting", "join-starting", 1f, tags(v));
             case READY -> {
                 // Countdown before going back (return.delay-seconds).
                 long delay = plugin.settings().back().delaySeconds() * 1000L;
                 long left = view.readySince() == 0 ? 0 : view.readySince() + delay - now;
-                v.put("time", String.valueOf(Math.max(0, (left + 999) / 1000)));
+                v.put("time", clock(Math.max(0, left) + 999));
                 yield left > 0
                         ? new Line("ready", "join-ready", (float) Math.clamp(1 - (double) left / Math.max(1, delay), 0, 1), tags(v))
                         : new Line("returning", "join-ready", 1f, tags(v));

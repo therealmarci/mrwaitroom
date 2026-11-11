@@ -4,9 +4,8 @@
 
 ## What can MRwaitroom do?
 - **Waiting room** on a second, small Paper server: empty world with a platform, no damage, no hunger, chat off.
-- **Time left at a glance:** the bossbar always shows how long it takes and why ("Restart · about 0:40 left", "Maintenance until 18:00"), the clock in your hand opens a menu with all details.
+- **Time left at a glance:** the bossbar always shows how long it takes and why ("Restart | 1:42", "Maintenance | 1:20:00"), the clock in your hand opens a menu with all details.
 - **Back by themselves:** as soon as the main server is ready, the waiting room sends everyone back in small batches. During maintenance only those with the maintenance bypass.
-- **Learns along:** it estimates the time left from the length of the last restarts.
 - **Even better with MRadmin:** MRadmin sends players over before a restart instead of letting them be kicked, and reports reason, countdown, maintenance and warnings. Without MRadmin the waiting room only sees whether the main server is up.
 - **Xaero-friendly:** its own map ID, so Xaero's Minimap does not draw the empty waiting room over the map of the main server.
 

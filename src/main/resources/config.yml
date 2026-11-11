@@ -8,7 +8,7 @@
 # ==============================================================================
 
 # Do not change - tells the plugin which settings need to be carried over on updates.
-config-version: 1
+config-version: 2
 
 
 # ------------------------------------------------------------------------------
@@ -116,3 +116,7 @@ updates:
   interval-hours: 6
   # Notify players with "mrwaitroom.admin.update" when they join the server.
   notify-on-join: true
+  # Updates ordered in MRadmin (page Plugins on the main server) are downloaded by the waiting room itself. Restart to
+  # put them in as soon as nobody waits and the main server is ready. Needs something that starts the server again
+  # (e.g. systemd with Restart=always) - otherwise the update waits for your next restart.
+  restart-when-idle: true

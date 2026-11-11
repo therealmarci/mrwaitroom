@@ -139,6 +139,9 @@ public final class MainLink {
         if (response.statusCode() != 200) {
             throw new IOException("HTTP " + response.statusCode());
         }
+        // Orders for the management from MRadmin (configuration, updates) come with the answer.
+        var json = com.google.gson.JsonParser.parseString(response.body()).getAsJsonObject();
+        plugin.remote().take(json.get("orders"));
         return MainStatus.parse(response.body());
     }
 

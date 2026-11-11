@@ -43,8 +43,9 @@ public record Settings(
     public record XaeroSettings(boolean enabled, int worldId) {
     }
 
+    /** @param restartWhenIdle restart for an update from MRadmin as soon as nobody waits and the main server is ready */
     public record UpdateSettings(boolean enabled, String source, boolean includePrereleases,
-                                 int intervalHours, boolean notifyOnJoin) {
+                                 int intervalHours, boolean notifyOnJoin, boolean restartWhenIdle) {
     }
 
     public static Settings from(FileConfiguration c, Logger log) {
@@ -116,7 +117,8 @@ public record Settings(
                 c.getString("updates.source", "github"),
                 c.getBoolean("updates.beta", false),
                 Math.max(1, c.getInt("updates.interval-hours", 6)),
-                c.getBoolean("updates.notify-on-join", true));
+                c.getBoolean("updates.notify-on-join", true),
+                c.getBoolean("updates.restart-when-idle", true));
 
         return new Settings(zone, main, back, room, display, xaero, update);
     }

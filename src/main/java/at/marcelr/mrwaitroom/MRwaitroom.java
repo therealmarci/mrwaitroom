@@ -40,6 +40,7 @@ public final class MRwaitroom extends JavaPlugin implements Listener {
     private final Display display = new Display(this);
     private final Returner returner = new Returner(this);
     private final XaeroWorldId xaero = new XaeroWorldId(this);
+    private final at.marcelr.mrwaitroom.link.Remote remote = new at.marcelr.mrwaitroom.link.Remote(this);
     private UpdateChecker updateChecker;
 
     @Override
@@ -72,6 +73,7 @@ public final class MRwaitroom extends JavaPlugin implements Listener {
         display.start();
         returner.start();
         xaero.start();
+        remote.start();
         if (settings.main().linkUrl().isEmpty()) {
             getLogger().info("No main.link-url set - the waiting room only sees whether the main server is up.");
         } else if (settings.main().linkKey().isEmpty()) {
@@ -84,6 +86,7 @@ public final class MRwaitroom extends JavaPlugin implements Listener {
         link.stop();
         display.stop();
         returner.stop();
+        remote.stop();
         if (updateChecker != null) {
             updateChecker.stop();
         }
@@ -96,6 +99,7 @@ public final class MRwaitroom extends JavaPlugin implements Listener {
         link.start();
         display.start();
         returner.start();
+        remote.start();
         updateChecker.start();
     }
 
@@ -145,6 +149,16 @@ public final class MRwaitroom extends JavaPlugin implements Listener {
 
     public Room room() {
         return room;
+    }
+
+    /** Management from MRadmin (reports, orders). */
+    public at.marcelr.mrwaitroom.link.Remote remote() {
+        return remote;
+    }
+
+    /** The plugin JAR (for an update into the update folder under the same name). */
+    public java.io.File jarFile() {
+        return getFile();
     }
 
     public Display display() {

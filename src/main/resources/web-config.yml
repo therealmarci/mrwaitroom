@@ -213,3 +213,7 @@ sections:
         when: updates.enabled
         name: {de: Team beim Betreten informieren, en: Tell the team on join}
         help: {de: Spieler mit mrwaitroom.admin.update bekommen einen Hinweis., en: Players with mrwaitroom.admin.update get a notice.}
+      - key: updates.restart-when-idle
+        type: bool
+        name: {de: Update bei Leerlauf einspielen, en: Put in updates when idle}
+        help: {de: "In MRadmin bestellte Updates: Neustart, sobald niemand wartet und der Hauptserver bereit ist. Braucht z.B. systemd mit Restart=always.", en: "Updates ordered in MRadmin: restart as soon as nobody waits and the main server is ready. Needs e.g. systemd with Restart=always."}

@@ -10,6 +10,8 @@ name: Release
 on:
   push:
     tags: ['mc*-STA-*', 'mc*-BET-*']
+  # By hand on a tag ("Run workflow", choose the tag) - in this repository pushes do not start workflows.
+  workflow_dispatch:
 
 permissions:
   contents: read

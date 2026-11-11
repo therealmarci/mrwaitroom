@@ -54,9 +54,10 @@ public final class MainLink {
      * @param estimate   expected length of a restart (ms)
      * @param linkOk     the last question to MRadmin got an answer
      * @param linkError  why the last question failed ("" if it did not)
+     * @param checkedAt  when the main server was last checked (epoch ms)
      */
     public record View(Phase phase, MainStatus status, long downSince, long readySince, long estimate, boolean linkOk,
-                       boolean portOpen, String linkError) {
+                       boolean portOpen, String linkError, long checkedAt) {
     }
 
     private static final int MAX_DURATIONS = 10;
@@ -85,7 +86,7 @@ public final class MainLink {
     public MainLink(MRwaitroom plugin) {
         this.plugin = plugin;
         this.file = new File(plugin.getDataFolder(), "state.yml");
-        this.view = new View(Phase.CRASH, null, System.currentTimeMillis(), 0, 90_000L, false, false, "");
+        this.view = new View(Phase.CRASH, null, System.currentTimeMillis(), 0, 90_000L, false, false, "", 0);
     }
 
     public View view() {
@@ -211,7 +212,7 @@ public final class MainLink {
         }
         up = isUp;
         ready = isReady;
-        view = new View(phase(now), status, downSince, readySince, estimate(), linkOk, portOpen, linkError);
+        view = new View(phase(now), status, downSince, readySince, estimate(), linkOk, portOpen, linkError, now);
         if (changed) {
             save();
         }

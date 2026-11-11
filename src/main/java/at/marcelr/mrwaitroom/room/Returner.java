@@ -34,6 +34,8 @@ public final class Returner implements Listener {
     private static final String CHANNEL = "BungeeCord";
     /** A try counts as failed if the player is still here this long after it. */
     private static final long TRY_MILLIS = 10_000L;
+    /** Nobody is sent back if the main server goes down within this time. */
+    private static final long RESTART_SOON = 30_000L;
 
     private record Waiting(long since, int tries, long lastTry) {
     }
@@ -77,6 +79,11 @@ public final class Returner implements Listener {
 
     /** Whether the player may go back right now (main server ready, or in maintenance with the bypass). */
     public boolean mayGo(Player player, MainLink.View view) {
+        // A restart is about to come: stay (otherwise players bounce back and forth right before it).
+        var restart = view.status() == null ? null : view.status().restart();
+        if (restart != null && restart.at() - System.currentTimeMillis() < RESTART_SOON) {
+            return false;
+        }
         return switch (view.phase()) {
             case READY -> true;
             case MAINTENANCE -> view.status() != null && view.status().maintenance() != null
@@ -96,7 +103,10 @@ public final class Returner implements Listener {
         List<Player> due = new ArrayList<>();
         for (Player player : Bukkit.getOnlinePlayers()) {
             Waiting w = waiting.get(player.getUniqueId());
-            if (w == null || player.hasPermission(PERM_STAY) || !mayGo(player, view) || now - w.lastTry() < TRY_MILLIS) {
+            // Only with an answer from after the arrival: the main server may just have sent the player here
+            // because it goes down - the last answer before does not know that yet.
+            if (w == null || view.checkedAt() <= w.since() || player.hasPermission(PERM_STAY) || !mayGo(player, view)
+                    || now - w.lastTry() < TRY_MILLIS) {
                 continue;
             }
             if (w.tries() >= s.maxAttempts()) {

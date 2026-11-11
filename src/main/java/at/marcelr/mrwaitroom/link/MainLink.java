@@ -219,18 +219,28 @@ public final class MainLink {
     }
 
     private Phase phase(long now) {
-        boolean maintenance = status != null && status.maintenanceActive();
+        // During a maintenance it stays "maintenance" - also while the main server restarts or is off meanwhile
+        // (that is part of the maintenance). Once its end has passed, the normal display applies again.
+        if (maintenance(status, now)) {
+            return Phase.MAINTENANCE;
+        }
         if (ready) {
-            return maintenance ? Phase.MAINTENANCE : Phase.READY;
+            return Phase.READY;
         }
         if (up) {
             return Phase.STARTING;
         }
         return switch (downKind) {
             case "restart" -> Phase.RESTART;
-            case "stop" -> maintenance ? Phase.MAINTENANCE : Phase.STOP;
+            case "stop" -> Phase.STOP;
             default -> Phase.CRASH;
         };
+    }
+
+    /** A maintenance runs (as last reported) and its end has not passed. */
+    static boolean maintenance(MainStatus status, long now) {
+        return status != null && status.maintenanceActive()
+                && (status.maintenance().end() <= 0 || status.maintenance().end() > now);
     }
 
     /** Why the main server went down, from the last answer before. */

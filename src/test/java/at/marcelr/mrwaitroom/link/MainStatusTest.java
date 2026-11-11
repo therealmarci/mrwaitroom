@@ -63,4 +63,16 @@ class MainStatusTest {
         assertEquals("crash", MainLink.kindOf(MainStatus.parse("{}"), now));
         assertEquals("crash", MainLink.kindOf(null, now));
     }
+
+    @Test
+    void maintenanceWinsUntilItsEnd() {
+        MainStatus m = MainStatus.parse("{\"maintenance\":{\"active\":true,\"end\":200000}}");
+        assertTrue(MainLink.maintenance(m, 100_000));
+        // End passed (e.g. the main server stayed down longer): normal display again.
+        assertFalse(MainLink.maintenance(m, 300_000));
+        // Open end.
+        assertTrue(MainLink.maintenance(MainStatus.parse("{\"maintenance\":{\"active\":true}}"), 300_000));
+        assertFalse(MainLink.maintenance(MainStatus.parse("{\"maintenance\":{\"active\":false,\"end\":200000}}"), 100_000));
+        assertFalse(MainLink.maintenance(null, 100_000));
+    }
 }

@@ -3,19 +3,22 @@
 ## Was der Warteraum über den Hauptserver weiß
 Alle paar Sekunden (`main.poll-seconds`) prüft der Warteraum, ob der Minecraft-Port des Hauptservers antwortet, und fragt MRadmin dort, was los ist. Die letzte Antwort von MRadmin hebt er auf (`plugins/MRwaitroom/state.yml`), damit Grund, Countdown und Wartungszeiten auch dann noch da sind, wenn der Hauptserver aus ist - auch nach einem Neustart des Warteraums selbst.
 
-| Zustand | Wann | Anzeige (Item) |
+| Zustand | Wann | Zeile über der Hotbar |
 |---|---|---|
-| **Neustart** | MRadmin-Countdown ist abgelaufen, Server weg | „⏳ Neustart · noch ca. 0:40“, danach „Gleich wieder da · seit …“ |
-| **Heruntergefahren** | `/mradmin stop` ist abgelaufen | „■ Server ist aus · seit …“ |
-| **Nicht erreichbar** | Server weg ohne Ankündigung (Absturz, `/stop`) | „↻ Server startet neu · seit …“ |
-| **Startet** | Port antwortet, MRadmin meldet noch nicht „bereit“ | „↻ Server startet · gleich geht es los“ |
-| **Wartung** | Server läuft, MRadmin meldet eine laufende Wartung | „🛠 Wartung · bis 18:00“ bzw. „Ende offen“ |
-| **Bereit** | MRadmin meldet „bereit“ | „➜ Zurück zum Server …“ |
+| **Neustart** | MRadmin-Countdown ist abgelaufen, Server weg | „Neustart · noch ca. 0:40“, danach „Gleich wieder da · seit …“ |
+| **Heruntergefahren** | `/mradmin stop` ist abgelaufen | „Server ist aus · seit …“ |
+| **Nicht erreichbar** | Server weg ohne Ankündigung (Absturz, `/stop`) | „Server startet neu · seit …“ |
+| **Startet** | Port antwortet, MRadmin meldet noch nicht „bereit“ | „Server startet · gleich geht es los“ |
+| **Wartung** | MRadmin meldet eine laufende Wartung - auch wenn der Server währenddessen neu startet oder aus ist | „Wartung · noch ca. 1:20:00“ bzw. „Ende offen“ |
+| **Bereit** | MRadmin meldet „bereit“ | „Zurück zum Server …“ |
 
 Dazu die **Bossbar** (`display.bossbar`) mit Grund bzw. Wartungstitel und Fortschritt, und **beim Betreten** eine kurze Chatzeile mit Einzelheiten im Hover sowie die Warnungen, die in MRadmin unter **Neuigkeiten** gerade aktiv sind.
 
 > [!NOTE]
-> Das Item bekommt jede Sekunde einen neuen Namen - so bleibt der Name dauerhaft über der Hotbar sichtbar. Es bleibt ausgewählt (`display.slot`), das Inventar ist gesperrt.
+Dazu die **Uhr in der Hotbar** (`display.item`, bleibt ausgewählt auf `display.slot`) mit dem Zustand im Namen, z.B. „⏳ Neustart“ oder „🛠 Wartung bis 18:00“.
+
+> [!NOTE]
+> Der Name der Uhr ändert sich nur, wenn sich der Zustand ändert - jede Änderung am Item in der Hand spielt im Spiel eine Animation ab. Der Countdown läuft deshalb in der Zeile darüber (Actionbar). Das Inventar ist gesperrt.
 
 ## Restzeit
 Die Restzeit eines Neustarts schätzt der Warteraum aus der **typischen Dauer der letzten Neustarts** (Median der letzten 10, gemessen vom Herunterfahren bis „bereit“). Bis zwei Neustarts gemessen sind, gilt `return.estimate-seconds` (Standard 90 s). Stopps zählen nicht mit.

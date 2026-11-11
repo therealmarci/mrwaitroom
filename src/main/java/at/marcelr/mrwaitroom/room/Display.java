@@ -35,8 +35,9 @@ import static at.marcelr.mrwaitroom.Messages.tag;
 /**
  * What the waiting players see, renewed every second, each player in their own language:
  * <ul>
- *     <li>an item in the hotbar whose name says how long it takes - a new name every second keeps it visible above
- *     the hotbar,</li>
+ *     <li>an item in the hotbar (selected) whose name says what is going on - it only changes when the situation
+ *     changes: every change makes the game play the "take into hand" animation,</li>
+ *     <li>the countdown in the action bar right above the hotbar, every second,</li>
  *     <li>a bossbar with the reason and the progress (display.bossbar),</li>
  *     <li>on joining one chat line with the details in a hover, plus the warnings that are on.</li>
  * </ul>
@@ -108,21 +109,21 @@ public final class Display implements Listener {
         Settings.DisplaySettings s = plugin.settings().display();
         Line line = line(view, now);
         if (player.getGameMode() != GameMode.CREATIVE) {
-            ItemStack item = player.getInventory().getItem(s.slot());
-            if (item == null || item.getType() != s.item()) {
-                item = new ItemStack(s.item());
-            }
+            ItemStack item = new ItemStack(s.item());
             ItemMeta meta = item.getItemMeta();
             meta.itemName(m.as(player, () -> m.get(line.item(), line.tags())).decoration(TextDecoration.ITALIC, false));
             meta.lore(m.as(player, () -> m.lore("item-lore", line.tags())));
             item.setItemMeta(meta);
-            // The amount shows the minutes left (1-64), as a second hint.
-            item.setAmount((int) Math.clamp(line.minutes(), 1, 64));
-            player.getInventory().setItem(s.slot(), item);
+            // Only when it differs: setting the same item again would replay the "take into hand" animation.
+            ItemStack current = player.getInventory().getItem(s.slot());
+            if (current == null || !current.isSimilar(item) || current.getAmount() != 1) {
+                player.getInventory().setItem(s.slot(), item);
+            }
             if (player.getInventory().getHeldItemSlot() != s.slot()) {
                 player.getInventory().setHeldItemSlot(s.slot());
             }
         }
+        player.sendActionBar(m.as(player, () -> m.get(line.actionbar(), line.tags())));
         if (!s.bossbar()) {
             BossBar old = bars.remove(player.getUniqueId());
             if (old != null) {
@@ -164,9 +165,13 @@ public final class Display implements Listener {
     /**
      * Which texts and values fit the phase.
      *
-     * @param minutes minutes left (for the amount of the item), at least 1
+     * @param item      name of the item - must not change every second (see the class comment)
+     * @param actionbar the live line above the hotbar (countdown)
      */
-    record Line(String item, String bar, String join, float progress, long minutes, TagResolver[] tags) {
+    record Line(String item, String actionbar, String bar, String join, float progress, TagResolver[] tags) {
+        Line(String key, String bar, String join, float progress, TagResolver[] tags) {
+            this("item-" + key, "actionbar-" + key, bar, join, progress, tags);
+        }
     }
 
     Line line(MainLink.View view, long now) {
@@ -183,36 +188,31 @@ public final class Display implements Listener {
                 tags.add(tag("time", clock(Math.max(0, left))));
                 float progress = (float) Math.clamp((double) since / Math.max(1, view.estimate()), 0, 1);
                 yield left > 0
-                        ? new Line("item-restart", "bossbar-restart", "join-restart", progress, minutes(left), arr(tags))
-                        : new Line("item-restart-late", "bossbar-restart", "join-restart", 1f, 1, arr(tags));
+                        ? new Line("restart", "bossbar-restart", "join-restart", progress, arr(tags))
+                        : new Line("restart-late", "bossbar-restart", "join-restart", 1f, arr(tags));
             }
-            case STOP -> new Line("item-stop", "bossbar-stop", "join-stop", 1f, 1, arr(tags));
-            case CRASH -> new Line("item-crash", "bossbar-crash", "join-crash", 1f, 1, arr(tags));
-            case STARTING -> new Line("item-starting", "bossbar-starting", "join-starting", 1f, 1, arr(tags));
-            case READY -> new Line("item-ready", "bossbar-ready", "join-ready", 1f, 1, arr(tags));
+            case STOP -> new Line("stop", "bossbar-stop", "join-stop", 1f, arr(tags));
+            case CRASH -> new Line("crash", "bossbar-crash", "join-crash", 1f, arr(tags));
+            case STARTING -> new Line("starting", "bossbar-starting", "join-starting", 1f, arr(tags));
+            case READY -> new Line("ready", "bossbar-ready", "join-ready", 1f, arr(tags));
             case MAINTENANCE -> {
                 MainStatus.Maintenance mt = status == null ? null : status.maintenance();
                 String title = mt == null || mt.title().isEmpty() ? plugin.messages().plain("maintenance-no-title") : mt.title();
                 tags.add(tag("title", title));
                 if (mt == null || mt.end() <= 0) {
-                    yield new Line("item-maintenance-open", "bossbar-maintenance", "join-maintenance-open", 1f, 1, arr(tags));
+                    yield new Line("maintenance-open", "bossbar-maintenance", "join-maintenance-open", 1f, arr(tags));
                 }
                 tags.add(tag("end", at(mt.end(), now)));
                 tags.add(tag("time", clock(Math.max(0, mt.end() - now))));
                 long start = mt.start() > 0 ? mt.start() : now;
                 float progress = (float) Math.clamp((double) (now - start) / Math.max(1, mt.end() - start), 0, 1);
-                yield new Line("item-maintenance", "bossbar-maintenance", "join-maintenance", progress,
-                        minutes(mt.end() - now), arr(tags));
+                yield new Line("maintenance", "bossbar-maintenance", "join-maintenance", progress, arr(tags));
             }
         };
     }
 
     private static TagResolver[] arr(List<TagResolver> tags) {
         return tags.toArray(TagResolver[]::new);
-    }
-
-    private static long minutes(long millis) {
-        return Math.max(1, (millis + 59_999) / 60_000);
     }
 
     /** 0:42, 12:05, 1:02:33. */

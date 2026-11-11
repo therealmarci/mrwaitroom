@@ -3,7 +3,7 @@
 Startet der Server neu oder läuft eine Wartung, landest du im **Warteraum** - du fliegst also nicht raus.
 
 ## Was du siehst
-- **Das Item in deiner Hotbar** sagt dir, wie lange es noch dauert, z.B. „⏳ Neustart · noch ca. 0:40“ oder „🛠 Wartung · bis 18:00“. Die Anzahl zeigt die Minuten.
+- **Über deiner Hotbar** steht, wie lange es noch dauert, z.B. „Neustart · noch ca. 0:40“. Die **Uhr in der Hand** sagt, was los ist („⏳ Neustart“, „🛠 Wartung bis 18:00“).
 - **Die Bossbar** oben nennt den Grund und füllt sich bis zur erwarteten Rückkehr.
 - **Beim Betreten** eine Zeile im Chat - fahr mit der Maus über **[Info]** für Einzelheiten.
 

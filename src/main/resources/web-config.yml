@@ -142,7 +142,7 @@ sections:
         type: string
         max-length: 64
         name: {de: Item, en: Item}
-        help: {de: "Zeigt im Namen, wie lange es noch dauert, z.B. CLOCK.", en: "Shows in its name how long it takes, e.g. CLOCK."}
+        help: {de: "Item in der Hand mit dem Zustand im Namen, z.B. CLOCK. Der Countdown steht darüber.", en: "Item in the hand with the state in its name, e.g. CLOCK. The countdown is above it."}
       - key: display.slot
         type: int
         min: 0

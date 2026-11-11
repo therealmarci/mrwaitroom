@@ -18,6 +18,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.security.SecureRandom;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * Main class of MRwaitroom: a waiting room behind a proxy. Players wait here while the main server restarts, is
@@ -28,7 +29,9 @@ public final class MRwaitroom extends JavaPlugin implements Listener {
 
     private FileConfiguration config;
     private Settings settings;
-    private final Messages messages = new Messages(1, Map.of());
+    // lang-version 2: the clock keeps its name (the countdown moved to the action bar).
+    private final Messages messages = new Messages(2, Map.of(2, Set.of("item-restart", "item-restart-late", "item-stop",
+            "item-crash", "item-starting", "item-ready", "item-maintenance", "item-maintenance-open")));
     private final MainLink link = new MainLink(this);
     private final Room room = new Room(this);
     private final Display display = new Display(this);

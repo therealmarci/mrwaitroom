@@ -13,7 +13,7 @@
 
 ## Was kann MRwaitroom?
 - **Warteraum** statt Kick: leere Welt mit Plattform, kein Schaden, kein Hunger.
-- **Restzeit im Blick:** Item in der Hotbar („Neustart · noch ca. 0:40“) und Bossbar mit Grund.
+- **Restzeit im Blick:** „Neustart · noch ca. 0:40“ über der Hotbar, Uhr in der Hand, Bossbar mit Grund.
 - **Automatisch zurück** in kleinen Schüben, sobald der Hauptserver bereit ist - bei Wartung nur mit Bypass.
 - **Mit MRadmin:** Spieler wechseln vor dem Neustart selbst hinüber, Grund, Countdown, Wartung und Warnungen inklusive.
 - **Xaero-freundlich:** eigene Karten-ID, die Karte des Hauptservers bleibt sauber.

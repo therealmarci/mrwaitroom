@@ -11,7 +11,7 @@
 # ==============================================================================
 
 # Nicht ändern - sagt dem Plugin, welche Texte bei Updates erneuert werden müssen.
-lang-version: 1
+lang-version: 2
 
 prefix: "<dark_gray>[<aqua>Warteraum</aqua>]</dark_gray> "
 
@@ -21,18 +21,30 @@ server-name: "der Server"
 maintenance-no-title: "Wartungsarbeiten"
 
 # ------------------------------------------------------------- Item in der Hotbar
-item-restart: "<yellow>⏳ Neustart <gray>· noch ca. <white><time>"
-item-restart-late: "<yellow>⏳ Gleich wieder da <gray>· seit <white><since>"
-item-stop: "<red>■ Server ist aus <gray>· seit <white><since>"
-item-crash: "<gold>↻ Server startet neu <gray>· seit <white><since>"
-item-starting: "<green>↻ Server startet <gray>· gleich geht es los"
-item-ready: "<green>➜ Zurück zum Server …"
-item-maintenance: "<aqua>🛠 Wartung <gray>· bis <white><end>"
-item-maintenance-open: "<aqua>🛠 Wartung <gray>· Ende offen"
+# Name der Uhr - ändert sich nur, wenn sich die Lage ändert (jede Änderung spielt im Spiel eine Animation ab).
+item-restart: "<yellow>⏳ Neustart"
+item-restart-late: "<yellow>⏳ Neustart"
+item-stop: "<red>■ Server ist aus"
+item-crash: "<gold>↻ Server startet neu"
+item-starting: "<green>↻ Server startet"
+item-ready: "<green>➜ Zurück zum Server"
+item-maintenance: "<aqua>🛠 Wartung bis <white><end>"
+item-maintenance-open: "<aqua>🛠 Wartung"
 item-lore:
   - "<gray>Du wartest im Warteraum."
   - "<gray>Sobald es weitergeht, kommst du"
   - "<gray>automatisch zurück."
+
+# ---------------------------------------------------------- Actionbar (Countdown)
+# Über der Hotbar, jede Sekunde neu.
+actionbar-restart: "<yellow>Neustart <gray>· noch ca. <white><time>"
+actionbar-restart-late: "<yellow>Gleich wieder da <gray>· seit <white><since>"
+actionbar-stop: "<red>Server ist aus <gray>· seit <white><since>"
+actionbar-crash: "<gold>Server startet neu <gray>· seit <white><since>"
+actionbar-starting: "<green>Server startet <gray>· gleich geht es los"
+actionbar-ready: "<green>Zurück zum Server …"
+actionbar-maintenance: "<aqua>Wartung <gray>· noch ca. <white><time>"
+actionbar-maintenance-open: "<aqua>Wartung <gray>· Ende offen"
 
 # ---------------------------------------------------------------------- Bossbar
 bossbar-restart: "<yellow>Neustart <gray>– <white><reason>"

@@ -11,7 +11,7 @@
 # ==============================================================================
 
 # Do not change - tells the plugin which texts need to be renewed on updates.
-lang-version: 1
+lang-version: 2
 
 prefix: "<dark_gray>[<aqua>Waiting room</aqua>]</dark_gray> "
 
@@ -21,18 +21,30 @@ server-name: "the server"
 maintenance-no-title: "Maintenance"
 
 # ---------------------------------------------------------------- Hotbar item
-item-restart: "<yellow>⏳ Restart <gray>· about <white><time></white> left"
-item-restart-late: "<yellow>⏳ Back in a moment <gray>· since <white><since>"
-item-stop: "<red>■ Server is off <gray>· since <white><since>"
-item-crash: "<gold>↻ Server is restarting <gray>· since <white><since>"
-item-starting: "<green>↻ Server is starting <gray>· almost there"
-item-ready: "<green>➜ Back to the server …"
-item-maintenance: "<aqua>🛠 Maintenance <gray>· until <white><end>"
-item-maintenance-open: "<aqua>🛠 Maintenance <gray>· open end"
+# Name of the clock - only changes when the situation changes (every change plays an animation in the game).
+item-restart: "<yellow>⏳ Restart"
+item-restart-late: "<yellow>⏳ Restart"
+item-stop: "<red>■ Server is off"
+item-crash: "<gold>↻ Server is restarting"
+item-starting: "<green>↻ Server is starting"
+item-ready: "<green>➜ Back to the server"
+item-maintenance: "<aqua>🛠 Maintenance until <white><end>"
+item-maintenance-open: "<aqua>🛠 Maintenance"
 item-lore:
   - "<gray>You are in the waiting room."
   - "<gray>As soon as it goes on, you go"
   - "<gray>back by yourself."
+
+# ---------------------------------------------------------- Action bar (countdown)
+# Above the hotbar, renewed every second.
+actionbar-restart: "<yellow>Restart <gray>· about <white><time></white> left"
+actionbar-restart-late: "<yellow>Back in a moment <gray>· since <white><since>"
+actionbar-stop: "<red>Server is off <gray>· since <white><since>"
+actionbar-crash: "<gold>Server is restarting <gray>· since <white><since>"
+actionbar-starting: "<green>Server is starting <gray>· almost there"
+actionbar-ready: "<green>Back to the server …"
+actionbar-maintenance: "<aqua>Maintenance <gray>· about <white><time></white> left"
+actionbar-maintenance-open: "<aqua>Maintenance <gray>· open end"
 
 # ---------------------------------------------------------------------- Bossbar
 bossbar-restart: "<yellow>Restart <gray>– <white><reason>"

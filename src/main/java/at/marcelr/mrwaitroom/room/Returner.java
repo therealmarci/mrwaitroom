@@ -97,7 +97,8 @@ public final class Returner implements Listener {
         }
         return switch (view.phase()) {
             case READY -> true;
-            case MAINTENANCE -> view.status() != null && view.status().maintenance() != null
+            // Only while the main server is up - it may restart during the maintenance.
+            case MAINTENANCE -> view.readySince() != 0 && view.status() != null && view.status().maintenance() != null
                     && player.hasPermission(view.status().maintenance().bypass());
             default -> false;
         };

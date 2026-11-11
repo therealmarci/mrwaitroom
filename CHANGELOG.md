@@ -7,6 +7,8 @@ veröffentlicht als `mc<minecraft>-STA|BET-<version>-bu<build>` (siehe [docs/REL
 
 ## [Unveröffentlicht]
 
+## [BET-0.1.0-bu001] - 2026-11-11
+
 ### Neu
 - **Warteraum hinter einem Velocity-Proxy:** Während der Hauptserver neu startet, gestoppt ist oder in Wartung ist, warten die Spieler hier und kommen automatisch zurück, sobald er bereit ist - in Schüben (`return.batch-size`, `return.batch-seconds`), während einer Wartung nur mit Wartungs-Bypass. Wer mehrmals abgewiesen wird (Bann, Whitelist), wird getrennt (`return.max-attempts`).
 - **Restzeit im Blick:** Uhr in der Hotbar mit dem Zustand („⏳ Neustart“, „🛠 Wartung bis 18:00“, `display.item`, `display.slot`), Rechtsklick öffnet ein Menü mit Grund, Zeiten, Wartung und Warnungen; Bossbar mit Countdown, Grund und Fortschritt (`display.bossbar`, „Neustart · noch ca. 0:40“), beim Betreten eine Chatzeile mit Einzelheiten im Hover und den aktiven Warnungen. Bei Neustart und Absturz zählt ein Countdown von 2 Minuten herunter (`return.estimate-seconds`), bei Wartung bis zu ihrem Ende.

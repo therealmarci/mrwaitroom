@@ -166,6 +166,11 @@ public final class Returner implements Listener {
                     || now - w.lastTry() < TRY_MILLIS) {
                 continue;
             }
+            // During a maintenance one refusal is enough: the main server does not see the bypass the waiting room
+            // sees (other permissions or OP list) - stay until the maintenance is over instead of bouncing.
+            if (view.phase() == MainLink.Phase.MAINTENANCE && w.tries() > 0) {
+                continue;
+            }
             if (w.tries() >= s.maxAttempts()) {
                 // During a maintenance the main server keeps them out (the bypass seen here may differ, e.g. without
                 // a shared LuckPerms): stay and wait for the end. Otherwise it turned them away for good.

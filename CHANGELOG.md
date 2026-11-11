@@ -18,6 +18,7 @@ veröffentlicht als `mc<minecraft>-STA|BET-<version>-bu<build>` (siehe [docs/REL
 ### Behoben & geändert
 - **Während einer Wartung zurück** nur noch mit dem Recht „Bei Wartung auf den Server“ statt mit dem Wartungs-Bypass - ein Admin ohne Admin-Modus wartet wie alle.
 - **Wartung flackerte mit „Server startet“:** Startet der Hauptserver während einer Wartung neu, behält der Warteraum die laufende Wartung, bis der Hauptserver bereit ist - keine Anzeige „startet“ dazwischen mehr.
+- **Weniger Chatzeilen:** „Es geht zurück zum Server …“ fällt weg (die Zeile mit dem Countdown davor sagt es schon, die Bossbar zeigt es), `/main` meldet dieselbe Absage wie das Item.
 
 ## [BET-0.1.0-bu001] - 2026-11-11
 

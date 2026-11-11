@@ -28,7 +28,7 @@ public final class MainCommand implements TabExecutor {
             } else if (!sender.hasPermission(PERM)) {
                 messages.send(sender, "no-permission");
             } else if (!plugin.returner().mayGo(player, plugin.link().view())) {
-                messages.send(sender, "main-not-ready");
+                messages.send(sender, "main-not-now");
             } else {
                 plugin.returner().send(player);
             }

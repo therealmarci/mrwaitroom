@@ -132,8 +132,6 @@ screen-footer-none: "No maintenance planned"
 screen-footer-server: "<server>"
 
 # -------------------------------------------------------------------- Going back
-returning: "<prefix><green>Going back to the server …"
-main-not-ready: "<prefix><gray>The server is not ready yet – you go back by yourself."
 kick-refused: "<red>You cannot join the server right now.<newline><newline><gray>It turned you away several times (e.g. whitelist or ban)."
 chat-off: "<prefix><gray>The chat is off in the waiting room."
 

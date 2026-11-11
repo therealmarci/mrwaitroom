@@ -166,7 +166,6 @@ public final class Returner implements Listener {
         long now = System.currentTimeMillis();
         Waiting w = waiting.getOrDefault(player.getUniqueId(), new Waiting(now, now, 0, 0));
         waiting.put(player.getUniqueId(), new Waiting(w.since(), w.arrived(), w.tries() + 1, now));
-        plugin.messages().send(player, "returning");
         try {
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
             DataOutputStream out = new DataOutputStream(bytes);

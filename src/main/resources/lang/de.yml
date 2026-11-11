@@ -132,8 +132,6 @@ screen-footer-none: "Keine Wartung geplant"
 screen-footer-server: "<server>"
 
 # -------------------------------------------------------------------- Rückkehr
-returning: "<prefix><green>Es geht zurück zum Server …"
-main-not-ready: "<prefix><gray>Der Server ist noch nicht bereit – du kommst automatisch zurück."
 kick-refused: "<red>Du kannst den Server gerade nicht betreten.<newline><newline><gray>Er hat dich mehrmals abgewiesen (z.B. Whitelist oder Sperre)."
 chat-off: "<prefix><gray>Im Warteraum ist der Chat aus."
 

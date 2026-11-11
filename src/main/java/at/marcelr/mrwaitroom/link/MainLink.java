@@ -164,6 +164,12 @@ public final class MainLink {
         portOpen = open;
         linkError = error;
         if (fresh != null) {
+            // While the main server is still starting MRadmin may not know the maintenance yet (it answers early in
+            // the start): the running maintenance is kept until the server is ready - otherwise the display jumps
+            // between "starting" and "maintenance".
+            if (!fresh.ready() && !fresh.maintenanceActive() && maintenance(status, now)) {
+                fresh = fresh.withMaintenance(status.maintenance());
+            }
             status = fresh;
             changed = true;
         }

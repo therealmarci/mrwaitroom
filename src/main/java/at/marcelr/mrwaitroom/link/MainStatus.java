@@ -86,6 +86,11 @@ public record MainStatus(long time, String name, boolean ready, boolean stopping
                 restart, maintenance, List.copyOf(alerts), Map.copyOf(rights), java.util.Set.copyOf(adminMode));
     }
 
+    /** The same answer with another maintenance (the one known before, while the main server is starting). */
+    public MainStatus withMaintenance(Maintenance other) {
+        return new MainStatus(time, name, ready, stopping, restart, other, alerts, rights, adminMode);
+    }
+
     /** Whether a maintenance is running right now. */
     public boolean maintenanceActive() {
         return maintenance != null && maintenance.active();

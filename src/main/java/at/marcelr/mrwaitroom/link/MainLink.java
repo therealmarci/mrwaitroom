@@ -82,6 +82,8 @@ public final class MainLink {
     private boolean portOpen;
     private String linkError = "";
     private volatile View view;
+    /** Phase of the last round (guarded by this). */
+    private Phase lastPhase = Phase.CRASH;
 
     public MainLink(MRwaitroom plugin) {
         this.plugin = plugin;
@@ -215,7 +217,14 @@ public final class MainLink {
         }
         up = isUp;
         ready = isReady;
-        view = new View(phase(now), status, downSince, readySince, estimate(), linkOk, portOpen, linkError, now);
+        Phase phase = phase(now);
+        // A maintenance ended (also early) while the main server was up: the countdown before going back starts now,
+        // not when the server became ready long before.
+        if (phase == Phase.READY && lastPhase == Phase.MAINTENANCE && readySince != 0) {
+            readySince = now;
+        }
+        lastPhase = phase;
+        view = new View(phase, status, downSince, readySince, estimate(), linkOk, portOpen, linkError, now);
         if (changed) {
             save();
         }

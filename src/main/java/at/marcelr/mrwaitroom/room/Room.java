@@ -41,6 +41,8 @@ public final class Room implements Listener {
 
     private final MRwaitroom plugin;
     private World world;
+    /** The spawn, for the login (that event runs off the main thread). */
+    private volatile Location spawn;
 
     public Room(MRwaitroom plugin) {
         this.plugin = plugin;
@@ -72,17 +74,41 @@ public final class Room implements Listener {
             world.getPersistentDataContainer().set(marker, org.bukkit.persistence.PersistentDataType.BOOLEAN, true);
             world.setSpawnLocation(0, 65, 0);
             if (s.lobby() && plugin.lobby().place(world)) {
-                plugin.getLogger().info("Created the waiting room world  + s.world() +  with the lobby.");
-                return;
-            }
-            if (s.platform()) {
-                for (int x = -4; x <= 4; x++) {
-                    for (int z = -4; z <= 4; z++) {
-                        world.getBlockAt(x, 64, z).setType(s.platformBlock(), false);
+                plugin.getLogger().info("Created the waiting room world '" + s.world() + "' with the lobby.");
+            } else {
+                if (s.platform()) {
+                    for (int x = -4; x <= 4; x++) {
+                        for (int z = -4; z <= 4; z++) {
+                            world.getBlockAt(x, 64, z).setType(s.platformBlock(), false);
+                        }
                     }
                 }
+                plugin.getLogger().info("Created the waiting room world '" + s.world() + "'.");
             }
-            plugin.getLogger().info("Created the waiting room world '" + s.world() + "'.");
+        }
+        rememberSpawn();
+    }
+
+    /** Remember the spawn for the login (also after /setworldspawn). */
+    private void rememberSpawn() {
+        if (world != null) {
+            spawn = spawn();
+        }
+    }
+
+    @EventHandler
+    public void onSpawnChange(org.bukkit.event.world.SpawnChangeEvent event) {
+        if (event.getWorld().equals(world)) {
+            rememberSpawn();
+        }
+    }
+
+    /** Everyone starts at the spawn of the room - wherever they were when they left. */
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onSpawnLocation(io.papermc.paper.event.player.AsyncPlayerSpawnLocationEvent event) {
+        Location at = spawn;
+        if (at != null) {
+            event.setSpawnLocation(at.clone());
         }
     }
 
@@ -96,11 +122,9 @@ public final class Room implements Listener {
         return l;
     }
 
-    /** Puts the player into the room: spawn, adventure mode, empty inventory (the display item comes next). */
+    /** Puts the player into the room: always at the spawn, adventure mode, empty inventory (the display item next). */
     public void receive(Player player) {
-        if (!player.getWorld().equals(world)) {
-            player.teleport(spawn());
-        }
+        player.teleport(spawn());
         player.setGameMode(GameMode.ADVENTURE);
         player.getInventory().clear();
         player.setHealth(player.getAttribute(org.bukkit.attribute.Attribute.MAX_HEALTH) == null ? 20

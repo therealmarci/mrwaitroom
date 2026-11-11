@@ -1,0 +1,18 @@
+# Lobby of MRwaitroom - placed when a new waiting room world is created.
+# Bundled lobby. Your own: /mrwaitroom lobby save (plugins/MRwaitroom/lobby/ wins over this one).
+
+origin:
+- -40
+- 35
+- -34
+spawn:
+  x: 1.0
+  y: 66.0
+  z: 0.0
+  yaw: 90.0
+  pitch: 0.0
+screen:
+  x: -3
+  y: 68
+  z: 1
+  facing: EAST

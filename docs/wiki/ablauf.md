@@ -43,7 +43,7 @@ Bei einem Neustart oder Absturz zählt die Bossbar von `return.estimate-seconds`
 - Von Hand zurück nur fürs Team: Admins mit `/main`, dem grünen Item oder dem Knopf im Uhr-Menü (`mrwaitroom.main`, `mrwaitroom.visit`), Staff mit `/mrwaitroom send <spieler|all>`. Spieler können das nicht selbst anstoßen.
 
 ## Der Raum
-Eine leere Welt (`room.world`) mit einer kleinen Plattform am Spawn. Kein Schaden, kein Hunger, Abenteuermodus, Blöcke und Inventar gesperrt, wer runterfällt, steht wieder am Spawn. Der Chat ist aus (`room.chat`), mit `mrwaitroom.chat` darf man trotzdem schreiben. Andere Spieler lassen sich ausblenden (`room.hide-players`).
+Eine eigene Welt (`room.world`) mit der [Lobby](lobby.md) und der [Anzeigetafel](lobby.md#die-anzeigetafel). **Jeder landet beim Betreten am Spawn** - egal, wo er beim letzten Mal stand. Kein Schaden, kein Hunger, Abenteuermodus, Blöcke und Inventar gesperrt, wer runterfällt, steht wieder am Spawn. Der Chat ist aus (`room.chat`), mit `mrwaitroom.chat` darf man trotzdem schreiben. Andere Spieler lassen sich ausblenden (`room.hide-players`).
 
 ## Neustarts des Warteraums
 Mit dem Starter von MRadmin (`mrserver setup --role waitroom`) startet der Warteraum neu:

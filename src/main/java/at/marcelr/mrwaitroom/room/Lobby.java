@@ -36,6 +36,9 @@ public final class Lobby {
     public record Saved(int width, int height, int length, int[] min, int[] max) {
     }
 
+    /** Chunks around the spawn that are always searched for the build (8 = 128 blocks in every direction). */
+    private static final int SCAN_CHUNKS = 8;
+
     private final MRwaitroom plugin;
     private final File folder;
 
@@ -55,6 +58,14 @@ public final class Lobby {
         if (from != null) {
             done.accept(write(world, min(from, to), max(from, to)));
             return;
+        }
+        // The area around the spawn is always looked at (also from the console, without a player nearby).
+        int sx = world.getSpawnLocation().getBlockX() >> 4;
+        int sz = world.getSpawnLocation().getBlockZ() >> 4;
+        for (int cx = sx - SCAN_CHUNKS; cx <= sx + SCAN_CHUNKS; cx++) {
+            for (int cz = sz - SCAN_CHUNKS; cz <= sz + SCAN_CHUNKS; cz++) {
+                world.getChunkAt(cx, cz);
+            }
         }
         List<ChunkSnapshot> snapshots = new ArrayList<>();
         for (Chunk chunk : world.getLoadedChunks()) {

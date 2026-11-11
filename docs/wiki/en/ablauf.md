@@ -43,7 +43,7 @@ On a restart or crash the bossbar counts down from `return.estimate-seconds` (de
 - Going back by hand only for the team: admins with `/main`, the green item or the button in the clock menu (`mrwaitroom.main`, `mrwaitroom.visit`), staff with `/mrwaitroom send <player|all>`. Players cannot trigger it themselves.
 
 ## The room
-An empty world (`room.world`) with a small platform at the spawn. No damage, no hunger, adventure mode, blocks and inventory locked, whoever falls off stands at the spawn again. The chat is off (`room.chat`), with `mrwaitroom.chat` one may write anyway. Other players can be hidden (`room.hide-players`).
+A world of its own (`room.world`) with the [lobby](lobby.md) and the [board](lobby.md#the-board). **Everyone lands at the spawn on joining** - wherever they stood last time. No damage, no hunger, adventure mode, blocks and inventory locked, whoever falls off stands at the spawn again. The chat is off (`room.chat`), with `mrwaitroom.chat` one may write anyway. Other players can be hidden (`room.hide-players`).
 
 ## Restarts of the waiting room
 With MRadmin's starter (`mrserver setup --role waitroom`) the waiting room restarts:

@@ -96,7 +96,7 @@ public record Settings(
                 c.getString("main.link-key", "").trim(), Math.clamp(c.getInt("main.poll-seconds", 2), 1, 30));
 
         ReturnSettings back = new ReturnSettings(
-                Math.clamp(c.getInt("return.delay-seconds", 5), 0, 300),
+                Math.clamp(c.getInt("return.delay-seconds", 10), 0, 300),
                 Math.clamp(c.getInt("return.batch-size", 5), 1, 100),
                 Math.clamp(c.getInt("return.batch-seconds", 2), 1, 60),
                 Math.clamp(c.getInt("return.max-attempts", 3), 1, 20),

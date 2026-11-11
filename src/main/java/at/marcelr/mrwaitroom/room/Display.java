@@ -98,6 +98,7 @@ public final class Display implements Listener {
     private void tick() {
         MainLink.View view = plugin.link().view();
         long now = System.currentTimeMillis();
+        countdown(view, now);
         for (Player player : Bukkit.getOnlinePlayers()) {
             show(player, view, now);
         }
@@ -120,7 +121,16 @@ public final class Display implements Listener {
             if (current == null || !current.isSimilar(item) || current.getAmount() != 1) {
                 player.getInventory().setItem(s.slot(), item);
             }
-            if (player.getInventory().getHeldItemSlot() != s.slot()) {
+            boolean visit = player.hasPermission(Returner.PERM_VISIT);
+            if (visit) {
+                ItemStack back = backItem(player);
+                ItemStack there = player.getInventory().getItem(BACK_SLOT);
+                if (there == null || !there.isSimilar(back)) {
+                    player.getInventory().setItem(BACK_SLOT, back);
+                }
+            }
+            // The clock stays selected - except for players with the back item (they need to reach it).
+            if (!visit && player.getInventory().getHeldItemSlot() != s.slot()) {
                 player.getInventory().setHeldItemSlot(s.slot());
             }
         }
@@ -158,6 +168,56 @@ public final class Display implements Listener {
                 }
             }
         });
+    }
+
+    // --------------------------------------------------------------- countdown
+
+    /** readySince of the countdown that was announced, so it is announced once. */
+    private long announced;
+
+    /** The main server is ready again: one chat line when the countdown starts, a tick in the last 5 seconds. */
+    private void countdown(MainLink.View view, long now) {
+        if (view.phase() != MainLink.Phase.READY || view.readySince() == 0) {
+            return;
+        }
+        long left = view.readySince() + plugin.settings().back().delaySeconds() * 1000L - now;
+        if (announced != view.readySince()) {
+            announced = view.readySince();
+            if (left > 1000) {
+                for (Player p : Bukkit.getOnlinePlayers()) {
+                    if (!plugin.returner().visitor(p)) {
+                        plugin.messages().send(p, "ready-countdown", tag("time", String.valueOf((left + 999) / 1000)));
+                    }
+                }
+            }
+        }
+        if (left > 0 && left <= 5000) {
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                if (!plugin.returner().visitor(p)) {
+                    p.playSound(p.getLocation(), org.bukkit.Sound.BLOCK_NOTE_BLOCK_HAT, 0.6f, 1.4f);
+                }
+            }
+        }
+    }
+
+    /** Slot of the back item (players with mrwaitroom.visit). */
+    static final int BACK_SLOT = 8;
+    static final org.bukkit.NamespacedKey BACK = new org.bukkit.NamespacedKey("mrwaitroom", "back");
+
+    private ItemStack backItem(Player player) {
+        Messages m = plugin.messages();
+        ItemStack item = new ItemStack(org.bukkit.Material.LIME_DYE);
+        ItemMeta meta = item.getItemMeta();
+        meta.itemName(m.as(player, () -> m.get("back-item-name")).decoration(TextDecoration.ITALIC, false));
+        meta.lore(m.as(player, () -> m.lore("back-item-lore")));
+        meta.getPersistentDataContainer().set(BACK, org.bukkit.persistence.PersistentDataType.BOOLEAN, true);
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    /** Whether the item is the back item. */
+    public static boolean isBackItem(ItemStack item) {
+        return item != null && item.hasItemMeta() && item.getItemMeta().getPersistentDataContainer().has(BACK);
     }
 
     // ------------------------------------------------------------------- texts
@@ -207,7 +267,15 @@ public final class Display implements Listener {
             case STOP -> new Line("stop", "join-stop", 1f, tags(v));
             case CRASH -> new Line("crash", "join-crash", 1f, tags(v));
             case STARTING -> new Line("starting", "join-starting", 1f, tags(v));
-            case READY -> new Line("ready", "join-ready", 1f, tags(v));
+            case READY -> {
+                // Countdown before going back (return.delay-seconds).
+                long delay = plugin.settings().back().delaySeconds() * 1000L;
+                long left = view.readySince() == 0 ? 0 : view.readySince() + delay - now;
+                v.put("time", String.valueOf(Math.max(0, (left + 999) / 1000)));
+                yield left > 0
+                        ? new Line("ready", "join-ready", (float) Math.clamp(1 - (double) left / Math.max(1, delay), 0, 1), tags(v))
+                        : new Line("returning", "join-ready", 1f, tags(v));
+            }
             case MAINTENANCE -> {
                 if (mt == null || mt.end() <= 0) {
                     yield new Line("maintenance-open", "join-maintenance-open", 1f, tags(v));

@@ -11,7 +11,7 @@
 # ==============================================================================
 
 # Do not change - tells the plugin which texts need to be renewed on updates.
-lang-version: 3
+lang-version: 4
 
 prefix: "<dark_gray>[<aqua>Waiting room</aqua>]</dark_gray> "
 
@@ -28,6 +28,7 @@ item-stop: "<red>■ Server is off"
 item-crash: "<gold>↻ Server is restarting"
 item-starting: "<green>↻ Server is starting"
 item-ready: "<green>➜ Back to the server"
+item-returning: "<green>➜ Back to the server"
 item-maintenance: "<aqua>🛠 Maintenance until <white><end>"
 item-maintenance-open: "<aqua>🛠 Maintenance"
 item-lore:
@@ -42,7 +43,8 @@ bossbar-restart-late: "<yellow>Back in a moment <gray>· since <white><since></w
 bossbar-stop: "<red>Server is off <gray>· since <white><since></white> <dark_gray>– <gray><reason>"
 bossbar-crash: "<gold>Server is restarting <gray>· since <white><since>"
 bossbar-starting: "<green>Server is starting <gray>· almost there"
-bossbar-ready: "<green>Server is ready <gray>· going back"
+bossbar-ready: "<green>Server is ready <gray>· back in <white><time> s"
+bossbar-returning: "<green>Going back to the server …"
 bossbar-maintenance: "<aqua>Maintenance until <white><end></white> <gray>· about <white><time></white> left <dark_gray>– <gray><title>"
 bossbar-maintenance-open: "<aqua>Maintenance <gray>· open end <dark_gray>– <gray><title>"
 
@@ -87,6 +89,11 @@ join-stop: "<prefix><red>The server is shut down. <hover:show_text:'<gray>Reason
 join-crash: "<prefix><gold>The server cannot be reached right now. <hover:show_text:'<gray>Since <white><since><newline><gray>You go back by yourself as soon as it runs again.'><dark_gray>[Info]</dark_gray></hover>"
 join-starting: "<prefix><green>The server is starting – almost there."
 join-ready: "<prefix><green>The server is ready – going back in a moment."
+ready-countdown: "<prefix><green>The server is ready again – going back in <white><time></white> seconds."
+back-item-name: "<green>Back to the server"
+back-item-lore:
+  - "<gray>Right click: back right away"
+  - "<gray>(also during a maintenance)"
 join-maintenance: "<prefix><aqua>Maintenance until <white><end></white>. <hover:show_text:'<gray><white><title></white><newline><gray>About <white><time></white> left<newline><gray>Afterwards you go back by yourself.'><dark_gray>[Info]</dark_gray></hover>"
 join-maintenance-open: "<prefix><aqua>Maintenance – no end set yet. <hover:show_text:'<gray><white><title></white><newline><gray>Afterwards you go back by yourself.'><dark_gray>[Info]</dark_gray></hover>"
 alert: "<prefix><red>⚠ <white><title>"

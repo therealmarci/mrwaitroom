@@ -61,6 +61,8 @@ public final class Remote {
     private final List<String> done = new ArrayList<>();
     private final List<Map<String, String>> failed = new ArrayList<>();
     private volatile String staged;
+    /** Set right before this server restarts - MRadmin then holds back restarts of the main server. */
+    private volatile boolean restarting;
     private BukkitTask reportTask;
     private BukkitTask idleTask;
 
@@ -136,6 +138,7 @@ public final class Remote {
         host.addProperty("pending", plugin.restarts().pending());
         host.addProperty("blocked", plugin.restarts().blocked());
         host.addProperty("paperUpdate", plugin.settings().server().paperUpdate());
+        host.addProperty("restarting", restarting);
         o.add("host", host);
         List<String> sentDone;
         List<Map<String, String>> sentFailed;
@@ -155,7 +158,7 @@ public final class Remote {
         o.add("failed", f);
         try {
             HttpRequest request = HttpRequest.newBuilder(URI.create(s.linkUrl() + "/waiting-room/report"))
-                    .timeout(Duration.ofSeconds(10))
+                    .timeout(Duration.ofSeconds(restarting ? 3 : 10))
                     .header("Authorization", "Bearer " + s.linkKey())
                     .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(o.toString())).build();
@@ -176,6 +179,15 @@ public final class Remote {
     }
 
     // ------------------------------------------------------------------- orders
+
+    /**
+     * Right before this server restarts: tells MRadmin (blocking, at most a few seconds), so it does not restart or
+     * stop the main server while the waiting room is away.
+     */
+    public void announceRestart() {
+        restarting = true;
+        report();
+    }
 
     /** Orders from the status answer (link thread). */
     public void take(JsonElement orders) {
@@ -202,6 +214,14 @@ public final class Remote {
                         fail(id, reason);
                     }
                     Bukkit.getScheduler().runTaskAsynchronously(plugin, this::report);
+                });
+                case "visit" -> Bukkit.getScheduler().runTask(plugin, () -> {
+                    try {
+                        plugin.returner().announceVisit(java.util.UUID.fromString(str(order, "player")));
+                        ok(id);
+                    } catch (IllegalArgumentException bad) {
+                        fail(id, "no player");
+                    }
                 });
                 case "update" -> Bukkit.getScheduler().runTaskAsynchronously(plugin,
                         () -> update(id, str(order, "version"), str(order, "url"), str(order, "sha256")));

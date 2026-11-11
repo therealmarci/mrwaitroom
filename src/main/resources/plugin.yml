@@ -41,12 +41,13 @@ permissions:
       mrwaitroom.groups.support: true
       mrwaitroom.admin.send: true
   mrwaitroom.groups.admin:
-    description: "Group admin: everything of MRwaitroom - reload and update notice."
+    description: "Group admin: everything of MRwaitroom - reload, update notice and visiting (back item)."
     default: op
     children:
       mrwaitroom.groups.staff: true
       mrwaitroom.admin.reload: true
       mrwaitroom.admin.update: true
+      mrwaitroom.visit: true
 
   # ------------------------------------------------------------- Single ones
   mrwaitroom.main:
@@ -61,6 +62,9 @@ permissions:
   mrwaitroom.stay:
     description: "Is not sent back to the main server by itself (e.g. to look at the waiting room). In no group."
     default: false
+  mrwaitroom.visit:
+    description: "Come over on purpose (MRadmin's menu) without being sent back by itself; item 'back to the server' in the hotbar."
+    default: op
   mrwaitroom.admin.status:
     description: "/mrwaitroom status - state of the main server and of the connection to MRadmin."
     default: op

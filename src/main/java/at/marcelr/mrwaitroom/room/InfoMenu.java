@@ -132,6 +132,11 @@ public final class InfoMenu implements InventoryHolder, Listener {
             return;
         }
         ItemStack hand = event.getItem();
+        if (Display.isBackItem(hand)) {
+            event.setCancelled(true);
+            plugin.returner().goBack(event.getPlayer());
+            return;
+        }
         if (hand == null || hand.getType() != plugin.settings().display().item()) {
             return;
         }

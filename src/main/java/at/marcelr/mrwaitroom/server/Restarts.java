@@ -121,7 +121,8 @@ public final class Restarts {
         manualBy = by;
         plugin.getLogger().info(by + " asked for a restart of the waiting room"
                 + (reason == null ? "." : " - it happens once nobody waits."));
-        tick();
+        // Not right here: the caller first confirms the order (MRadmin), the report before going down carries it.
+        Bukkit.getScheduler().runTask(plugin, this::tick);
         return null;
     }
 
@@ -159,6 +160,7 @@ public final class Restarts {
         plugin.getLogger().info("Restarting the waiting room (" + (manualSince > 0 ? "by " + manualBy : "planned") + ").");
         manualSince = 0;
         plannedSince = 0;
+        plugin.remote().announceRestart();
         plugin.starter().prepare(true);
         Bukkit.shutdown();
     }

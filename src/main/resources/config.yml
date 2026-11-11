@@ -8,7 +8,7 @@
 # ==============================================================================
 
 # Do not change - tells the plugin which settings need to be carried over on updates.
-config-version: 3
+config-version: 4
 
 
 # ------------------------------------------------------------------------------
@@ -47,8 +47,8 @@ main:
 #   3) GOING BACK
 # ------------------------------------------------------------------------------
 return:
-  # Wait this long after the main server is ready before sending players back (seconds).
-  delay-seconds: 5
+  # Countdown in the waiting room once the main server is ready (seconds) - shown in the bossbar, then players go back.
+  delay-seconds: 10
   # Players per batch and pause between two batches (seconds).
   batch-size: 5
   batch-seconds: 2

@@ -207,7 +207,7 @@ public final class Room implements Listener {
     /** The display item stays selected, so its name stays visible above the hotbar. */
     @EventHandler(ignoreCancelled = true)
     public void onHeld(PlayerItemHeldEvent event) {
-        if (event.getPlayer().getGameMode() != GameMode.CREATIVE) {
+        if (event.getPlayer().getGameMode() != GameMode.CREATIVE && !event.getPlayer().hasPermission(Returner.PERM_VISIT)) {
             event.setCancelled(true);
         }
     }

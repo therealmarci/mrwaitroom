@@ -11,7 +11,7 @@
 # ==============================================================================
 
 # Nicht ändern - sagt dem Plugin, welche Texte bei Updates erneuert werden müssen.
-lang-version: 3
+lang-version: 4
 
 prefix: "<dark_gray>[<aqua>Warteraum</aqua>]</dark_gray> "
 
@@ -28,6 +28,7 @@ item-stop: "<red>■ Server ist aus"
 item-crash: "<gold>↻ Server startet neu"
 item-starting: "<green>↻ Server startet"
 item-ready: "<green>➜ Zurück zum Server"
+item-returning: "<green>➜ Zurück zum Server"
 item-maintenance: "<aqua>🛠 Wartung bis <white><end>"
 item-maintenance-open: "<aqua>🛠 Wartung"
 item-lore:
@@ -42,7 +43,8 @@ bossbar-restart-late: "<yellow>Gleich wieder da <gray>· seit <white><since></wh
 bossbar-stop: "<red>Server ist aus <gray>· seit <white><since></white> <dark_gray>– <gray><reason>"
 bossbar-crash: "<gold>Server startet neu <gray>· seit <white><since>"
 bossbar-starting: "<green>Server startet <gray>· gleich geht es los"
-bossbar-ready: "<green>Server ist bereit <gray>· es geht zurück"
+bossbar-ready: "<green>Server ist bereit <gray>· zurück in <white><time> s"
+bossbar-returning: "<green>Es geht zurück zum Server …"
 bossbar-maintenance: "<aqua>Wartung bis <white><end></white> <gray>· noch ca. <white><time></white> <dark_gray>– <gray><title>"
 bossbar-maintenance-open: "<aqua>Wartung <gray>· Ende offen <dark_gray>– <gray><title>"
 
@@ -87,6 +89,11 @@ join-stop: "<prefix><red>Der Server ist heruntergefahren. <hover:show_text:'<gra
 join-crash: "<prefix><gold>Der Server ist gerade nicht erreichbar. <hover:show_text:'<gray>Seit <white><since><newline><gray>Du kommst automatisch zurück, sobald er wieder läuft.'><dark_gray>[Info]</dark_gray></hover>"
 join-starting: "<prefix><green>Der Server startet – gleich geht es weiter."
 join-ready: "<prefix><green>Der Server ist bereit – es geht gleich zurück."
+ready-countdown: "<prefix><green>Der Server ist wieder bereit – in <white><time></white> Sekunden geht es zurück."
+back-item-name: "<green>Zurück zum Server"
+back-item-lore:
+  - "<gray>Rechtsklick: sofort zurück"
+  - "<gray>(auch während einer Wartung)"
 join-maintenance: "<prefix><aqua>Wartung bis <white><end></white>. <hover:show_text:'<gray><white><title></white><newline><gray>Noch ca. <white><time><newline><gray>Danach kommst du automatisch zurück.'><dark_gray>[Info]</dark_gray></hover>"
 join-maintenance-open: "<prefix><aqua>Wartung – Ende noch offen. <hover:show_text:'<gray><white><title></white><newline><gray>Danach kommst du automatisch zurück.'><dark_gray>[Info]</dark_gray></hover>"
 alert: "<prefix><red>⚠ <white><title>"

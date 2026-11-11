@@ -35,10 +35,11 @@ Das Menü aktualisiert sich jede Sekunde, solange es offen ist.
 Die Restzeit eines Neustarts schätzt der Warteraum aus der **typischen Dauer der letzten Neustarts** (Median der letzten 10, gemessen vom Herunterfahren bis „bereit“). Bis zwei Neustarts gemessen sind, gilt `return.estimate-seconds` (Standard 90 s). Stopps zählen nicht mit.
 
 ## Zurückschicken
-- Sobald der Hauptserver **bereit** ist, wartet der Warteraum `return.delay-seconds` (Standard 5 s) und schickt dann alle **in Schüben** zurück: `return.batch-size` Spieler (5) alle `return.batch-seconds` (2 s), wer am längsten wartet zuerst.
+- Sobald der Hauptserver **bereit** ist, läuft ein **Countdown** von `return.delay-seconds` (Standard 10 s): Bossbar „Server ist bereit · zurück in 8 s“, eine Chatzeile und ein Ticken in den letzten 5 Sekunden. Danach schickt der Warteraum alle **in Schüben** zurück: `return.batch-size` Spieler (5) alle `return.batch-seconds` (2 s), wer am längsten wartet zuerst.
 - **Während einer Wartung** gehen nur Spieler mit dem Wartungs-Bypass von MRadmin zurück (`mradmin.maintenance.bypass`) - die anderen warten bis zum Ende.
 - **Abgewiesen?** Kommt ein Spieler `return.max-attempts`-mal (3) nicht an (Bann, Whitelist), trennt ihn der Warteraum mit einem Hinweis. Auch wer kurz hintereinander zurückprallt, zählt weiter - niemand pendelt endlos. Während einer Wartung wird nicht getrennt: Der Spieler bleibt dann einfach bis zum Ende im Warteraum.
 - Spieler mit `mrwaitroom.stay` werden nie automatisch zurückgeschickt.
+- **Besuch:** Wer über **In den Warteraum** im Admin-Menü von MRadmin kommt (Permission `mrwaitroom.visit`), bleibt, bis er selbst geht - mit dem grünen Item **Zurück zum Server** in der Hotbar (Platz 9), auch während einer Wartung.
 - `/main` schickt einen Spieler sofort zurück, `/mrwaitroom send <spieler|all>` das Team.
 
 ## Der Raum

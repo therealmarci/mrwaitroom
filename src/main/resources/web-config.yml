@@ -80,8 +80,8 @@ sections:
         min: 0
         max: 300
         unit: {de: Sekunden, en: seconds}
-        name: {de: Wartezeit nach dem Start, en: Wait after the start}
-        help: {de: "So lange wartet der Warteraum, nachdem der Hauptserver „bereit“ meldet, bevor er Spieler zurückschickt - gibt Plugins Zeit, fertig zu laden.", en: "This long the waiting room waits after the main server reports “ready” before it sends players back - gives plugins time to finish loading."}
+        name: {de: Countdown vor der Rückkehr, en: Countdown before going back}
+        help: {de: "Ist der Hauptserver wieder bereit, läuft im Warteraum dieser Countdown (Bossbar, Chatzeile, Ticken in den letzten Sekunden) - danach geht es zurück. Gibt Plugins Zeit, fertig zu laden.", en: "Once the main server is ready again, this countdown runs in the waiting room (bossbar, chat line, ticking in the last seconds) - then players go back. Gives plugins time to finish loading."}
       - key: return.batch-size
         type: int
         min: 1

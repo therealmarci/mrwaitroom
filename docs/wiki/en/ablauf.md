@@ -35,10 +35,11 @@ The menu renews every second while it is open.
 The waiting room estimates the time left of a restart from the **typical length of the last restarts** (median of the last 10, measured from going down to "ready"). Until two restarts were measured, `return.estimate-seconds` applies (default 90 s). Stops do not count.
 
 ## Sending back
-- As soon as the main server is **ready**, the waiting room waits `return.delay-seconds` (default 5 s) and then sends everyone back **in batches**: `return.batch-size` players (5) every `return.batch-seconds` (2 s), longest waiting first.
+- As soon as the main server is **ready**, a **countdown** of `return.delay-seconds` runs (default 10 s): bossbar "Server is ready · back in 8 s", one chat line and a tick in the last 5 seconds. Then the waiting room sends everyone back **in batches**: `return.batch-size` players (5) every `return.batch-seconds` (2 s), longest waiting first.
 - **During a maintenance** only players with MRadmin's maintenance bypass go back (`mradmin.maintenance.bypass`) - the others wait until the end.
 - **Turned away?** If a player does not arrive `return.max-attempts` times (3) (ban, whitelist), the waiting room disconnects them with a note. Whoever bounces back shortly after keeps counting - nobody goes back and forth forever. During a maintenance nobody is disconnected: the player simply stays in the waiting room until the end.
 - Players with `mrwaitroom.stay` are never sent back by themselves.
+- **Visit:** whoever comes via **To the waiting room** in MRadmin's admin menu (permission `mrwaitroom.visit`) stays until they leave themselves - with the green item **Back to the server** in the hotbar (slot 9), also during a maintenance.
 - `/main` sends a player back right away, `/mrwaitroom send <player|all>` the team.
 
 ## The room

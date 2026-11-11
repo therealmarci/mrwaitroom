@@ -71,6 +71,10 @@ public final class Room implements Listener {
         if (!world.getPersistentDataContainer().has(marker)) {
             world.getPersistentDataContainer().set(marker, org.bukkit.persistence.PersistentDataType.BOOLEAN, true);
             world.setSpawnLocation(0, 65, 0);
+            if (s.lobby() && plugin.lobby().place(world)) {
+                plugin.getLogger().info("Created the waiting room world  + s.world() +  with the lobby.");
+                return;
+            }
             if (s.platform()) {
                 for (int x = -4; x <= 4; x++) {
                     for (int z = -4; z <= 4; z++) {

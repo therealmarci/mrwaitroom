@@ -11,7 +11,7 @@
 # ==============================================================================
 
 # Nicht ändern - sagt dem Plugin, welche Texte bei Updates erneuert werden müssen.
-lang-version: 6
+lang-version: 7
 
 prefix: "<dark_gray>[<aqua>Warteraum</aqua>]</dark_gray> "
 
@@ -100,6 +100,25 @@ join-maintenance: "<prefix><aqua>Wartung bis <white><end></white>. <hover:show_t
 join-maintenance-open: "<prefix><aqua>Wartung – Ende noch offen. <hover:show_text:'<gray><white><title></white><newline><gray>Danach kommst du automatisch zurück.'><dark_gray>[Info]</dark_gray></hover>"
 alert: "<prefix><red>⚠ <white><title>"
 
+# ---------------------------------------------------------------- Anzeigetafel
+# Die Tafel aus 4 × 2 Karten (/mrwaitroom screen set). Pro Zustand fünf Zeilen:
+# Überschrift, Text, Einzelheit, Countdown (groß), Beschriftung darunter. Leere Zeile = nichts.
+screen-restart: ["NEUSTART", "Der Server startet neu.", "Grund: <reason>", "<time>", "verbleibend"]
+screen-restart-late: ["NEUSTART", "Gleich wieder da.", "Grund: <reason>", "...", "gleich geht es los"]
+screen-stop: ["SERVER AUS", "Der Server wurde heruntergefahren.", "Grund: <reason>", "--:--", "Ende offen"]
+screen-crash: ["NEUSTART", "Der Server ist gerade nicht erreichbar.", "Weg seit <since>", "<time>", "verbleibend"]
+screen-crash-late: ["NEUSTART", "Der Server ist gerade nicht erreichbar.", "Weg seit <since>", "...", "gleich geht es los"]
+screen-starting: ["STARTET", "Der Server fährt hoch.", "Gleich geht es zurück.", "...", "gleich geht es los"]
+screen-ready: ["BEREIT", "Der Server ist wieder da.", "Du kommst automatisch zurück.", "<time>", "bis es zurückgeht"]
+screen-returning: ["BEREIT", "Es geht zurück zum Server ...", "", ">>", ""]
+screen-maintenance: ["WARTUNG", "<title>", "Ende: <end>", "<time>", "verbleibend"]
+screen-maintenance-open: ["WARTUNG", "<title>", "Ende noch offen", "--:--", "Ende offen"]
+# Fußzeile links: Wartung; rechts: Name des Servers (aus MRadmin).
+screen-footer-maintenance: "Wartung seit <start>"
+screen-footer-planned: "Nächste Wartung: <start>"
+screen-footer-none: "Keine Wartung geplant"
+screen-footer-server: "<server>"
+
 # -------------------------------------------------------------------- Rückkehr
 returning: "<prefix><green>Es geht zurück zum Server …"
 main-not-ready: "<prefix><gray>Der Server ist noch nicht bereit – du kommst automatisch zurück."
@@ -107,7 +126,18 @@ kick-refused: "<red>Du kannst den Server gerade nicht betreten.<newline><newline
 chat-off: "<prefix><gray>Im Warteraum ist der Chat aus."
 
 # ------------------------------------------------------------------- Befehle
-usage: "<prefix><gray>Befehle: <aqua>/mrwaitroom status</aqua>, <aqua>send <spieler|all></aqua>, <aqua>reload</aqua>, <aqua>version</aqua>"
+usage: "<prefix><gray>Befehle: <aqua>/mrwaitroom status</aqua>, <aqua>send <spieler|all></aqua>, <aqua>screen</aqua>, <aqua>lobby</aqua>, <aqua>reload</aqua>, <aqua>version</aqua>"
+screen-usage: "<prefix><gray>Anzeigetafel: <aqua>/mrwaitroom screen set</aqua> <hover:show_text:'<gray>Schau dabei auf einen Rahmen einer Wand aus 4 × 2 Rahmen.'><dark_gray>[?]</dark_gray></hover> <gray>oder <aqua>remove"
+screen-set-done: "<prefix><green>Die Anzeigetafel hängt. <hover:show_text:'<gray>Die Rahmen sind gesperrt.<newline><gray>Abnehmen: <white>/mrwaitroom screen remove'><dark_gray>[Info]</dark_gray></hover>"
+screen-no-frame: "<prefix><red>Schau auf einen Rahmen der Wand."
+screen-not-on-wall: "<prefix><red>Die Rahmen müssen an einer Wand hängen."
+screen-wrong-size: "<prefix><red>Die Wand ist <white><width> × <height></white> Rahmen groß. <hover:show_text:'<gray>Gebraucht werden genau 4 breit und 2 hoch,<newline><gray>alle Rahmen in dieselbe Richtung.'><dark_gray>[Info]</dark_gray></hover>"
+screen-removed: "<prefix><green>Die Anzeigetafel ist abgenommen."
+screen-none: "<prefix><gray>Es hängt keine Anzeigetafel."
+lobby-usage: "<prefix><gray>Lobby speichern: <aqua>/mrwaitroom lobby save</aqua> <hover:show_text:'<gray>Ohne Angabe findet MRwaitroom den Bau selbst.<newline><gray>Bereich angeben: <white>save x1 y1 z1 x2 y2 z2'><dark_gray>[?]</dark_gray></hover>"
+lobby-saving: "<prefix><gray>Lobby wird gespeichert ..."
+lobby-saved: "<prefix><green>Lobby gespeichert <white>(<size>)</white>. <hover:show_text:'<gray>Von <white><from></white> bis <white><to><newline><gray>Neue Warteraum-Welten starten mit dieser Lobby,<newline><gray>Spawn und Anzeigetafel inklusive.<newline><gray>Ordner: plugins/MRwaitroom/lobby'><dark_gray>[Info]</dark_gray></hover>"
+lobby-empty: "<prefix><red>Kein Bau gefunden - stell dich in die Lobby oder gib den Bereich an."
 no-permission: "<prefix><red>Dazu hast du keine Berechtigung."
 players-only: "<prefix><red>Dieser Befehl kann nur von Spielern genutzt werden."
 player-not-found: "<prefix><red>Spieler <white><player></white> wurde nicht gefunden."

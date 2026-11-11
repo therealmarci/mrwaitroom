@@ -8,7 +8,7 @@
 # ==============================================================================
 
 # Do not change - tells the plugin which settings need to be carried over on updates.
-config-version: 5
+config-version: 6
 
 
 # ------------------------------------------------------------------------------
@@ -65,7 +65,10 @@ return:
 room:
   # World of the waiting room. Created empty (void) if it does not exist yet.
   world: "waitroom"
-  # Build a small platform at the spawn of a newly created world.
+  # Build the lobby into a newly created world (spawn and board included): the bundled one, or the one saved with
+  # /mrwaitroom lobby save (plugins/MRwaitroom/lobby/). Off = an empty world with the platform below.
+  lobby: true
+  # Build a small platform at the spawn of a newly created world (only without the lobby).
   platform: true
   platform-block: SMOOTH_STONE
   # Chat between waiting players. Players with mrwaitroom.chat may always write.

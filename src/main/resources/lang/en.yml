@@ -11,7 +11,7 @@
 # ==============================================================================
 
 # Do not change - tells the plugin which texts need to be renewed on updates.
-lang-version: 6
+lang-version: 7
 
 prefix: "<dark_gray>[<aqua>Waiting room</aqua>]</dark_gray> "
 
@@ -100,6 +100,25 @@ join-maintenance: "<prefix><aqua>Maintenance until <white><end></white>. <hover:
 join-maintenance-open: "<prefix><aqua>Maintenance – no end set yet. <hover:show_text:'<gray><white><title></white><newline><gray>Afterwards you go back by yourself.'><dark_gray>[Info]</dark_gray></hover>"
 alert: "<prefix><red>⚠ <white><title>"
 
+# --------------------------------------------------------------------- Board
+# The board of 4 × 2 maps (/mrwaitroom screen set). Five lines per state:
+# heading, text, detail, countdown (big), label below it. Empty line = nothing.
+screen-restart: ["RESTART", "The server is restarting.", "Reason: <reason>", "<time>", "remaining"]
+screen-restart-late: ["RESTART", "Back in a moment.", "Reason: <reason>", "...", "starting soon"]
+screen-stop: ["SERVER OFF", "The server was shut down.", "Reason: <reason>", "--:--", "open end"]
+screen-crash: ["RESTART", "The server cannot be reached right now.", "Gone for <since>", "<time>", "remaining"]
+screen-crash-late: ["RESTART", "The server cannot be reached right now.", "Gone for <since>", "...", "starting soon"]
+screen-starting: ["STARTING", "The server is starting up.", "You go back in a moment.", "...", "starting soon"]
+screen-ready: ["READY", "The server is back.", "You go back by yourself.", "<time>", "until you go back"]
+screen-returning: ["READY", "Going back to the server ...", "", ">>", ""]
+screen-maintenance: ["MAINTENANCE", "<title>", "Ends: <end>", "<time>", "remaining"]
+screen-maintenance-open: ["MAINTENANCE", "<title>", "End not known yet", "--:--", "open end"]
+# Footer left: maintenance; right: name of the server (from MRadmin).
+screen-footer-maintenance: "Maintenance since <start>"
+screen-footer-planned: "Next maintenance: <start>"
+screen-footer-none: "No maintenance planned"
+screen-footer-server: "<server>"
+
 # -------------------------------------------------------------------- Going back
 returning: "<prefix><green>Going back to the server …"
 main-not-ready: "<prefix><gray>The server is not ready yet – you go back by yourself."
@@ -107,7 +126,18 @@ kick-refused: "<red>You cannot join the server right now.<newline><newline><gray
 chat-off: "<prefix><gray>The chat is off in the waiting room."
 
 # ---------------------------------------------------------------------- Commands
-usage: "<prefix><gray>Commands: <aqua>/mrwaitroom status</aqua>, <aqua>send <player|all></aqua>, <aqua>reload</aqua>, <aqua>version</aqua>"
+usage: "<prefix><gray>Commands: <aqua>/mrwaitroom status</aqua>, <aqua>send <player|all></aqua>, <aqua>screen</aqua>, <aqua>lobby</aqua>, <aqua>reload</aqua>, <aqua>version</aqua>"
+screen-usage: "<prefix><gray>Board: <aqua>/mrwaitroom screen set</aqua> <hover:show_text:'<gray>Look at one frame of a wall of 4 × 2 frames.'><dark_gray>[?]</dark_gray></hover> <gray>or <aqua>remove"
+screen-set-done: "<prefix><green>The board is up. <hover:show_text:'<gray>The frames are locked.<newline><gray>Take it down: <white>/mrwaitroom screen remove'><dark_gray>[Info]</dark_gray></hover>"
+screen-no-frame: "<prefix><red>Look at one frame of the wall."
+screen-not-on-wall: "<prefix><red>The frames must hang on a wall."
+screen-wrong-size: "<prefix><red>The wall is <white><width> × <height></white> frames. <hover:show_text:'<gray>It needs exactly 4 wide and 2 high,<newline><gray>all frames facing the same way.'><dark_gray>[Info]</dark_gray></hover>"
+screen-removed: "<prefix><green>The board is taken down."
+screen-none: "<prefix><gray>There is no board."
+lobby-usage: "<prefix><gray>Save the lobby: <aqua>/mrwaitroom lobby save</aqua> <hover:show_text:'<gray>Without an area MRwaitroom finds the build by itself.<newline><gray>With an area: <white>save x1 y1 z1 x2 y2 z2'><dark_gray>[?]</dark_gray></hover>"
+lobby-saving: "<prefix><gray>Saving the lobby ..."
+lobby-saved: "<prefix><green>Lobby saved <white>(<size>)</white>. <hover:show_text:'<gray>From <white><from></white> to <white><to><newline><gray>New waiting room worlds start with this lobby,<newline><gray>spawn and board included.<newline><gray>Folder: plugins/MRwaitroom/lobby'><dark_gray>[Info]</dark_gray></hover>"
+lobby-empty: "<prefix><red>No build found - stand in the lobby or give the area."
 no-permission: "<prefix><red>You do not have permission to do that."
 players-only: "<prefix><red>Only players can use this command."
 player-not-found: "<prefix><red>Player <white><player></white> was not found."

@@ -14,6 +14,7 @@ sections:
     audience: admin
     pages:
       - {id: einrichten, file: einrichten.md, title: {de: Einrichten (Velocity & Server), en: Setting up (Velocity & servers)}}
+      - {id: lobby, file: lobby.md, title: {de: Lobby & Anzeigetafel, en: Lobby & board}}
       - {id: ablauf, file: ablauf.md, title: {de: Ablauf & Anzeige, en: How it works & display}}
       - {id: befehle, file: befehle.md, title: {de: Befehle, en: Commands}}
       - {id: permissions, file: permissions.md, title: {de: Permissions, en: Permissions}}

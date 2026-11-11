@@ -13,7 +13,7 @@ commands:
     aliases: [hauptserver]
   mrwaitroom:
     description: Management of MRwaitroom.
-    usage: /mrwaitroom <status|send|reload|version>
+    usage: /mrwaitroom <status|send|screen|lobby|reload|version>
     aliases: [waitroom, warteraum]
 
 permissions:
@@ -40,12 +40,14 @@ permissions:
       mrwaitroom.groups.support: true
       mrwaitroom.admin.send: true
   mrwaitroom.groups.admin:
-    description: "Group admin: everything of MRwaitroom - reload, update notice, visiting and going back by hand (back item, /main)."
+    description: "Group admin: everything of MRwaitroom - reload, update notice, board, lobby, visiting and going back by hand (back item, /main)."
     default: op
     children:
       mrwaitroom.groups.staff: true
       mrwaitroom.admin.reload: true
       mrwaitroom.admin.update: true
+      mrwaitroom.admin.screen: true
+      mrwaitroom.admin.lobby: true
       mrwaitroom.visit: true
       mrwaitroom.main: true
 
@@ -76,4 +78,10 @@ permissions:
     default: op
   mrwaitroom.admin.update:
     description: "Notice about new versions when joining."
+    default: op
+  mrwaitroom.admin.screen:
+    description: "/mrwaitroom screen set|remove - hang up or take down the board (a wall of 4 x 2 item frames)."
+    default: op
+  mrwaitroom.admin.lobby:
+    description: "/mrwaitroom lobby save - save the build of the waiting room as the lobby of new waiting room worlds."
     default: op

@@ -42,7 +42,7 @@ public record Settings(
                                  int estimateSeconds) {
     }
 
-    public record RoomSettings(String world, boolean platform, Material platformBlock, boolean chat,
+    public record RoomSettings(String world, boolean lobby, boolean platform, Material platformBlock, boolean chat,
                                boolean hidePlayers) {
     }
 
@@ -103,7 +103,8 @@ public record Settings(
                 Math.clamp(c.getInt("return.estimate-seconds", 120), 10, 3600));
 
         String world = c.getString("room.world", "waitroom").trim();
-        RoomSettings room = new RoomSettings(world.isEmpty() ? "waitroom" : world, c.getBoolean("room.platform", true),
+        RoomSettings room = new RoomSettings(world.isEmpty() ? "waitroom" : world, c.getBoolean("room.lobby", true),
+                c.getBoolean("room.platform", true),
                 material(c.getString("room.platform-block", "SMOOTH_STONE"), Material.SMOOTH_STONE, true,
                         "room.platform-block", log),
                 c.getBoolean("room.chat", false), c.getBoolean("room.hide-players", false));

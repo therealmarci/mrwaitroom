@@ -206,6 +206,22 @@ public final class Messages {
         }
     }
 
+    /** Like {@link #as(CommandSender, Supplier)} for a language code (e.g. "de") - for things drawn per language. */
+    public <T> T in(String code, Supplier<T> action) {
+        YamlConfiguration target = languages.getOrDefault(code, english);
+        YamlConfiguration previous = CURRENT.get();
+        CURRENT.set(target);
+        try {
+            return action.get();
+        } finally {
+            if (previous == null) {
+                CURRENT.remove();
+            } else {
+                CURRENT.set(previous);
+            }
+        }
+    }
+
     /** Like {@link #as(CommandSender, Supplier)} for actions without result. */
     public void run(CommandSender recipient, Runnable action) {
         as(recipient, () -> {

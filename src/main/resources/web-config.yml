@@ -120,11 +120,16 @@ sections:
         max-length: 64
         name: {de: Welt, en: World}
         help: {de: "Name der Warteraum-Welt. Gibt es sie noch nicht, legt MRwaitroom sie leer an (ohne Gelände). Jeder Spieler wird beim Betreten an ihren Spawn gesetzt.", en: "Name of the waiting room world. If it does not exist yet, MRwaitroom creates it empty (no terrain). Every player is put at its spawn on joining."}
+      - key: room.lobby
+        type: bool
+        restart: true
+        name: {de: Lobby bauen, en: Build the lobby}
+        help: {de: "Baut beim Anlegen einer neuen Welt die Lobby auf - mit Spawn und Anzeigetafel. Das ist die mitgelieferte Lobby oder deine eigene, gespeichert mit /mrwaitroom lobby save. Bei einer bestehenden Welt ändert sich nichts.", en: "Builds the lobby when a new world is created - with spawn and board. That is the bundled lobby or your own, saved with /mrwaitroom lobby save. An existing world stays as it is."}
       - key: room.platform
         type: bool
         restart: true
         name: {de: Plattform bauen, en: Build a platform}
-        help: {de: "Baut beim Anlegen einer neuen Welt eine kleine Plattform (9×9) am Spawn, damit niemand ins Leere fällt. Bei einer bestehenden Welt ändert sich nichts.", en: "Builds a small platform (9×9) at the spawn when a new world is created, so nobody falls into the void. An existing world stays as it is."}
+        help: {de: "Nur ohne Lobby: baut beim Anlegen einer neuen Welt eine kleine Plattform (9×9) am Spawn, damit niemand ins Leere fällt. Bei einer bestehenden Welt ändert sich nichts.", en: "Only without the lobby: builds a small platform (9×9) at the spawn when a new world is created, so nobody falls into the void. An existing world stays as it is."}
       - key: room.platform-block
         type: string
         when: room.platform

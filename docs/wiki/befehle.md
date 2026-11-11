@@ -5,6 +5,8 @@
 | `/main` (`/hauptserver`) | Sofort zurück zum Hauptserver, wenn er bereit ist - nur Admins (Spieler gehen automatisch zurück) | `mrwaitroom.main` |
 | `/mrwaitroom status` | Zustand des Hauptservers, Port, Verbindung zu MRadmin, typische Neustartdauer (Einzelheiten im Hover) | `mrwaitroom.admin.status` |
 | `/mrwaitroom send <spieler\|all>` | Spieler jetzt zum Hauptserver schicken | `mrwaitroom.admin.send` |
+| `/mrwaitroom screen set|remove` | [Anzeigetafel](lobby.md#die-anzeigetafel) aufhängen (auf einen Rahmen der Wand schauen) bzw. abnehmen | `mrwaitroom.admin.screen` |
+| `/mrwaitroom lobby save [x1 y1 z1 x2 y2 z2]` | Bau als [Lobby](lobby.md#eigene-lobby) für neue Warteraum-Welten speichern | `mrwaitroom.admin.lobby` |
 | `/mrwaitroom reload` | `config.yml` und Sprachdateien neu laden | `mrwaitroom.admin.reload` |
 | `/mrwaitroom version` | Version und Update-Status | `mrwaitroom.version` |
 

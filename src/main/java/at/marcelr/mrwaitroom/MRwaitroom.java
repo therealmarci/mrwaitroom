@@ -30,7 +30,7 @@ public final class MRwaitroom extends JavaPlugin implements Listener {
     private FileConfiguration config;
     private Settings settings;
     // lang-version 2: the clock keeps its name (the countdown moved to the action bar).
-    private final Messages messages = new Messages(6, Map.of(2, Set.of("item-restart", "item-restart-late", "item-stop",
+    private final Messages messages = new Messages(7, Map.of(2, Set.of("item-restart", "item-restart-late", "item-stop",
             "item-crash", "item-starting", "item-ready", "item-maintenance", "item-maintenance-open"),
             // 3: the countdown is in the bossbar, the clock opens a menu.
             3, Set.of("item-lore", "bossbar-restart", "bossbar-stop", "bossbar-crash", "bossbar-starting",
@@ -42,7 +42,9 @@ public final class MRwaitroom extends JavaPlugin implements Listener {
                     "bossbar-ready", "bossbar-returning", "bossbar-maintenance", "bossbar-maintenance-open"),
             // 6: countdowns instead of times.
             6, Set.of("bossbar-restart", "bossbar-stop", "bossbar-crash", "bossbar-ready", "bossbar-maintenance",
-                    "status", "join-restart", "menu-time-lore")));
+                    "status", "join-restart", "menu-time-lore"),
+            // 7: board and lobby in the command list.
+            7, Set.of("usage")));
     private final MainLink link = new MainLink(this);
     private final Room room = new Room(this);
     private final Display display = new Display(this);
@@ -51,6 +53,8 @@ public final class MRwaitroom extends JavaPlugin implements Listener {
     private final at.marcelr.mrwaitroom.link.Remote remote = new at.marcelr.mrwaitroom.link.Remote(this);
     private final at.marcelr.mrwaitroom.server.StarterBridge starter = new at.marcelr.mrwaitroom.server.StarterBridge(this);
     private final at.marcelr.mrwaitroom.server.Restarts restarts = new at.marcelr.mrwaitroom.server.Restarts(this);
+    private final at.marcelr.mrwaitroom.room.Screen screen = new at.marcelr.mrwaitroom.room.Screen(this);
+    private final at.marcelr.mrwaitroom.room.Lobby lobby = new at.marcelr.mrwaitroom.room.Lobby(this);
     private UpdateChecker updateChecker;
 
     @Override
@@ -66,6 +70,7 @@ public final class MRwaitroom extends JavaPlugin implements Listener {
             loadConfiguration();
         }
         room.load();
+        screen.load();
         updateChecker = new UpdateChecker(this);
         updateChecker.start();
 
@@ -75,6 +80,7 @@ public final class MRwaitroom extends JavaPlugin implements Listener {
         pm.registerEvents(returner, this);
         pm.registerEvents(xaero, this);
         pm.registerEvents(new at.marcelr.mrwaitroom.room.InfoMenu(this), this);
+        pm.registerEvents(screen, this);
         pm.registerEvents(this, this);
         register("mrwaitroom", new WaitroomCommand(this));
         register("main", new MainCommand(this));
@@ -86,6 +92,7 @@ public final class MRwaitroom extends JavaPlugin implements Listener {
         remote.start();
         starter.start();
         restarts.start();
+        screen.start();
         if (settings.main().linkUrl().isEmpty()) {
             getLogger().info("No main.link-url set - the waiting room only sees whether the main server is up.");
         } else if (settings.main().linkKey().isEmpty()) {
@@ -100,6 +107,7 @@ public final class MRwaitroom extends JavaPlugin implements Listener {
         returner.stop();
         remote.stop();
         restarts.stop();
+        screen.stop();
         starter.shutdown();
         if (updateChecker != null) {
             updateChecker.stop();
@@ -110,6 +118,8 @@ public final class MRwaitroom extends JavaPlugin implements Listener {
     public void reload() {
         ConfigUpdater.update(this);
         loadConfiguration();
+        screen.board().clear();
+        screen.start();
         link.start();
         display.start();
         returner.start();
@@ -185,6 +195,14 @@ public final class MRwaitroom extends JavaPlugin implements Listener {
     /** Restarts by hand and planned ones, with the rules when they may happen. */
     public at.marcelr.mrwaitroom.server.Restarts restarts() {
         return restarts;
+    }
+
+    public at.marcelr.mrwaitroom.room.Screen screen() {
+        return screen;
+    }
+
+    public at.marcelr.mrwaitroom.room.Lobby lobby() {
+        return lobby;
     }
 
     public Display display() {

@@ -21,13 +21,15 @@ import java.util.Locale;
 
 import static at.marcelr.mrwaitroom.Messages.tag;
 
-/** /mrwaitroom status | send &lt;player|all&gt; | reload | version. */
+/** /mrwaitroom status | send &lt;player|all&gt; | screen set|remove | lobby save | reload | version. */
 public final class WaitroomCommand implements TabExecutor {
 
     public static final String PERM_STATUS = "mrwaitroom.admin.status";
     public static final String PERM_SEND = "mrwaitroom.admin.send";
     public static final String PERM_RELOAD = "mrwaitroom.admin.reload";
     public static final String PERM_VERSION = "mrwaitroom.version";
+    public static final String PERM_SCREEN = "mrwaitroom.admin.screen";
+    public static final String PERM_LOBBY = "mrwaitroom.admin.lobby";
 
     private final MRwaitroom plugin;
 
@@ -58,6 +60,16 @@ public final class WaitroomCommand implements TabExecutor {
                     if (check(sender, PERM_RELOAD)) {
                         plugin.reload();
                         messages().send(sender, "reload-done");
+                    }
+                }
+                case "screen" -> {
+                    if (check(sender, PERM_SCREEN)) {
+                        screen(sender, args);
+                    }
+                }
+                case "lobby" -> {
+                    if (check(sender, PERM_LOBBY)) {
+                        lobby(sender, args);
                     }
                 }
                 case "version", "ver" -> {
@@ -114,6 +126,65 @@ public final class WaitroomCommand implements TabExecutor {
         messages().send(sender, "send-done", tag("count", targets.size()));
     }
 
+    /** /mrwaitroom screen set (looking at a frame of the wall) | remove. */
+    private void screen(CommandSender sender, String[] args) {
+        String action = args.length < 2 ? "" : args[1].toLowerCase(Locale.ROOT);
+        switch (action) {
+            case "set" -> {
+                if (!(sender instanceof Player player)) {
+                    messages().send(sender, "players-only");
+                    return;
+                }
+                switch (plugin.screen().set(player)) {
+                    case OK -> messages().send(sender, "screen-set-done");
+                    case NO_FRAME -> messages().send(sender, "screen-no-frame");
+                    case NOT_ON_WALL -> messages().send(sender, "screen-not-on-wall");
+                    case WRONG_SIZE -> messages().send(sender, "screen-wrong-size",
+                            tag("width", plugin.screen().lastSize()[0]), tag("height", plugin.screen().lastSize()[1]));
+                }
+            }
+            case "remove" -> {
+                if (!plugin.screen().active()) {
+                    messages().send(sender, "screen-none");
+                    return;
+                }
+                plugin.screen().remove();
+                messages().send(sender, "screen-removed");
+            }
+            default -> messages().send(sender, "screen-usage");
+        }
+    }
+
+    /** /mrwaitroom lobby save [x1 y1 z1 x2 y2 z2]. */
+    private void lobby(CommandSender sender, String[] args) {
+        if (args.length < 2 || !args[1].equalsIgnoreCase("save") || (args.length != 2 && args.length != 8)) {
+            messages().send(sender, "lobby-usage");
+            return;
+        }
+        int[] from = null;
+        int[] to = null;
+        if (args.length == 8) {
+            try {
+                from = new int[]{Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4])};
+                to = new int[]{Integer.parseInt(args[5]), Integer.parseInt(args[6]), Integer.parseInt(args[7])};
+            } catch (NumberFormatException e) {
+                messages().send(sender, "lobby-usage");
+                return;
+            }
+        }
+        messages().send(sender, "lobby-saving");
+        plugin.lobby().save(plugin.room().world(), from, to, saved -> messages().run(sender, () -> {
+            if (saved == null) {
+                messages().send(sender, "lobby-empty");
+            } else {
+                messages().send(sender, "lobby-saved",
+                        tag("size", saved.width() + " x " + saved.height() + " x " + saved.length()),
+                        tag("from", saved.min()[0] + " " + saved.min()[1] + " " + saved.min()[2]),
+                        tag("to", saved.max()[0] + " " + saved.max()[1] + " " + saved.max()[2]));
+            }
+        }));
+    }
+
     private void version(CommandSender sender) {
         UpdateChecker updates = plugin.updateChecker();
         messages().send(sender, "version",
@@ -154,6 +225,16 @@ public final class WaitroomCommand implements TabExecutor {
             if (sender.hasPermission(PERM_VERSION)) {
                 options.add("version");
             }
+            if (sender.hasPermission(PERM_SCREEN)) {
+                options.add("screen");
+            }
+            if (sender.hasPermission(PERM_LOBBY)) {
+                options.add("lobby");
+            }
+        } else if (args.length == 2 && args[0].equalsIgnoreCase("screen") && sender.hasPermission(PERM_SCREEN)) {
+            options.addAll(List.of("set", "remove"));
+        } else if (args.length == 2 && args[0].equalsIgnoreCase("lobby") && sender.hasPermission(PERM_LOBBY)) {
+            options.add("save");
         } else if (args.length == 2 && args[0].equalsIgnoreCase("send") && sender.hasPermission(PERM_SEND)) {
             options.add("all");
             Bukkit.getOnlinePlayers().forEach(p -> options.add(p.getName()));

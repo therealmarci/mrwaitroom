@@ -8,7 +8,7 @@ mrwaitroom.groups.support:
 mrwaitroom.groups.staff:
   de: "Support + Spieler zum Hauptserver schicken (`/mrwaitroom send`)"
 mrwaitroom.groups.admin:
-  de: "Alles: Staff + Reload, Update-Hinweis, Besuchen mit Zurück-Item"
+  de: "Alles: Staff + Reload, Update-Hinweis, Anzeigetafel, Lobby, Besuchen mit Zurück-Item"
 mrwaitroom.main:
   de: "`/main` - sofort zurück, wenn der Hauptserver bereit ist (nur Admins)"
 mrwaitroom.version:
@@ -27,3 +27,7 @@ mrwaitroom.admin.reload:
   de: "`/mrwaitroom reload`"
 mrwaitroom.admin.update:
   de: "Hinweis auf neue Versionen beim Betreten"
+mrwaitroom.admin.screen:
+  de: "`/mrwaitroom screen set|remove` - Anzeigetafel aufhängen bzw. abnehmen"
+mrwaitroom.admin.lobby:
+  de: "`/mrwaitroom lobby save` - Bau als Lobby für neue Warteraum-Welten speichern"

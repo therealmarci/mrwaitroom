@@ -11,7 +11,7 @@
 # ==============================================================================
 
 # Do not change - tells the plugin which texts need to be renewed on updates.
-lang-version: 4
+lang-version: 5
 
 prefix: "<dark_gray>[<aqua>Waiting room</aqua>]</dark_gray> "
 
@@ -37,16 +37,16 @@ item-lore:
   - "<yellow>Right click: <gray>all details"
 
 # ---------------------------------------------------------------------- Bossbar
-# At the top of the screen, renewed every second - with the countdown.
-bossbar-restart: "<yellow>Restart <gray>· about <white><time></white> left <dark_gray>– <gray><reason>"
-bossbar-restart-late: "<yellow>Back in a moment <gray>· since <white><since></white> <dark_gray>– <gray><reason>"
-bossbar-stop: "<red>Server is off <gray>· since <white><since></white> <dark_gray>– <gray><reason>"
-bossbar-crash: "<gold>Server is restarting <gray>· since <white><since>"
-bossbar-starting: "<green>Server is starting <gray>· almost there"
-bossbar-ready: "<green>Server is ready <gray>· back in <white><time> s"
-bossbar-returning: "<green>Going back to the server …"
-bossbar-maintenance: "<aqua>Maintenance until <white><end></white> <gray>· about <white><time></white> left <dark_gray>– <gray><title>"
-bossbar-maintenance-open: "<aqua>Maintenance <gray>· open end <dark_gray>– <gray><title>"
+# At the top of the screen, renewed every second. Always the same layout: state | time (reason and details in the clock menu).
+bossbar-restart: "<yellow>Restart</yellow> <dark_gray>|</dark_gray> <white>about <time> left"
+bossbar-restart-late: "<yellow>Restart</yellow> <dark_gray>|</dark_gray> <white>back in a moment"
+bossbar-stop: "<red>Server off</red> <dark_gray>|</dark_gray> <white>since <since>"
+bossbar-crash: "<gold>Server restarting</gold> <dark_gray>|</dark_gray> <white>since <since>"
+bossbar-starting: "<green>Server starting</green> <dark_gray>|</dark_gray> <white>almost there"
+bossbar-ready: "<green>Server ready</green> <dark_gray>|</dark_gray> <white>back in <time> s"
+bossbar-returning: "<green>Server ready</green> <dark_gray>|</dark_gray> <white>going back"
+bossbar-maintenance: "<aqua>Maintenance</aqua> <dark_gray>|</dark_gray> <white>until <end>"
+bossbar-maintenance-open: "<aqua>Maintenance</aqua> <dark_gray>|</dark_gray> <white>open end"
 
 # --------------------------------------------------------------------- Menu
 # Opens with a right click on the clock.

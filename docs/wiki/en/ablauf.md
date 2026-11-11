@@ -5,14 +5,14 @@ Every few seconds (`main.poll-seconds`) the waiting room checks whether the Mine
 
 | State | When | Bossbar (top, renewed every second) |
 |---|---|---|
-| **Restart** | MRadmin's countdown has ended, server gone | "Restart · about 0:40 left – reason", then "Back in a moment · since …" |
-| **Shut down** | `/mradmin stop` has ended | "Server is off · since … – reason" |
-| **Not reachable** | Server gone without notice (crash, `/stop`) | "Server is restarting · since …" |
-| **Starting** | Port answers, MRadmin does not report "ready" yet | "Server is starting · almost there" |
-| **Maintenance** | MRadmin reports a running maintenance - also while the server restarts or is off during it | "Maintenance until 18:00 · about 1:20:00 left – title" or "open end" |
-| **Ready** | MRadmin reports "ready" | "Server is ready · going back" |
+| **Restart** | MRadmin's countdown has ended, server gone | "Restart | about 0:40 left", then "Restart | back in a moment" |
+| **Shut down** | `/mradmin stop` has ended | "Server off | since 2:13" |
+| **Not reachable** | Server gone without notice (crash, `/stop`) | "Server restarting | since 0:25" |
+| **Starting** | Port answers, MRadmin does not report "ready" yet | "Server starting | almost there" |
+| **Maintenance** | MRadmin reports a running maintenance - also while the server restarts or is off during it | "Maintenance | until 18:00" or "Maintenance | open end" |
+| **Ready** | MRadmin reports "ready" | "Server ready | back in 8 s" |
 
-The bossbar (`display.bossbar`) fills up until the expected return or the end of the maintenance. **On joining** there is a short chat line with details in the hover, plus the warnings that are currently active in MRadmin under **News**.
+The bossbar (`display.bossbar`) always has the same layout - **state | time** -, reason and details are in the clock menu. It fills up until the expected return or the end of the maintenance. **On joining** there is a short chat line with details in the hover, plus the warnings that are currently active in MRadmin under **News**.
 
 ## The clock and its menu
 The **clock in the hotbar** (`display.item`, stays selected on `display.slot`) carries the state in its name, e.g. "⏳ Restart" or "🛠 Maintenance until 18:00". A **right click** opens a menu with all details:
@@ -35,7 +35,7 @@ The menu renews every second while it is open.
 The waiting room estimates the time left of a restart from the **typical length of the last restarts** (median of the last 10, measured from going down to "ready"). Until two restarts were measured, `return.estimate-seconds` applies (default 90 s). Stops do not count.
 
 ## Sending back
-- As soon as the main server is **ready**, a **countdown** of `return.delay-seconds` runs (default 10 s): bossbar "Server is ready · back in 8 s", one chat line and a tick in the last 5 seconds. Then the waiting room sends everyone back **in batches**: `return.batch-size` players (5) every `return.batch-seconds` (2 s), longest waiting first.
+- As soon as the main server is **ready**, a **countdown** of `return.delay-seconds` runs (default 10 s): bossbar "Server ready | back in 8 s", one chat line and a tick in the last 5 seconds. Then the waiting room sends everyone back **in batches**: `return.batch-size` players (5) every `return.batch-seconds` (2 s), longest waiting first.
 - **During a maintenance** only players with MRadmin's maintenance bypass go back (`mradmin.maintenance.bypass`) - the others wait until the end.
 - **Turned away?** If a player does not arrive `return.max-attempts` times (3) (ban, whitelist), the waiting room disconnects them with a note. Whoever bounces back shortly after keeps counting - nobody goes back and forth forever. During a maintenance nobody is disconnected: the player simply stays in the waiting room until the end.
 - Players with `mrwaitroom.stay` are never sent back by themselves.

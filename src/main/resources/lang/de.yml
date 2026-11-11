@@ -11,7 +11,7 @@
 # ==============================================================================
 
 # Nicht ändern - sagt dem Plugin, welche Texte bei Updates erneuert werden müssen.
-lang-version: 4
+lang-version: 5
 
 prefix: "<dark_gray>[<aqua>Warteraum</aqua>]</dark_gray> "
 
@@ -37,16 +37,16 @@ item-lore:
   - "<yellow>Rechtsklick: <gray>alle Einzelheiten"
 
 # ---------------------------------------------------------------------- Bossbar
-# Oben am Bildschirm, jede Sekunde neu - mit Countdown.
-bossbar-restart: "<yellow>Neustart <gray>· noch ca. <white><time></white> <dark_gray>– <gray><reason>"
-bossbar-restart-late: "<yellow>Gleich wieder da <gray>· seit <white><since></white> <dark_gray>– <gray><reason>"
-bossbar-stop: "<red>Server ist aus <gray>· seit <white><since></white> <dark_gray>– <gray><reason>"
-bossbar-crash: "<gold>Server startet neu <gray>· seit <white><since>"
-bossbar-starting: "<green>Server startet <gray>· gleich geht es los"
-bossbar-ready: "<green>Server ist bereit <gray>· zurück in <white><time> s"
-bossbar-returning: "<green>Es geht zurück zum Server …"
-bossbar-maintenance: "<aqua>Wartung bis <white><end></white> <gray>· noch ca. <white><time></white> <dark_gray>– <gray><title>"
-bossbar-maintenance-open: "<aqua>Wartung <gray>· Ende offen <dark_gray>– <gray><title>"
+# Oben am Bildschirm, jede Sekunde neu. Immer gleich aufgebaut: Zustand | Zeit (Grund und Einzelheiten im Uhr-Menü).
+bossbar-restart: "<yellow>Neustart</yellow> <dark_gray>|</dark_gray> <white>noch ca. <time>"
+bossbar-restart-late: "<yellow>Neustart</yellow> <dark_gray>|</dark_gray> <white>gleich wieder da"
+bossbar-stop: "<red>Server aus</red> <dark_gray>|</dark_gray> <white>seit <since>"
+bossbar-crash: "<gold>Server startet neu</gold> <dark_gray>|</dark_gray> <white>seit <since>"
+bossbar-starting: "<green>Server startet</green> <dark_gray>|</dark_gray> <white>gleich geht es los"
+bossbar-ready: "<green>Server bereit</green> <dark_gray>|</dark_gray> <white>zurück in <time> s"
+bossbar-returning: "<green>Server bereit</green> <dark_gray>|</dark_gray> <white>es geht zurück"
+bossbar-maintenance: "<aqua>Wartung</aqua> <dark_gray>|</dark_gray> <white>bis <end>"
+bossbar-maintenance-open: "<aqua>Wartung</aqua> <dark_gray>|</dark_gray> <white>Ende offen"
 
 # --------------------------------------------------------------------- Menü
 # Öffnet sich mit Rechtsklick auf die Uhr.

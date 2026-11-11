@@ -10,7 +10,7 @@ When the server restarts or a maintenance runs, you land in the **waiting room**
 ## Going back
 You do not have to do anything: as soon as the server is ready, the waiting room sends you back by itself ("Going back to the server …"). Whoever was there first goes first.
 
-Impatient? **`/main`** takes you back right away - but only if the server is already ready.
+You cannot go back by yourself - the waiting room sends everyone back in turn as soon as it goes on.
 
 > [!NOTE]
 > During a **maintenance** you stay in the waiting room until it is over. Then you go back by yourself as well.

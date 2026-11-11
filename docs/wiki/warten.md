@@ -10,7 +10,7 @@ Startet der Server neu oder läuft eine Wartung, landest du im **Warteraum** - d
 ## Zurück
 Du musst nichts tun: Sobald der Server bereit ist, schickt dich der Warteraum automatisch zurück („Es geht zurück zum Server …“). Wer zuerst da war, kommt zuerst dran.
 
-Ungeduldig? Mit **`/main`** gehst du sofort zurück - aber nur, wenn der Server schon bereit ist.
+Selbst zurück geht nicht - der Warteraum schickt alle der Reihe nach zurück, sobald es weitergeht.
 
 > [!NOTE]
 > Während einer **Wartung** bleibst du im Warteraum, bis sie vorbei ist. Danach geht es auch automatisch zurück.

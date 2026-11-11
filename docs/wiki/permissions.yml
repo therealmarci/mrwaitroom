@@ -2,7 +2,7 @@
 # Die Tabelle selbst (Permissions, Standard, Gruppe) erzeugt die Website aus plugin.yml - hier steht nur, wofür eine
 # Permission ist, auf Deutsch (de) und optional Englisch (en). Ohne Eintrag gilt die description aus plugin.yml.
 mrwaitroom.player:
-  de: "`/main`, `/mrwaitroom version` - hat jeder von Haus aus"
+  de: "`/mrwaitroom version` - hat jeder von Haus aus (zurück geht es automatisch)"
 mrwaitroom.groups.support:
   de: "Spieler + Chat im Warteraum, `/mrwaitroom status`"
 mrwaitroom.groups.staff:
@@ -10,7 +10,7 @@ mrwaitroom.groups.staff:
 mrwaitroom.groups.admin:
   de: "Alles: Staff + Reload, Update-Hinweis, Besuchen mit Zurück-Item"
 mrwaitroom.main:
-  de: "`/main` - sofort zurück, wenn der Hauptserver bereit ist"
+  de: "`/main` - sofort zurück, wenn der Hauptserver bereit ist (nur Admins)"
 mrwaitroom.version:
   de: "`/mrwaitroom version`"
 mrwaitroom.chat:

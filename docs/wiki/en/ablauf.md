@@ -40,7 +40,7 @@ The waiting room estimates the time left of a restart from the **typical length 
 - **Turned away?** If a player does not arrive `return.max-attempts` times (3) (ban, whitelist), the waiting room disconnects them with a note. Whoever bounces back shortly after keeps counting - nobody goes back and forth forever. During a maintenance nobody is disconnected: the player simply stays in the waiting room until the end.
 - Players with `mrwaitroom.stay` are never sent back by themselves.
 - **Visit:** whoever comes via **To the waiting room** in MRadmin's admin menu (permission `mrwaitroom.visit`) stays until they leave themselves - with the green item **Back to the server** in the hotbar (slot 9), also during a maintenance.
-- `/main` sends a player back right away, `/mrwaitroom send <player|all>` the team.
+- Going back by hand only for the team: admins with `/main`, the green item or the button in the clock menu (`mrwaitroom.main`, `mrwaitroom.visit`), staff with `/mrwaitroom send <player|all>`. Players cannot trigger it themselves.
 
 ## The room
 An empty world (`room.world`) with a small platform at the spawn. No damage, no hunger, adventure mode, blocks and inventory locked, whoever falls off stands at the spawn again. The chat is off (`room.chat`), with `mrwaitroom.chat` one may write anyway. Other players can be hidden (`room.hide-players`).

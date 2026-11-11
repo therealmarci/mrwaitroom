@@ -22,10 +22,9 @@ permissions:
   # the team - each group contains the one below. Unlike the other plugins mrwaitroom.player is given to everyone
   # by default: waiting players are often new and have no group yet. mrwaitroom.stay is in no group on purpose.
   mrwaitroom.player:
-    description: "Player: /main and /mrwaitroom version."
+    description: "Player: /mrwaitroom version. Going back is automatic - only admins can go back by hand."
     default: true
     children:
-      mrwaitroom.main: true
       mrwaitroom.version: true
   mrwaitroom.groups.support:
     description: "Group support: player + chat in the waiting room and /mrwaitroom status."
@@ -41,18 +40,19 @@ permissions:
       mrwaitroom.groups.support: true
       mrwaitroom.admin.send: true
   mrwaitroom.groups.admin:
-    description: "Group admin: everything of MRwaitroom - reload, update notice and visiting (back item)."
+    description: "Group admin: everything of MRwaitroom - reload, update notice, visiting and going back by hand (back item, /main)."
     default: op
     children:
       mrwaitroom.groups.staff: true
       mrwaitroom.admin.reload: true
       mrwaitroom.admin.update: true
       mrwaitroom.visit: true
+      mrwaitroom.main: true
 
   # ------------------------------------------------------------- Single ones
   mrwaitroom.main:
-    description: "/main - back to the main server right away when it is ready."
-    default: true
+    description: "/main - back to the main server right away when it is ready (admins only - players go back automatically)."
+    default: op
   mrwaitroom.version:
     description: "/mrwaitroom version - version and update status."
     default: true

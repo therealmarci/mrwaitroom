@@ -2,7 +2,7 @@
 
 | Befehl | Was er macht | Permission |
 |---|---|---|
-| `/main` (`/hauptserver`) | Sofort zurück zum Hauptserver - nur, wenn er bereit ist | `mrwaitroom.main` |
+| `/main` (`/hauptserver`) | Sofort zurück zum Hauptserver, wenn er bereit ist - nur Admins (Spieler gehen automatisch zurück) | `mrwaitroom.main` |
 | `/mrwaitroom status` | Zustand des Hauptservers, Port, Verbindung zu MRadmin, typische Neustartdauer (Einzelheiten im Hover) | `mrwaitroom.admin.status` |
 | `/mrwaitroom send <spieler\|all>` | Spieler jetzt zum Hauptserver schicken | `mrwaitroom.admin.send` |
 | `/mrwaitroom reload` | `config.yml` und Sprachdateien neu laden | `mrwaitroom.admin.reload` |

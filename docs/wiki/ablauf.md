@@ -40,7 +40,7 @@ Die Restzeit eines Neustarts schätzt der Warteraum aus der **typischen Dauer de
 - **Abgewiesen?** Kommt ein Spieler `return.max-attempts`-mal (3) nicht an (Bann, Whitelist), trennt ihn der Warteraum mit einem Hinweis. Auch wer kurz hintereinander zurückprallt, zählt weiter - niemand pendelt endlos. Während einer Wartung wird nicht getrennt: Der Spieler bleibt dann einfach bis zum Ende im Warteraum.
 - Spieler mit `mrwaitroom.stay` werden nie automatisch zurückgeschickt.
 - **Besuch:** Wer über **In den Warteraum** im Admin-Menü von MRadmin kommt (Permission `mrwaitroom.visit`), bleibt, bis er selbst geht - mit dem grünen Item **Zurück zum Server** in der Hotbar (Platz 9), auch während einer Wartung.
-- `/main` schickt einen Spieler sofort zurück, `/mrwaitroom send <spieler|all>` das Team.
+- Von Hand zurück nur fürs Team: Admins mit `/main`, dem grünen Item oder dem Knopf im Uhr-Menü (`mrwaitroom.main`, `mrwaitroom.visit`), Staff mit `/mrwaitroom send <spieler|all>`. Spieler können das nicht selbst anstoßen.
 
 ## Der Raum
 Eine leere Welt (`room.world`) mit einer kleinen Plattform am Spawn. Kein Schaden, kein Hunger, Abenteuermodus, Blöcke und Inventar gesperrt, wer runterfällt, steht wieder am Spawn. Der Chat ist aus (`room.chat`), mit `mrwaitroom.chat` darf man trotzdem schreiben. Andere Spieler lassen sich ausblenden (`room.hide-players`).

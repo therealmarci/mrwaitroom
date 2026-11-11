@@ -33,7 +33,7 @@ import static at.marcelr.mrwaitroom.Messages.tag;
  * <pre>
  *  . . . . S . . . .     S = state
  *  . R . T . M . W .     R = reason, T = times, M = maintenance, W = warnings
- *  . . . B . C . . .     B = back to the server (grey while not ready), C = close
+ *  . . . B . C . . .     B = back to the server (only admins, grey while not ready), C = close (players: middle)
  * </pre>
  * Renewed every second while it is open ({@link Display}).
  */
@@ -46,6 +46,8 @@ public final class InfoMenu implements InventoryHolder, Listener {
     private static final int ALERTS = 16;
     private static final int BACK = 21;
     private static final int CLOSE = 23;
+    /** Close without the back button (players): in the middle. */
+    private static final int CLOSE_ALONE = 22;
 
     private final MRwaitroom plugin;
     private final Player viewer;
@@ -105,11 +107,17 @@ public final class InfoMenu implements InventoryHolder, Listener {
                 alerts.addAll(m.lore("menu-alerts-none"));
             }
             inventory.setItem(ALERTS, item(Material.BELL, m.item("menu-alerts-name"), alerts));
-            boolean ready = plugin.returner().mayGo(viewer, view);
-            inventory.setItem(BACK, ready
-                    ? item(Material.LIME_DYE, m.item("menu-back-name"), m.lore("menu-back-lore"))
-                    : item(Material.GRAY_DYE, m.item("menu-back-locked-name"), m.lore("menu-back-locked-lore")));
-            inventory.setItem(CLOSE, item(Material.BARRIER, m.item("menu-close"), List.of()));
+            // Going back by hand only for admins (mrwaitroom.visit) - players go back automatically. Without it the
+            // close button moves to the middle (symmetric).
+            if (viewer.hasPermission(Returner.PERM_VISIT)) {
+                boolean ready = plugin.returner().mayGo(viewer, view);
+                inventory.setItem(BACK, ready
+                        ? item(Material.LIME_DYE, m.item("menu-back-name"), m.lore("menu-back-lore"))
+                        : item(Material.GRAY_DYE, m.item("menu-back-locked-name"), m.lore("menu-back-locked-lore")));
+                inventory.setItem(CLOSE, item(Material.BARRIER, m.item("menu-close"), List.of()));
+            } else {
+                inventory.setItem(CLOSE_ALONE, item(Material.BARRIER, m.item("menu-close"), List.of()));
+            }
         });
     }
 
@@ -153,9 +161,10 @@ public final class InfoMenu implements InventoryHolder, Listener {
         if (!(event.getWhoClicked() instanceof Player player) || event.getClickedInventory() != menu.inventory) {
             return;
         }
-        if (event.getSlot() == CLOSE) {
+        boolean admin = player.hasPermission(Returner.PERM_VISIT);
+        if (event.getSlot() == (admin ? CLOSE : CLOSE_ALONE)) {
             player.closeInventory();
-        } else if (event.getSlot() == BACK && plugin.returner().mayGo(player, plugin.link().view())) {
+        } else if (admin && event.getSlot() == BACK && plugin.returner().mayGo(player, plugin.link().view())) {
             player.closeInventory();
             plugin.returner().send(player);
         }

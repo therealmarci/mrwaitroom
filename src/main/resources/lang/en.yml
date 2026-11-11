@@ -11,7 +11,7 @@
 # ==============================================================================
 
 # Do not change - tells the plugin which texts need to be renewed on updates.
-lang-version: 2
+lang-version: 3
 
 prefix: "<dark_gray>[<aqua>Waiting room</aqua>]</dark_gray> "
 
@@ -31,28 +31,55 @@ item-ready: "<green>➜ Back to the server"
 item-maintenance: "<aqua>🛠 Maintenance until <white><end>"
 item-maintenance-open: "<aqua>🛠 Maintenance"
 item-lore:
-  - "<gray>You are in the waiting room."
-  - "<gray>As soon as it goes on, you go"
-  - "<gray>back by yourself."
-
-# ---------------------------------------------------------- Action bar (countdown)
-# Above the hotbar, renewed every second.
-actionbar-restart: "<yellow>Restart <gray>· about <white><time></white> left"
-actionbar-restart-late: "<yellow>Back in a moment <gray>· since <white><since>"
-actionbar-stop: "<red>Server is off <gray>· since <white><since>"
-actionbar-crash: "<gold>Server is restarting <gray>· since <white><since>"
-actionbar-starting: "<green>Server is starting <gray>· almost there"
-actionbar-ready: "<green>Back to the server …"
-actionbar-maintenance: "<aqua>Maintenance <gray>· about <white><time></white> left"
-actionbar-maintenance-open: "<aqua>Maintenance <gray>· open end"
+  - "<gray>You are waiting in the waiting room"
+  - "<gray>and go back by yourself."
+  - "<yellow>Right click: <gray>all details"
 
 # ---------------------------------------------------------------------- Bossbar
-bossbar-restart: "<yellow>Restart <gray>– <white><reason>"
-bossbar-stop: "<red>Server shut down <gray>– <white><reason>"
-bossbar-crash: "<gold>Server not reachable <gray>– hopefully restarting soon"
-bossbar-starting: "<green>Server is starting …"
-bossbar-ready: "<green>Server is ready – going back"
-bossbar-maintenance: "<aqua>Maintenance <gray>– <white><title>"
+# At the top of the screen, renewed every second - with the countdown.
+bossbar-restart: "<yellow>Restart <gray>· about <white><time></white> left <dark_gray>– <gray><reason>"
+bossbar-restart-late: "<yellow>Back in a moment <gray>· since <white><since></white> <dark_gray>– <gray><reason>"
+bossbar-stop: "<red>Server is off <gray>· since <white><since></white> <dark_gray>– <gray><reason>"
+bossbar-crash: "<gold>Server is restarting <gray>· since <white><since>"
+bossbar-starting: "<green>Server is starting <gray>· almost there"
+bossbar-ready: "<green>Server is ready <gray>· going back"
+bossbar-maintenance: "<aqua>Maintenance until <white><end></white> <gray>· about <white><time></white> left <dark_gray>– <gray><title>"
+bossbar-maintenance-open: "<aqua>Maintenance <gray>· open end <dark_gray>– <gray><title>"
+
+# --------------------------------------------------------------------- Menu
+# Opens with a right click on the clock.
+menu-title: "Waiting room"
+menu-reason-name: "<yellow>Reason"
+menu-reason-lore:
+  - "<white><reason>"
+menu-time-name: "<aqua>Time"
+menu-time-lore:
+  - "<gray>Gone since: <white><since>"
+  - "<gray>About left: <white><time>"
+  - "<gray>A restart usually takes: <white><estimate>"
+menu-maintenance-name: "<aqua>Maintenance"
+menu-maintenance-lore:
+  - "<white><title>"
+  - "<gray>Start: <white><start>"
+  - "<gray>End: <white><end>"
+menu-maintenance-planned:
+  - "<gray>Planned: <white><title>"
+  - "<gray>Start: <white><start>"
+  - "<gray>End: <white><end>"
+menu-maintenance-none:
+  - "<gray>No maintenance planned."
+menu-alerts-name: "<red>Warnings"
+menu-alert-line: "<white>• <title>"
+menu-alerts-none:
+  - "<gray>None."
+menu-back-name: "<green>Back to the server"
+menu-back-lore:
+  - "<gray>The server is ready."
+menu-back-locked-name: "<gray>Not ready yet"
+menu-back-locked-lore:
+  - "<gray>You go back by yourself"
+  - "<gray>as soon as it goes on."
+menu-close: "<red>Close"
 
 # -------------------------------------------------------------------- On joining
 join-restart: "<prefix><yellow>Restart – you go back by yourself. <hover:show_text:'<gray>Reason: <white><reason><newline><gray>Usually takes about <white><estimate>'><dark_gray>[Info]</dark_gray></hover>"

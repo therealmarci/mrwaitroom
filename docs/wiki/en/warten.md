@@ -3,8 +3,8 @@
 When the server restarts or a maintenance runs, you land in the **waiting room** - so you are not kicked.
 
 ## What you see
-- **Above your hotbar** it says how long it takes, e.g. "Restart · about 0:40 left". The **clock in your hand** says what is going on ("⏳ Restart", "🛠 Maintenance until 18:00").
-- **The bossbar** at the top names the reason and fills up until the expected return.
+- **The bossbar** at the top tells you how long it takes and why, e.g. "Restart · about 0:40 left – plugin updates". It fills up until the expected return.
+- **The clock in your hand** shows what is going on ("⏳ Restart", "🛠 Maintenance until 18:00"). A **right click** on the clock opens a menu with all details: reason, times, maintenance, warnings.
 - **On joining** one line in the chat - hover over **[Info]** for details.
 
 ## Going back

@@ -3,22 +3,33 @@
 ## Was der Warteraum über den Hauptserver weiß
 Alle paar Sekunden (`main.poll-seconds`) prüft der Warteraum, ob der Minecraft-Port des Hauptservers antwortet, und fragt MRadmin dort, was los ist. Die letzte Antwort von MRadmin hebt er auf (`plugins/MRwaitroom/state.yml`), damit Grund, Countdown und Wartungszeiten auch dann noch da sind, wenn der Hauptserver aus ist - auch nach einem Neustart des Warteraums selbst.
 
-| Zustand | Wann | Zeile über der Hotbar |
+| Zustand | Wann | Bossbar (oben, jede Sekunde neu) |
 |---|---|---|
-| **Neustart** | MRadmin-Countdown ist abgelaufen, Server weg | „Neustart · noch ca. 0:40“, danach „Gleich wieder da · seit …“ |
-| **Heruntergefahren** | `/mradmin stop` ist abgelaufen | „Server ist aus · seit …“ |
+| **Neustart** | MRadmin-Countdown ist abgelaufen, Server weg | „Neustart · noch ca. 0:40 – Grund“, danach „Gleich wieder da · seit …“ |
+| **Heruntergefahren** | `/mradmin stop` ist abgelaufen | „Server ist aus · seit … – Grund“ |
 | **Nicht erreichbar** | Server weg ohne Ankündigung (Absturz, `/stop`) | „Server startet neu · seit …“ |
 | **Startet** | Port antwortet, MRadmin meldet noch nicht „bereit“ | „Server startet · gleich geht es los“ |
-| **Wartung** | MRadmin meldet eine laufende Wartung - auch wenn der Server währenddessen neu startet oder aus ist | „Wartung · noch ca. 1:20:00“ bzw. „Ende offen“ |
-| **Bereit** | MRadmin meldet „bereit“ | „Zurück zum Server …“ |
+| **Wartung** | MRadmin meldet eine laufende Wartung - auch wenn der Server währenddessen neu startet oder aus ist | „Wartung bis 18:00 · noch ca. 1:20:00 – Titel“ bzw. „Ende offen“ |
+| **Bereit** | MRadmin meldet „bereit“ | „Server ist bereit · es geht zurück“ |
 
-Dazu die **Bossbar** (`display.bossbar`) mit Grund bzw. Wartungstitel und Fortschritt, und **beim Betreten** eine kurze Chatzeile mit Einzelheiten im Hover sowie die Warnungen, die in MRadmin unter **Neuigkeiten** gerade aktiv sind.
+Die Bossbar (`display.bossbar`) füllt sich bis zur erwarteten Rückkehr bzw. bis zum Ende der Wartung. **Beim Betreten** kommt eine kurze Chatzeile mit Einzelheiten im Hover, dazu die Warnungen, die in MRadmin unter **Neuigkeiten** gerade aktiv sind.
+
+## Die Uhr und ihr Menü
+Die **Uhr in der Hotbar** (`display.item`, bleibt ausgewählt auf `display.slot`) trägt den Zustand im Namen, z.B. „⏳ Neustart“ oder „🛠 Wartung bis 18:00“. **Rechtsklick** öffnet ein Menü mit allen Einzelheiten:
+
+| Feld | Inhalt |
+|---|---|
+| Zustand (oben) | wie die Bossbar |
+| Grund | Grund des Neustarts bzw. Stopps |
+| Zeit | weg seit, noch ca., wie lange ein Neustart meist dauert |
+| Wartung | Titel, Beginn und Ende - laufend oder geplant |
+| Warnungen | die aktiven Warnungen aus MRadmin |
+| Zurück zum Server | nur grün, wenn der Server bereit ist (sonst grau) |
+
+Das Menü aktualisiert sich jede Sekunde, solange es offen ist.
 
 > [!NOTE]
-Dazu die **Uhr in der Hotbar** (`display.item`, bleibt ausgewählt auf `display.slot`) mit dem Zustand im Namen, z.B. „⏳ Neustart“ oder „🛠 Wartung bis 18:00“.
-
-> [!NOTE]
-> Der Name der Uhr ändert sich nur, wenn sich der Zustand ändert - jede Änderung am Item in der Hand spielt im Spiel eine Animation ab. Der Countdown läuft deshalb in der Zeile darüber (Actionbar). Das Inventar ist gesperrt.
+> Der Name der Uhr ändert sich nur, wenn sich der Zustand ändert - jede Änderung am Item in der Hand spielt im Spiel eine Animation ab. Der Countdown läuft deshalb in der Bossbar. Das Inventar ist gesperrt.
 
 ## Restzeit
 Die Restzeit eines Neustarts schätzt der Warteraum aus der **typischen Dauer der letzten Neustarts** (Median der letzten 10, gemessen vom Herunterfahren bis „bereit“). Bis zwei Neustarts gemessen sind, gilt `return.estimate-seconds` (Standard 90 s). Stopps zählen nicht mit.

@@ -11,7 +11,7 @@
 # ==============================================================================
 
 # Nicht ändern - sagt dem Plugin, welche Texte bei Updates erneuert werden müssen.
-lang-version: 2
+lang-version: 3
 
 prefix: "<dark_gray>[<aqua>Warteraum</aqua>]</dark_gray> "
 
@@ -31,28 +31,55 @@ item-ready: "<green>➜ Zurück zum Server"
 item-maintenance: "<aqua>🛠 Wartung bis <white><end>"
 item-maintenance-open: "<aqua>🛠 Wartung"
 item-lore:
-  - "<gray>Du wartest im Warteraum."
-  - "<gray>Sobald es weitergeht, kommst du"
+  - "<gray>Du wartest im Warteraum und kommst"
   - "<gray>automatisch zurück."
-
-# ---------------------------------------------------------- Actionbar (Countdown)
-# Über der Hotbar, jede Sekunde neu.
-actionbar-restart: "<yellow>Neustart <gray>· noch ca. <white><time>"
-actionbar-restart-late: "<yellow>Gleich wieder da <gray>· seit <white><since>"
-actionbar-stop: "<red>Server ist aus <gray>· seit <white><since>"
-actionbar-crash: "<gold>Server startet neu <gray>· seit <white><since>"
-actionbar-starting: "<green>Server startet <gray>· gleich geht es los"
-actionbar-ready: "<green>Zurück zum Server …"
-actionbar-maintenance: "<aqua>Wartung <gray>· noch ca. <white><time>"
-actionbar-maintenance-open: "<aqua>Wartung <gray>· Ende offen"
+  - "<yellow>Rechtsklick: <gray>alle Einzelheiten"
 
 # ---------------------------------------------------------------------- Bossbar
-bossbar-restart: "<yellow>Neustart <gray>– <white><reason>"
-bossbar-stop: "<red>Server heruntergefahren <gray>– <white><reason>"
-bossbar-crash: "<gold>Server nicht erreichbar <gray>– startet hoffentlich gleich neu"
-bossbar-starting: "<green>Server startet …"
-bossbar-ready: "<green>Server ist bereit – es geht zurück"
-bossbar-maintenance: "<aqua>Wartung <gray>– <white><title>"
+# Oben am Bildschirm, jede Sekunde neu - mit Countdown.
+bossbar-restart: "<yellow>Neustart <gray>· noch ca. <white><time></white> <dark_gray>– <gray><reason>"
+bossbar-restart-late: "<yellow>Gleich wieder da <gray>· seit <white><since></white> <dark_gray>– <gray><reason>"
+bossbar-stop: "<red>Server ist aus <gray>· seit <white><since></white> <dark_gray>– <gray><reason>"
+bossbar-crash: "<gold>Server startet neu <gray>· seit <white><since>"
+bossbar-starting: "<green>Server startet <gray>· gleich geht es los"
+bossbar-ready: "<green>Server ist bereit <gray>· es geht zurück"
+bossbar-maintenance: "<aqua>Wartung bis <white><end></white> <gray>· noch ca. <white><time></white> <dark_gray>– <gray><title>"
+bossbar-maintenance-open: "<aqua>Wartung <gray>· Ende offen <dark_gray>– <gray><title>"
+
+# --------------------------------------------------------------------- Menü
+# Öffnet sich mit Rechtsklick auf die Uhr.
+menu-title: "Warteraum"
+menu-reason-name: "<yellow>Grund"
+menu-reason-lore:
+  - "<white><reason>"
+menu-time-name: "<aqua>Zeit"
+menu-time-lore:
+  - "<gray>Weg seit: <white><since>"
+  - "<gray>Noch ca.: <white><time>"
+  - "<gray>Ein Neustart dauert meist: <white><estimate>"
+menu-maintenance-name: "<aqua>Wartung"
+menu-maintenance-lore:
+  - "<white><title>"
+  - "<gray>Beginn: <white><start>"
+  - "<gray>Ende: <white><end>"
+menu-maintenance-planned:
+  - "<gray>Geplant: <white><title>"
+  - "<gray>Beginn: <white><start>"
+  - "<gray>Ende: <white><end>"
+menu-maintenance-none:
+  - "<gray>Keine Wartung geplant."
+menu-alerts-name: "<red>Warnungen"
+menu-alert-line: "<white>• <title>"
+menu-alerts-none:
+  - "<gray>Keine."
+menu-back-name: "<green>Zurück zum Server"
+menu-back-lore:
+  - "<gray>Der Server ist bereit."
+menu-back-locked-name: "<gray>Noch nicht bereit"
+menu-back-locked-lore:
+  - "<gray>Du kommst automatisch zurück,"
+  - "<gray>sobald es weitergeht."
+menu-close: "<red>Schließen"
 
 # ------------------------------------------------------------- Beim Betreten
 join-restart: "<prefix><yellow>Neustart – du kommst automatisch zurück. <hover:show_text:'<gray>Grund: <white><reason><newline><gray>Dauert meist ca. <white><estimate>'><dark_gray>[Info]</dark_gray></hover>"

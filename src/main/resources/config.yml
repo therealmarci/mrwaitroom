@@ -78,8 +78,9 @@ room:
 #   5) DISPLAY
 # ------------------------------------------------------------------------------
 display:
-  # Item in the hand that names the state ("Restart", "Maintenance until 18:00"). The countdown runs in the line
-  # above the hotbar - the name only changes with the state, every change plays an animation in the game.
+  # Item in the hand that names the state ("Restart", "Maintenance until 18:00"); a right click opens a menu with
+  # all details. The countdown runs in the bossbar - the name only changes with the state (every change plays an
+  # animation in the game).
   item: CLOCK
   # Slot in the hotbar (0-8); it stays selected.
   slot: 4

@@ -142,7 +142,7 @@ sections:
         type: string
         max-length: 64
         name: {de: Item, en: Item}
-        help: {de: "Item in der Hand mit dem Zustand im Namen, z.B. CLOCK. Der Countdown steht darüber.", en: "Item in the hand with the state in its name, e.g. CLOCK. The countdown is above it."}
+        help: {de: "Item in der Hand mit dem Zustand im Namen, Rechtsklick öffnet ein Menü, z.B. CLOCK.", en: "Item in the hand with the state in its name, a right click opens a menu, e.g. CLOCK."}
       - key: display.slot
         type: int
         min: 0

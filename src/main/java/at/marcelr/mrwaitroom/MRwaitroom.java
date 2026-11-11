@@ -30,8 +30,11 @@ public final class MRwaitroom extends JavaPlugin implements Listener {
     private FileConfiguration config;
     private Settings settings;
     // lang-version 2: the clock keeps its name (the countdown moved to the action bar).
-    private final Messages messages = new Messages(2, Map.of(2, Set.of("item-restart", "item-restart-late", "item-stop",
-            "item-crash", "item-starting", "item-ready", "item-maintenance", "item-maintenance-open")));
+    private final Messages messages = new Messages(3, Map.of(2, Set.of("item-restart", "item-restart-late", "item-stop",
+            "item-crash", "item-starting", "item-ready", "item-maintenance", "item-maintenance-open"),
+            // 3: the countdown is in the bossbar, the clock opens a menu.
+            3, Set.of("item-lore", "bossbar-restart", "bossbar-stop", "bossbar-crash", "bossbar-starting",
+                    "bossbar-ready", "bossbar-maintenance")));
     private final MainLink link = new MainLink(this);
     private final Room room = new Room(this);
     private final Display display = new Display(this);
@@ -60,6 +63,7 @@ public final class MRwaitroom extends JavaPlugin implements Listener {
         pm.registerEvents(display, this);
         pm.registerEvents(returner, this);
         pm.registerEvents(xaero, this);
+        pm.registerEvents(new at.marcelr.mrwaitroom.room.InfoMenu(this), this);
         pm.registerEvents(this, this);
         register("mrwaitroom", new WaitroomCommand(this));
         register("main", new MainCommand(this));
@@ -141,6 +145,10 @@ public final class MRwaitroom extends JavaPlugin implements Listener {
 
     public Room room() {
         return room;
+    }
+
+    public Display display() {
+        return display;
     }
 
     public Returner returner() {

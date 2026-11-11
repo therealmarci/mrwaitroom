@@ -24,7 +24,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -37,8 +37,8 @@ import static at.marcelr.mrwaitroom.Messages.tag;
  * <ul>
  *     <li>an item in the hotbar (selected) whose name says what is going on - it only changes when the situation
  *     changes: every change makes the game play the "take into hand" animation,</li>
- *     <li>the countdown in the action bar right above the hotbar, every second,</li>
- *     <li>a bossbar with the reason and the progress (display.bossbar),</li>
+ *     <li>a bossbar with the countdown, the reason and the progress, every second (display.bossbar),</li>
+ *     <li>right-clicking the clock opens {@link InfoMenu} with all details,</li>
  *     <li>on joining one chat line with the details in a hover, plus the warnings that are on.</li>
  * </ul>
  */
@@ -101,6 +101,7 @@ public final class Display implements Listener {
         for (Player player : Bukkit.getOnlinePlayers()) {
             show(player, view, now);
         }
+        InfoMenu.refreshOpen();
     }
 
     /** Item and bossbar for one player. */
@@ -123,7 +124,6 @@ public final class Display implements Listener {
                 player.getInventory().setHeldItemSlot(s.slot());
             }
         }
-        player.sendActionBar(m.as(player, () -> m.get(line.actionbar(), line.tags())));
         if (!s.bossbar()) {
             BossBar old = bars.remove(player.getUniqueId());
             if (old != null) {
@@ -165,54 +165,63 @@ public final class Display implements Listener {
     /**
      * Which texts and values fit the phase.
      *
-     * @param item      name of the item - must not change every second (see the class comment)
-     * @param actionbar the live line above the hotbar (countdown)
+     * @param key  state: item-&lt;key&gt; names the clock (must not change every second, see the class comment),
+     *             bossbar-&lt;key&gt; is the live line with the countdown, menu-state-&lt;key&gt; the text in the menu
+     * @param tags all values of the texts (reason, since, time, estimate, title, start, end, server)
      */
-    record Line(String item, String actionbar, String bar, String join, float progress, TagResolver[] tags) {
-        Line(String key, String bar, String join, float progress, TagResolver[] tags) {
-            this("item-" + key, "actionbar-" + key, bar, join, progress, tags);
+    public record Line(String key, String join, float progress, TagResolver[] tags) {
+        public String item() {
+            return "item-" + key;
+        }
+
+        public String bar() {
+            return "bossbar-" + key;
         }
     }
 
-    Line line(MainLink.View view, long now) {
+    public Line line(MainLink.View view, long now) {
         MainStatus status = view.status();
-        String reason = status != null && status.restart() != null && !status.restart().reason().isEmpty()
-                ? status.restart().reason() : plugin.messages().plain("reason-none");
-        String name = status != null && !status.name().isEmpty() ? status.name() : plugin.messages().plain("server-name");
+        Messages m = plugin.messages();
         long since = view.downSince() == 0 ? 0 : Math.max(0, now - view.downSince());
-        List<TagResolver> tags = new ArrayList<>(List.of(tag("reason", reason), tag("server", name),
-                tag("since", clock(since)), tag("estimate", clock(view.estimate()))));
+        // All values, so every text (bossbar, menu, chat) may use any of them; what does not apply is "-".
+        Map<String, String> v = new LinkedHashMap<>();
+        v.put("reason", status != null && status.restart() != null && !status.restart().reason().isEmpty()
+                ? status.restart().reason() : m.plain("reason-none"));
+        v.put("server", status != null && !status.name().isEmpty() ? status.name() : m.plain("server-name"));
+        v.put("since", view.downSince() == 0 ? "-" : clock(since));
+        v.put("estimate", clock(view.estimate()));
+        v.put("time", "-");
+        MainStatus.Maintenance mt = status == null ? null : status.maintenance();
+        v.put("title", mt == null || mt.title().isEmpty() ? m.plain("maintenance-no-title") : mt.title());
+        v.put("start", mt != null && mt.start() > 0 ? at(mt.start(), now) : "-");
+        v.put("end", mt != null && mt.end() > 0 ? at(mt.end(), now) : "-");
         return switch (view.phase()) {
             case RESTART -> {
                 long left = view.estimate() - since;
-                tags.add(tag("time", clock(Math.max(0, left))));
+                v.put("time", clock(Math.max(0, left)));
                 float progress = (float) Math.clamp((double) since / Math.max(1, view.estimate()), 0, 1);
                 yield left > 0
-                        ? new Line("restart", "bossbar-restart", "join-restart", progress, arr(tags))
-                        : new Line("restart-late", "bossbar-restart", "join-restart", 1f, arr(tags));
+                        ? new Line("restart", "join-restart", progress, tags(v))
+                        : new Line("restart-late", "join-restart", 1f, tags(v));
             }
-            case STOP -> new Line("stop", "bossbar-stop", "join-stop", 1f, arr(tags));
-            case CRASH -> new Line("crash", "bossbar-crash", "join-crash", 1f, arr(tags));
-            case STARTING -> new Line("starting", "bossbar-starting", "join-starting", 1f, arr(tags));
-            case READY -> new Line("ready", "bossbar-ready", "join-ready", 1f, arr(tags));
+            case STOP -> new Line("stop", "join-stop", 1f, tags(v));
+            case CRASH -> new Line("crash", "join-crash", 1f, tags(v));
+            case STARTING -> new Line("starting", "join-starting", 1f, tags(v));
+            case READY -> new Line("ready", "join-ready", 1f, tags(v));
             case MAINTENANCE -> {
-                MainStatus.Maintenance mt = status == null ? null : status.maintenance();
-                String title = mt == null || mt.title().isEmpty() ? plugin.messages().plain("maintenance-no-title") : mt.title();
-                tags.add(tag("title", title));
                 if (mt == null || mt.end() <= 0) {
-                    yield new Line("maintenance-open", "bossbar-maintenance", "join-maintenance-open", 1f, arr(tags));
+                    yield new Line("maintenance-open", "join-maintenance-open", 1f, tags(v));
                 }
-                tags.add(tag("end", at(mt.end(), now)));
-                tags.add(tag("time", clock(Math.max(0, mt.end() - now))));
+                v.put("time", clock(Math.max(0, mt.end() - now)));
                 long start = mt.start() > 0 ? mt.start() : now;
                 float progress = (float) Math.clamp((double) (now - start) / Math.max(1, mt.end() - start), 0, 1);
-                yield new Line("maintenance", "bossbar-maintenance", "join-maintenance", progress, arr(tags));
+                yield new Line("maintenance", "join-maintenance", progress, tags(v));
             }
         };
     }
 
-    private static TagResolver[] arr(List<TagResolver> tags) {
-        return tags.toArray(TagResolver[]::new);
+    private static TagResolver[] tags(Map<String, String> values) {
+        return values.entrySet().stream().map(e -> tag(e.getKey(), e.getValue())).toArray(TagResolver[]::new);
     }
 
     /** 0:42, 12:05, 1:02:33. */

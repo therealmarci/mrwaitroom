@@ -174,6 +174,57 @@ sections:
           - {value: PINK, de: Rosa, en: Pink}
           - {value: WHITE, de: Weiß, en: White}
 
+  - id: server
+    name: {de: Server & Neustarts, en: Server & restarts}
+    help: {de: "Nur mit dem Starter von MRadmin (mrserver setup --role waitroom): Er startet den Warteraum, holt ihn nach Neustart und Absturz zurück und hält Paper aktuell.", en: "Only with MRadmin's starter (mrserver setup --role waitroom): it starts the waiting room, brings it back after restarts and crashes and keeps Paper up to date."}
+    fields:
+      - key: server.restart-times
+        heading: {de: "Neustarts", en: "Restarts"}
+        type: strings
+        item: time
+        name: {de: Geplante Neustarts, en: Planned restarts}
+        help: {de: "Jeden Tag zu diesen Uhrzeiten (Zeitzone siehe Allgemein). Der Warteraum startet nur neu, wenn er nicht gebraucht wird: Hauptserver bereit, keine Wartung, kein Neustart des Hauptservers in den nächsten 15 Minuten, niemand wartet. Sonst wartet der Neustart, bis das zutrifft.", en: "Every day at these times (time zone see General). The waiting room only restarts when it is not needed: main server ready, no maintenance, no restart of the main server within the next 15 minutes, nobody waiting. Otherwise the restart waits until that is true."}
+      - key: server.plain-stop
+        type: choice
+        name: {de: /stop in der Konsole, en: /stop in the console}
+        help: {de: "Was ein einfaches /stop bewirkt: der Server bleibt aus, oder er kommt sofort zurück.", en: "What a plain /stop does: the server stays down, or it comes back right away."}
+        options:
+          - {value: stop, de: Bleibt aus, en: Stays down}
+          - {value: restart, de: Kommt zurück, en: Comes back}
+      - key: server.memory-min
+        heading: {de: "Start", en: "Start"}
+        type: string
+        max-length: 10
+        name: {de: Arbeitsspeicher min., en: Memory min.}
+        help: {de: "Z.B. 1G oder 1024M. Gilt ab dem nächsten Start.", en: "E.g. 1G or 1024M. Applies from the next start."}
+      - key: server.memory-max
+        type: string
+        max-length: 10
+        name: {de: Arbeitsspeicher max., en: Memory max.}
+        help: {de: "Z.B. 2G. Für den Warteraum reichen 2 GB gut. Gilt ab dem nächsten Start.", en: "E.g. 2G. 2 GB are plenty for the waiting room. Applies from the next start."}
+      - key: server.paper-update
+        type: choice
+        name: {de: Paper-Updates, en: Paper updates}
+        help: {de: "Automatisch = vor jedem Start der neueste stabile Paper-Build dieser Minecraft-Version (nie eine neue Minecraft-Version). Startet er nicht, nimmt der Starter wieder den alten.", en: "Automatic = before every start the newest stable Paper build of this Minecraft version (never a new Minecraft version). If it does not start, the starter takes the old one again."}
+        options:
+          - {value: auto, de: Automatisch, en: Automatic}
+          - {value: notify, de: Nur anzeigen, en: Only show}
+          - {value: "off", de: Aus, en: "Off"}
+      - key: server.java-flags
+        type: text
+        advanced: true
+        max-length: 2000
+        name: {de: Java-Optionen, en: Java options}
+        help: {de: "Standard sind Aikars Flags (für Paper empfohlen). Nur Optionen zum Feintuning - alles, was Programme starten oder Dateien lesen könnte, wird ignoriert.", en: "Default are Aikar's flags (recommended for Paper). Only tuning options - anything that could run programs or read files is ignored."}
+      - key: server.hang-seconds
+        type: int
+        advanced: true
+        min: 0
+        max: 3600
+        unit: {de: Sekunden, en: seconds}
+        name: {de: Hänger nach, en: Hang after}
+        help: {de: "Tickt der Server so lange nicht, beendet ihn der Starter und startet ihn neu. 0 = aus.", en: "If the server does not tick this long, the starter ends and restarts it. 0 = off."}
+
   - id: xaero
     name: {de: Xaero-Karten, en: Xaero maps}
     help: {de: "Für Spieler mit Xaero's Minimap oder World Map.", en: "For players with Xaero's Minimap or World Map."}

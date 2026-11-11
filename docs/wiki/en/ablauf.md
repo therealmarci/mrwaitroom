@@ -43,3 +43,11 @@ The waiting room estimates the time left of a restart from the **typical length 
 
 ## The room
 An empty world (`room.world`) with a small platform at the spawn. No damage, no hunger, adventure mode, blocks and inventory locked, whoever falls off stands at the spawn again. The chat is off (`room.chat`), with `mrwaitroom.chat` one may write anyway. Other players can be hidden (`room.hide-players`).
+
+## Restarts of the waiting room
+With MRadmin's starter (`mrserver setup --role waitroom`) the waiting room restarts:
+
+- **by hand:** in MRadmin on **Server → Overview** (tile **Waiting room server**, **Restart**) or with `mrserver restart` in the console of the machine,
+- **planned:** every day at the times in `server.restart-times`.
+
+But only when it is not needed: the main server is ready, **no maintenance** runs, **no restart of the main server** comes within the next 15 minutes and **nobody waits**. Otherwise it refuses a restart by hand with the reason (except waiting players - then it restarts once they are back), and a planned restart waits until everything fits. `mrserver stop` stops it without these checks, `mrserver cancel` cancels a waiting restart.

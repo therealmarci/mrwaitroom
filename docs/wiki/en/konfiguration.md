@@ -9,6 +9,7 @@ Everything is in `plugins/MRwaitroom/config.yml`, every option is commented ther
 | `return` | Wait, batch size, tries, expected restart length | [How it works](ablauf.md#sending-back) |
 | `room` | World, platform, chat, hide others | [How it works](ablauf.md#the-room) |
 | `display` | Item, slot in the hotbar, bossbar and colour | [How it works](ablauf.md) |
+| `server` | Memory, Java options, Paper updates, planned restarts, `/stop`, hangs - only with the starter | [Restarts](ablauf.md#restarts-of-the-waiting-room) |
 | `xaero` | Own map ID for Xaero's Minimap/World Map | [Setting up](einrichten.md#6-xaeros-minimap--world-map) |
 | `updates` | on/off, source, check interval, notice on join | |
 

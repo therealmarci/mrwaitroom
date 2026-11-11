@@ -5,7 +5,10 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.time.DateTimeException;
+import java.time.LocalTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.logging.Logger;
 
@@ -17,8 +20,14 @@ public record Settings(
         RoomSettings room,
         DisplaySettings display,
         XaeroSettings xaero,
-        UpdateSettings update
+        UpdateSettings update,
+        ServerSettings server
 ) {
+
+    /** Section server: starter settings and planned restarts (only with MRadmin's starter). */
+    public record ServerSettings(String memoryMin, String memoryMax, String javaFlags, String paperUpdate,
+                                 List<LocalTime> restartTimes, String plainStop, int hangSeconds) {
+    }
 
     /**
      * @param server   name of the main server in the proxy
@@ -120,7 +129,44 @@ public record Settings(
                 c.getBoolean("updates.notify-on-join", true),
                 c.getBoolean("updates.restart-when-idle", true));
 
-        return new Settings(zone, main, back, room, display, xaero, update);
+        List<LocalTime> times = new ArrayList<>();
+        for (Object raw : c.getList("server.restart-times", List.of())) {
+            LocalTime t = time(raw);
+            if (t == null) {
+                log.warning("server.restart-times: '" + raw + "' is not a time like \"05:30\" - ignored.");
+            } else if (!times.contains(t)) {
+                times.add(t);
+            }
+        }
+        String paper = c.getString("server.paper-update", "auto").trim().toLowerCase(Locale.ROOT);
+        ServerSettings serverSettings = new ServerSettings(memory(c.getString("server.memory-min", "1G"), "1G"),
+                memory(c.getString("server.memory-max", "2G"), "2G"), c.getString("server.java-flags", "").trim(),
+                paper.matches("auto|notify|off") ? paper : "auto", List.copyOf(times),
+                "restart".equalsIgnoreCase(c.getString("server.plain-stop", "stop").trim()) ? "restart" : "stop",
+                Math.clamp(c.getInt("server.hang-seconds", 180), 0, 3600));
+
+        return new Settings(zone, main, back, room, display, xaero, update, serverSettings);
+    }
+
+    /** "05:30", or a number: YAML 1.1 reads an unquoted 5:30 as 330 (minutes) - counted back. */
+    static LocalTime time(Object raw) {
+        if (raw instanceof Number n && n.intValue() >= 0 && n.intValue() < 24 * 60) {
+            return LocalTime.of(n.intValue() / 60, n.intValue() % 60);
+        }
+        String s = String.valueOf(raw).trim();
+        if (!s.matches("\\d{1,2}:\\d{2}")) {
+            return null;
+        }
+        String[] p = s.split(":");
+        int h = Integer.parseInt(p[0]);
+        int m = Integer.parseInt(p[1]);
+        return h < 24 && m < 60 ? LocalTime.of(h, m) : null;
+    }
+
+    /** "2G", "1024M" - otherwise the fallback. */
+    private static String memory(String raw, String fallback) {
+        String s = raw == null ? "" : raw.trim().toUpperCase(Locale.ROOT);
+        return s.matches("\\d{1,6}[MG]") ? s : fallback;
     }
 
     private static Material material(String raw, Material fallback, boolean block, String key, Logger log) {

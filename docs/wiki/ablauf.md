@@ -43,3 +43,11 @@ Die Restzeit eines Neustarts schätzt der Warteraum aus der **typischen Dauer de
 
 ## Der Raum
 Eine leere Welt (`room.world`) mit einer kleinen Plattform am Spawn. Kein Schaden, kein Hunger, Abenteuermodus, Blöcke und Inventar gesperrt, wer runterfällt, steht wieder am Spawn. Der Chat ist aus (`room.chat`), mit `mrwaitroom.chat` darf man trotzdem schreiben. Andere Spieler lassen sich ausblenden (`room.hide-players`).
+
+## Neustarts des Warteraums
+Mit dem Starter von MRadmin (`mrserver setup --role waitroom`) startet der Warteraum neu:
+
+- **von Hand:** in MRadmin auf **Server → Übersicht** (Kachel **Warteraum-Server**, **Neu starten**) oder mit `mrserver restart` in der Konsole des Rechners,
+- **geplant:** jeden Tag zu den Zeiten in `server.restart-times`.
+
+Aber nur, wenn er nicht gebraucht wird: Der Hauptserver ist bereit, **keine Wartung** läuft, **kein Neustart des Hauptservers** kommt in den nächsten 15 Minuten, und **niemand wartet**. Sonst lehnt er einen Neustart von Hand mit dem Grund ab (wartende Spieler ausgenommen - dann startet er, sobald sie zurück sind), und ein geplanter Neustart wartet, bis alles passt. `mrserver stop` hält ihn ohne diese Prüfung an, `mrserver cancel` bricht einen wartenden Neustart ab.

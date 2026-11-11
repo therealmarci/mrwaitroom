@@ -41,6 +41,8 @@ public final class MRwaitroom extends JavaPlugin implements Listener {
     private final Returner returner = new Returner(this);
     private final XaeroWorldId xaero = new XaeroWorldId(this);
     private final at.marcelr.mrwaitroom.link.Remote remote = new at.marcelr.mrwaitroom.link.Remote(this);
+    private final at.marcelr.mrwaitroom.server.StarterBridge starter = new at.marcelr.mrwaitroom.server.StarterBridge(this);
+    private final at.marcelr.mrwaitroom.server.Restarts restarts = new at.marcelr.mrwaitroom.server.Restarts(this);
     private UpdateChecker updateChecker;
 
     @Override
@@ -74,6 +76,8 @@ public final class MRwaitroom extends JavaPlugin implements Listener {
         returner.start();
         xaero.start();
         remote.start();
+        starter.start();
+        restarts.start();
         if (settings.main().linkUrl().isEmpty()) {
             getLogger().info("No main.link-url set - the waiting room only sees whether the main server is up.");
         } else if (settings.main().linkKey().isEmpty()) {
@@ -87,6 +91,8 @@ public final class MRwaitroom extends JavaPlugin implements Listener {
         display.stop();
         returner.stop();
         remote.stop();
+        restarts.stop();
+        starter.shutdown();
         if (updateChecker != null) {
             updateChecker.stop();
         }
@@ -100,6 +106,8 @@ public final class MRwaitroom extends JavaPlugin implements Listener {
         display.start();
         returner.start();
         remote.start();
+        starter.start();
+        restarts.start();
         updateChecker.start();
     }
 
@@ -159,6 +167,16 @@ public final class MRwaitroom extends JavaPlugin implements Listener {
     /** The plugin JAR (for an update into the update folder under the same name). */
     public java.io.File jarFile() {
         return getFile();
+    }
+
+    /** The connection to MRadmin's starter (mrserver), if it runs this server. */
+    public at.marcelr.mrwaitroom.server.StarterBridge starter() {
+        return starter;
+    }
+
+    /** Restarts by hand and planned ones, with the rules when they may happen. */
+    public at.marcelr.mrwaitroom.server.Restarts restarts() {
+        return restarts;
     }
 
     public Display display() {

@@ -125,6 +125,18 @@ public final class Remote {
         if (staged != null) {
             o.addProperty("staged", staged);
         }
+        // The server itself, for the tile "waiting room server" in MRadmin.
+        JsonObject host = new JsonObject();
+        host.addProperty("starter", plugin.starter().active());
+        host.addProperty("paper", at.marcelr.mrwaitroom.server.StarterBridge.paperBuild());
+        host.addProperty("minecraft", Bukkit.getMinecraftVersion());
+        host.addProperty("startedAt", java.lang.management.ManagementFactory.getRuntimeMXBean().getStartTime());
+        host.addProperty("players", Bukkit.getOnlinePlayers().size());
+        host.addProperty("nextRestart", plugin.restarts().nextPlanned());
+        host.addProperty("pending", plugin.restarts().pending());
+        host.addProperty("blocked", plugin.restarts().blocked());
+        host.addProperty("paperUpdate", plugin.settings().server().paperUpdate());
+        o.add("host", host);
         List<String> sentDone;
         List<Map<String, String>> sentFailed;
         synchronized (this) {
@@ -182,6 +194,15 @@ public final class Remote {
             }
             switch (str(order, "type")) {
                 case "config" -> Bukkit.getScheduler().runTask(plugin, () -> applyConfig(id, str(order, "text")));
+                case "restart" -> Bukkit.getScheduler().runTask(plugin, () -> {
+                    String reason = plugin.restarts().requestByHand(str(order, "by").isEmpty() ? "MRadmin" : str(order, "by"));
+                    if (reason == null) {
+                        ok(id);
+                    } else {
+                        fail(id, reason);
+                    }
+                    Bukkit.getScheduler().runTaskAsynchronously(plugin, this::report);
+                });
                 case "update" -> Bukkit.getScheduler().runTaskAsynchronously(plugin,
                         () -> update(id, str(order, "version"), str(order, "url"), str(order, "sha256")));
                 default -> fail(id, "unknown order");

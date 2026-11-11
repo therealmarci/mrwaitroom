@@ -16,6 +16,8 @@ Paper-Plugin für einen Warteraum hinter einem Velocity-Proxy. Kein Bezug zu and
 | `room/Display` | jede Sekunde: Item (neuer Name hält die Anzeige über der Hotbar sichtbar, Anzahl = Minuten) und Bossbar pro Spieler in seiner Sprache; Chatzeile beim Betreten |
 | `room/Returner` | Rückkehr in Schüben über den BungeeCord-Kanal (`Connect`), Wartung nur mit dem gemeldeten Bypass-Recht, Kick nach `max-attempts` |
 | `room/XaeroWorldId` | schickt bei `PlayerRegisterChannelEvent` für `xaerominimap:main` / `xaeroworldmap:main` Paket 0 + int (Format aus Xaero 26.6.2: `LevelMapProperties`, Index 0) |
+| `server/StarterBridge` | Anbindung an MRadmins Starter ohne MRadmin: Herzschlag (jede Sekunde), `action` vor dem Herunterfahren, `launch.properties` aus dem Abschnitt `server`, `request`/`request.answer` (`mrserver restart|stop|cancel`); Ordner `plugins/MRadmin/starter/` aus der Umgebungsvariable `MRADMIN_STARTER` |
+| `server/Restarts` | Neustarts von Hand (Auftrag `restart` aus MRadmin, `mrserver restart`) und geplant (`server.restart-times`); `blocked()` = no-starter, maintenance, main-not-ready, main-restart-soon, players-waiting |
 | `command/*` | `/mrwaitroom`, `/main` |
 
 ## Protokoll mit MRadmin

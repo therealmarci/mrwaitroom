@@ -22,7 +22,7 @@ import java.util.logging.Level;
  */
 public final class ConfigUpdater {
 
-    public static final int CURRENT_VERSION = 2;
+    public static final int CURRENT_VERSION = 3;
     public static final String BOM = "﻿";
     /** Values whose default changed; the new default replaces the old value (none yet). */
     private static final Set<String> REPLACED_KEYS = Set.of();

@@ -9,3 +9,12 @@
 | `/mrwaitroom version` | Version and update status | `mrwaitroom.version` |
 
 Short forms: `/waitroom`, `/warteraum`.
+
+With the starter (on the machine, in the folder of the waiting room):
+
+| Command | What it does |
+|---|---|
+| `mrserver restart` | Restart as soon as it is allowed ([rules](ablauf.md#restarts-of-the-waiting-room)) |
+| `mrserver stop` | Stop (without checks) |
+| `mrserver cancel` | Cancel a waiting restart |
+| `mrserver status` / `console <command>` / `attach` | Like on the main server ([Starter](https://mrtechnology.marcelr.at/wiki/mradmin/starter/)) |

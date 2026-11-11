@@ -35,6 +35,10 @@ Auf **beiden** Servern:
 - Die Server nur im internen Netz erreichbar machen - von außen ist nur Velocity offen.
 
 ## 3. Der Warteraum-Server
+> [!TIP]
+> Am einfachsten mit dem **Installer** von der Website (Frage „Warteraum-Server“) oder dem Starter von MRadmin: `mrserver setup --role waitroom --main-server main --main-address 10.0.0.5:25565 --link-url http://10.0.0.5:8126` (Schlüssel in der Umgebungsvariable `MRSERVER_LINK_KEY`). Das richtet Paper und MRwaitroom ein, trägt die Verbindung zum Hauptserver ein und sorgt für Autostart, Neustart nach Absturz und Paper-Updates - siehe [Starter](https://mrtechnology.marcelr.at/wiki/mradmin/starter/#warteraum-server-einrichten).
+
+Von Hand:
 - **Arbeitsspeicher:** 2 GB reichen gut.
 - `server.properties`: kleine `view-distance` und `simulation-distance` (z.B. 4 und 2), `spawn-protection=0` und **`white-list=false`** - Minecraft 26 legt neue Server teils mit eingeschalteter Whitelist an, dann käme niemand in den Warteraum.
 - MRwaitroom legt die Welt `waitroom` (leer, mit Plattform) selbst an und schickt jeden Spieler dorthin.

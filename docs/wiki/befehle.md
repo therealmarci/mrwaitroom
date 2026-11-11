@@ -9,3 +9,12 @@
 | `/mrwaitroom version` | Version und Update-Status | `mrwaitroom.version` |
 
 Kurzformen: `/waitroom`, `/warteraum`.
+
+Mit dem Starter (auf dem Rechner, im Ordner des Warteraums):
+
+| Befehl | Was er macht |
+|---|---|
+| `mrserver restart` | Neu starten, sobald es erlaubt ist ([Regeln](ablauf.md#neustarts-des-warteraums)) |
+| `mrserver stop` | Anhalten (ohne Prüfung) |
+| `mrserver cancel` | Einen wartenden Neustart abbrechen |
+| `mrserver status` / `console <befehl>` / `attach` | Wie beim Hauptserver ([Starter](https://mrtechnology.marcelr.at/wiki/mradmin/starter/)) |

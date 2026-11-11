@@ -8,7 +8,7 @@
 # ==============================================================================
 
 # Do not change - tells the plugin which settings need to be carried over on updates.
-config-version: 2
+config-version: 3
 
 
 # ------------------------------------------------------------------------------
@@ -91,7 +91,30 @@ display:
 
 
 # ------------------------------------------------------------------------------
-#   6) XAERO'S MINIMAP / WORLD MAP
+#   6) SERVER (STARTER AND RESTARTS)
+# ------------------------------------------------------------------------------
+# Only with MRadmin's starter (mrserver), which starts this server, brings it back after restarts and crashes and
+# keeps Paper up to date. Set it up with "mrserver setup --role waitroom". Without the starter these do nothing.
+server:
+  # Memory of the server (e.g. 1G, 2048M) - takes effect on the next start. 2G are plenty for the waiting room.
+  memory-min: "1G"
+  memory-max: "2G"
+  # Extra Java options - by default Aikar's flags. Only tuning options, anything else is ignored. "" = none.
+  java-flags: "-XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch -XX:G1NewSizePercent=30 -XX:G1MaxNewSizePercent=40 -XX:G1HeapRegionSize=8M -XX:G1ReservePercent=20 -XX:G1HeapWastePercent=5 -XX:G1MixedGCCountTarget=4 -XX:InitiatingHeapOccupancyPercent=15 -XX:G1MixedGCLiveThresholdPercent=90 -XX:G1RSetUpdatingPauseTimePercent=5 -XX:SurvivorRatio=32 -XX:+PerfDisableSharedMem -XX:MaxTenuringThreshold=1 -Dusing.aikars.flags=https://mcflags.emc.gs -Daikars.new.flags=true"
+  # Paper updates on every start: "auto" = newest stable build of this Minecraft version, "notify", "off".
+  paper-update: "auto"
+  # Planned restarts every day at these times (HH:MM in quotes, time zone general.timezone), e.g. ["05:30"].
+  # The waiting room only restarts when it is not needed: the main server is ready, no maintenance runs, no restart
+  # of the main server comes within 15 minutes and nobody waits - otherwise the restart waits until then.
+  restart-times: []
+  # What /stop in the console does: "stop" = the server stays down, "restart" = it comes back.
+  plain-stop: "stop"
+  # The server counts as hanging if it has not ticked for this many seconds: the starter ends and starts it. 0 = off.
+  hang-seconds: 180
+
+
+# ------------------------------------------------------------------------------
+#   7) XAERO'S MINIMAP / WORLD MAP
 # ------------------------------------------------------------------------------
 xaero:
   # The proxy shows the main server and the waiting room under the same address. With its own map ID the waiting
@@ -102,7 +125,7 @@ xaero:
 
 
 # ------------------------------------------------------------------------------
-#   7) UPDATES
+#   8) UPDATES
 # ------------------------------------------------------------------------------
 updates:
   # Look for new versions on startup and regularly afterwards.

@@ -23,7 +23,7 @@ Die Restzeit eines Neustarts schätzt der Warteraum aus der **typischen Dauer de
 ## Zurückschicken
 - Sobald der Hauptserver **bereit** ist, wartet der Warteraum `return.delay-seconds` (Standard 5 s) und schickt dann alle **in Schüben** zurück: `return.batch-size` Spieler (5) alle `return.batch-seconds` (2 s), wer am längsten wartet zuerst.
 - **Während einer Wartung** gehen nur Spieler mit dem Wartungs-Bypass von MRadmin zurück (`mradmin.maintenance.bypass`) - die anderen warten bis zum Ende.
-- **Abgewiesen?** Kommt ein Spieler `return.max-attempts`-mal (3) nicht an (Bann, Whitelist), trennt ihn der Warteraum mit einem Hinweis.
+- **Abgewiesen?** Kommt ein Spieler `return.max-attempts`-mal (3) nicht an (Bann, Whitelist), trennt ihn der Warteraum mit einem Hinweis. Auch wer kurz hintereinander zurückprallt, zählt weiter - niemand pendelt endlos. Während einer Wartung wird nicht getrennt: Der Spieler bleibt dann einfach bis zum Ende im Warteraum.
 - Spieler mit `mrwaitroom.stay` werden nie automatisch zurückgeschickt.
 - `/main` schickt einen Spieler sofort zurück, `/mrwaitroom send <spieler|all>` das Team.
 

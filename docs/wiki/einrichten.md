@@ -36,7 +36,7 @@ Auf **beiden** Servern:
 
 ## 3. Der Warteraum-Server
 - **Arbeitsspeicher:** 2 GB reichen gut.
-- `server.properties`: kleine `view-distance` und `simulation-distance` (z.B. 4 und 2), `spawn-protection=0`.
+- `server.properties`: kleine `view-distance` und `simulation-distance` (z.B. 4 und 2), `spawn-protection=0` und **`white-list=false`** - Minecraft 26 legt neue Server teils mit eingeschalteter Whitelist an, dann käme niemand in den Warteraum.
 - MRwaitroom legt die Welt `waitroom` (leer, mit Plattform) selbst an und schickt jeden Spieler dorthin.
 - Damit der Warteraum nach einem Absturz oder Update von selbst wieder hochkommt, als Dienst starten (z.B. systemd mit `Restart=always`).
 

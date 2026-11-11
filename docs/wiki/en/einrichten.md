@@ -36,7 +36,7 @@ On **both** servers:
 
 ## 3. The waiting room server
 - **Memory:** 2 GB are plenty.
-- `server.properties`: small `view-distance` and `simulation-distance` (e.g. 4 and 2), `spawn-protection=0`.
+- `server.properties`: small `view-distance` and `simulation-distance` (e.g. 4 and 2), `spawn-protection=0` and **`white-list=false`** - Minecraft 26 sometimes creates new servers with the whitelist on, then nobody gets into the waiting room.
 - MRwaitroom creates the world `waitroom` (empty, with a platform) itself and sends every player there.
 - So the waiting room comes back by itself after a crash or update, run it as a service (e.g. systemd with `Restart=always`).
 

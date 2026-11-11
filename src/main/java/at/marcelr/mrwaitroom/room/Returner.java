@@ -8,7 +8,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.io.ByteArrayOutputStream;
@@ -37,7 +36,15 @@ public final class Returner implements Listener {
     /** Nobody is sent back if the main server goes down within this time. */
     private static final long RESTART_SOON = 30_000L;
 
-    private record Waiting(long since, int tries, long lastTry) {
+    /** A player who bounced back within this time keeps counting tries (instead of starting at 0 again). */
+    private static final long BOUNCE_MILLIS = 2 * 60_000L;
+
+    /**
+     * @param since   first arrival of this stay (longest waiting first)
+     * @param arrived last arrival (a player who bounced back arrives again)
+     * @param tries   tries to go back during this stay
+     */
+    private record Waiting(long since, long arrived, int tries, long lastTry) {
     }
 
     private final MRwaitroom plugin;
@@ -55,7 +62,8 @@ public final class Returner implements Listener {
             Bukkit.getMessenger().registerOutgoingPluginChannel(plugin, CHANNEL);
         }
         for (Player p : Bukkit.getOnlinePlayers()) {
-            waiting.putIfAbsent(p.getUniqueId(), new Waiting(System.currentTimeMillis(), 0, 0));
+            long now = System.currentTimeMillis();
+            waiting.putIfAbsent(p.getUniqueId(), new Waiting(now, now, 0, 0));
         }
         task = Bukkit.getScheduler().runTaskTimer(plugin, this::tick, 20L, 20L);
     }
@@ -67,14 +75,17 @@ public final class Returner implements Listener {
         }
     }
 
+    /**
+     * Whoever comes back shortly after a try (the main server turned them away or sent them here again) keeps their
+     * tries - so nobody bounces back and forth forever. The entries stay after leaving for that reason.
+     */
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        waiting.put(event.getPlayer().getUniqueId(), new Waiting(System.currentTimeMillis(), 0, 0));
-    }
-
-    @EventHandler
-    public void onQuit(PlayerQuitEvent event) {
-        waiting.remove(event.getPlayer().getUniqueId());
+        long now = System.currentTimeMillis();
+        Waiting old = waiting.get(event.getPlayer().getUniqueId());
+        waiting.put(event.getPlayer().getUniqueId(), old != null && now - old.lastTry() < BOUNCE_MILLIS
+                ? new Waiting(old.since(), now, old.tries(), old.lastTry())
+                : new Waiting(now, now, 0, 0));
     }
 
     /** Whether the player may go back right now (main server ready, or in maintenance with the bypass). */
@@ -100,19 +111,25 @@ public final class Returner implements Listener {
                 || now - lastBatch < s.batchSeconds() * 1000L) {
             return;
         }
+        waiting.entrySet().removeIf(e -> Bukkit.getPlayer(e.getKey()) == null && now - e.getValue().arrived() > 10 * 60_000L
+                && now - e.getValue().lastTry() > 10 * 60_000L);
         List<Player> due = new ArrayList<>();
         for (Player player : Bukkit.getOnlinePlayers()) {
             Waiting w = waiting.get(player.getUniqueId());
             // Only with an answer from after the arrival: the main server may just have sent the player here
             // because it goes down - the last answer before does not know that yet.
-            if (w == null || view.checkedAt() <= w.since() || player.hasPermission(PERM_STAY) || !mayGo(player, view)
+            if (w == null || view.checkedAt() <= w.arrived() || player.hasPermission(PERM_STAY) || !mayGo(player, view)
                     || now - w.lastTry() < TRY_MILLIS) {
                 continue;
             }
             if (w.tries() >= s.maxAttempts()) {
-                plugin.getLogger().info(player.getName() + " could not get back to the main server " + w.tries()
-                        + " times - disconnecting.");
-                player.kick(plugin.messages().as(player, () -> plugin.messages().get("kick-refused")));
+                // During a maintenance the main server keeps them out (the bypass seen here may differ, e.g. without
+                // a shared LuckPerms): stay and wait for the end. Otherwise it turned them away for good.
+                if (view.phase() == MainLink.Phase.READY) {
+                    plugin.getLogger().info(player.getName() + " could not get back to the main server " + w.tries()
+                            + " times - disconnecting.");
+                    player.kick(plugin.messages().as(player, () -> plugin.messages().get("kick-refused")));
+                }
                 continue;
             }
             due.add(player);
@@ -129,8 +146,9 @@ public final class Returner implements Listener {
 
     /** Sends the player to the main server now (also for /main and /mrwaitroom send). */
     public void send(Player player) {
-        Waiting w = waiting.getOrDefault(player.getUniqueId(), new Waiting(System.currentTimeMillis(), 0, 0));
-        waiting.put(player.getUniqueId(), new Waiting(w.since(), w.tries() + 1, System.currentTimeMillis()));
+        long now = System.currentTimeMillis();
+        Waiting w = waiting.getOrDefault(player.getUniqueId(), new Waiting(now, now, 0, 0));
+        waiting.put(player.getUniqueId(), new Waiting(w.since(), w.arrived(), w.tries() + 1, now));
         plugin.messages().send(player, "returning");
         try {
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();

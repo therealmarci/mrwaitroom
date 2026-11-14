@@ -27,6 +27,9 @@ permissions:
     default: true
     children:
       mrwaitroom.version: true
+  mrwaitroom.groups.bots:
+    description: "Group bots (second accounts): no rights in MRwaitroom - they wait and go back like normal players."
+    default: false
   mrwaitroom.groups.support:
     description: "Group support: player + chat in the waiting room and /mrwaitroom status."
     default: op

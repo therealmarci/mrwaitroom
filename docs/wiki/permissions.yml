@@ -27,3 +27,5 @@ mrwaitroom.admin.screen:
   de: "`/mrwaitroom screen set|remove` - Anzeigetafel aufhängen bzw. abnehmen"
 mrwaitroom.admin.lobby:
   de: "`/mrwaitroom lobby save` - Bau als Lobby für neue Warteraum-Welten speichern"
+mrwaitroom.groups.bots:
+  de: "Gruppe Bots (Zweitaccounts): keine Rechte in MRwaitroom - sie warten und kehren zurück wie normale Spieler."

@@ -8,6 +8,7 @@ veröffentlicht als `mc<minecraft>-STA|BET-<version>-bu<build>` (siehe [docs/REL
 ## [Unveröffentlicht]
 
 ### Neu
+- **Gruppe Bots für Zweitaccounts:** `mrwaitroom.groups.bots` (nicht für OPs, in keiner Team-Gruppe) - keine Rechte, warten und kehren zurück wie normale Spieler. Fertige LuckPerms-Gruppe „bots“ im MRadmin-Wiki unter Permissions.
 - **Leistung in MRadmin:** Der Warteraum öffnet einen eigenen Port für MRadmin (`agent.port`, Standard 8127, `0` = aus; `agent.bind` = Adresse, auf der er lauscht). MRadmin fragt dort jede Sekunde Leistung, Systeminfo und Lag-Chunks ab und zeigt sie wie beim Hauptserver. Geschützt mit `main.link-key`, den Port meldet der Warteraum selbst.
 - **Protokoll und Konsole in MRadmin:** MRadmin zeigt die Ereignisse dieses Servers (gestartet, Neustart, Hauptserver weg/wieder da, Konfiguration und Updates) und sein Server-Log der letzten 14 Tage, dazu die Konsole live mit Befehlen aus MRadmins Web-Konsole (dort mit denselben Rechten und Entsperren wie beim Hauptserver). Befehle lassen sich hier mit `agent.console-commands: false` abschalten.
 - **Netzwerk-Übersicht und fremde Plugins in MRadmin:** Der Warteraum meldet MRadmin seine Spieler (für „Spieler online“ der Übersicht) und den Fingerabdruck seiner Plugin-JARs samt Minecraft-Version (damit MRadmin sie auf Modrinth erkennt).
@@ -20,7 +21,6 @@ veröffentlicht als `mc<minecraft>-STA|BET-<version>-bu<build>` (siehe [docs/REL
 - **Countdown in Bossbar und Tafel gleich:** Die Bossbar hinkte der Anzeigetafel bis zu einer Sekunde hinterher. Beide zählen jetzt im selben Takt, und alle Countdowns runden gleich (in der letzten Sekunde steht 0:01).
 - **Item „Information“:** Das Item in der Hand heißt immer „Information“ statt den Zustand im Namen zu tragen (neuer Text `info-item-name`). Der Zustand steht in der Bossbar und im Menü.
 - **Update im Warteraum blieb aus:** Nach einem heruntergeladenen Update startete der Warteraum zum Einspielen neu, sagte dem Starter aber nicht, dass es ein Neustart ist - der Server blieb aus. Jetzt startet er wieder und hält sich dabei an die Neustart-Regeln (keine Wartung, kein Hauptserver-Neustart in Kürze).
-
 
 ## [BET-0.1.1-bu001] - 2026-11-11
 

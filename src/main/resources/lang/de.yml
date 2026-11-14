@@ -126,11 +126,20 @@ screen-ready: ["BEREIT", "Der Server ist wieder da.", "Du kommst automatisch zur
 screen-returning: ["BEREIT", "Es geht zurück zum Server ...", "", ">>", ""]
 screen-maintenance: ["WARTUNG", "<title>", "Ende: <end>", "<time>", "verbleibend"]
 screen-maintenance-open: ["WARTUNG", "<title>", "Ende noch offen", "--:--", "Ende offen"]
-# Fußzeile links: Wartung; rechts: Name des Servers (aus MRadmin).
-screen-footer-maintenance: "Wartung seit <start>"
-screen-footer-planned: "Nächste Wartung: <start>"
-screen-footer-none: "Keine Wartung geplant"
-screen-footer-server: "<server>"
+# Untere Kacheln: links wechselnde Folien (Wartung, Warnungen, Server), rechts Uhrzeit, Datum und Wartende.
+screen-slide-maintenance-active: "WARTUNG LÄUFT"
+screen-slide-maintenance-next: "NÄCHSTE WARTUNG"
+screen-slide-maintenance-title: "<title>"
+screen-slide-maintenance-when: "<start> bis <end>"
+screen-slide-maintenance-open: "ab <start>, Ende offen"
+screen-slide-alert: "WARNUNG"
+screen-slide-server: "SERVER"
+screen-slide-server-name: "<server>"
+screen-slide-down: "Hauptserver weg seit <since>"
+screen-slide-up: "Hauptserver läuft"
+screen-slide-estimate: "Ein Neustart dauert etwa <estimate>"
+screen-waiting: "<count> warten"
+screen-waiting-one: "1 wartet"
 
 # -------------------------------------------------------------------- Rückkehr
 kick-refused: "<red>Du kannst den Server gerade nicht betreten.<newline><newline><gray>Er hat dich mehrmals abgewiesen (z.B. Whitelist oder Sperre)."

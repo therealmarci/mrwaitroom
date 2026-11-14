@@ -126,11 +126,20 @@ screen-ready: ["READY", "The server is back.", "You go back by yourself.", "<tim
 screen-returning: ["READY", "Going back to the server ...", "", ">>", ""]
 screen-maintenance: ["MAINTENANCE", "<title>", "Ends: <end>", "<time>", "remaining"]
 screen-maintenance-open: ["MAINTENANCE", "<title>", "End not known yet", "--:--", "open end"]
-# Footer left: maintenance; right: name of the server (from MRadmin).
-screen-footer-maintenance: "Maintenance since <start>"
-screen-footer-planned: "Next maintenance: <start>"
-screen-footer-none: "No maintenance planned"
-screen-footer-server: "<server>"
+# Lower tiles: changing slides on the left (maintenance, warnings, server), clock, date and players waiting on the right.
+screen-slide-maintenance-active: "MAINTENANCE RUNNING"
+screen-slide-maintenance-next: "NEXT MAINTENANCE"
+screen-slide-maintenance-title: "<title>"
+screen-slide-maintenance-when: "<start> to <end>"
+screen-slide-maintenance-open: "from <start>, open end"
+screen-slide-alert: "WARNING"
+screen-slide-server: "SERVER"
+screen-slide-server-name: "<server>"
+screen-slide-down: "Main server gone for <since>"
+screen-slide-up: "Main server is running"
+screen-slide-estimate: "A restart takes about <estimate>"
+screen-waiting: "<count> waiting"
+screen-waiting-one: "1 waiting"
 
 # -------------------------------------------------------------------- Going back
 kick-refused: "<red>You cannot join the server right now.<newline><newline><gray>It turned you away several times (e.g. whitelist or ban)."

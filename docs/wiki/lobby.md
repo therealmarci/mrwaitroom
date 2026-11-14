@@ -20,9 +20,9 @@ Gespeichert wird in `plugins/MRwaitroom/lobby/` (`lobby.nbt` = Blöcke und Rahme
 
 Eine Wand aus **4 × 2 Rahmen** zeigt den Wartenden, was los ist - jeder sieht sie in seiner Sprache:
 
-- links groß der Zustand (Neustart, Wartung, Server aus, bereit …) in seiner Farbe, darunter Text und Grund bzw. Ende der Wartung,
-- rechts der Countdown mit Balken,
-- unten die nächste bzw. laufende Wartung und der **Name deines Servers** (aus MRadmin, Seite Aussehen).
+- **oben** groß der Zustand (Neustart, Wartung, Server aus, bereit …) in seiner Farbe, darunter Text und Grund, rechts der große Countdown und über die ganze Breite der Fortschrittsbalken,
+- **unten links** eine Kachel mit wechselnden Folien (alle 6 Sekunden, Segmentleiste oben wie die große Kachel in MRadmin) - nur Folien mit Inhalt: die laufende bzw. nächste **Wartung** (Titel, Beginn und Ende), je eine Folie pro **Warnung** aus MRadmin und die **Server-Infos** (Name deines Servers aus MRadmin, wie lange der Hauptserver weg ist, wie lange ein Neustart etwa dauert),
+- **unten rechts** Uhrzeit, Datum und wie viele gerade warten.
 
 ### Aufhängen
 
@@ -32,4 +32,4 @@ Eine Wand aus **4 × 2 Rahmen** zeigt den Wartenden, was los ist - jeder sieht s
 MRwaitroom legt die Karten selbst hinein und sperrt die Rahmen (nicht drehen, nicht herausnehmen, nicht zerstören). Abnehmen: `/mrwaitroom screen remove`. Gibt es die Tafel schon, zieht `screen set` sie an die neue Wand um.
 
 > [!TIP]
-> Die Texte stehen in den Sprachdateien unter `screen-…` - pro Zustand fünf Zeilen (Überschrift, Text, Einzelheit, Countdown, Beschriftung). Die Tafel zeichnet nur, wenn sich etwas ändert, und nur für Spieler, die sie sehen.
+> Die Texte stehen in den Sprachdateien unter `screen-…` - pro Zustand fünf Zeilen (Überschrift, Text, Einzelheit, Countdown, Beschriftung), die Folien unter `screen-slide-…`, die Wartenden unter `screen-waiting`. Die Tafel zeichnet nur, wenn sich etwas ändert, und nur für Spieler, die sie sehen.

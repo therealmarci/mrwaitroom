@@ -20,9 +20,9 @@ It is saved in `plugins/MRwaitroom/lobby/` (`lobby.nbt` = blocks and frames, `lo
 
 A wall of **4 × 2 item frames** shows the waiting players what is going on - everyone sees it in their own language:
 
-- large on the left the state (restart, maintenance, server off, ready …) in its colour, below it the text and the reason or the end of the maintenance,
-- on the right the countdown with a bar,
-- at the bottom the next or running maintenance and the **name of your server** (from MRadmin, page Appearance).
+- **at the top** large the state (restart, maintenance, server off, ready …) in its colour, below it the text and the reason, on the right the big countdown and the progress bar over the whole width,
+- **bottom left** a tile with changing slides (every 6 seconds, segment bar at the top like the big tile in MRadmin) - only slides with content: the running or next **maintenance** (title, start and end), one slide per **warning** from MRadmin and the **server infos** (name of your server from MRadmin, how long the main server has been gone, how long a restart takes about),
+- **bottom right** the time, the date and how many are waiting.
 
 ### Hanging it up
 
@@ -32,4 +32,4 @@ A wall of **4 × 2 item frames** shows the waiting players what is going on - ev
 MRwaitroom puts the maps in by itself and locks the frames (no turning, no taking out, no breaking). Take it down: `/mrwaitroom screen remove`. If there is a board already, `screen set` moves it to the new wall.
 
 > [!TIP]
-> The texts are in the language files under `screen-…` - five lines per state (heading, text, detail, countdown, label). The board only draws when something changes, and only for players who see it.
+> The texts are in the language files under `screen-…` - five lines per state (heading, text, detail, countdown, label), the slides under `screen-slide-…`, the waiting players under `screen-waiting`. The board only draws when something changes, and only for players who see it.

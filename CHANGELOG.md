@@ -14,6 +14,7 @@ veröffentlicht als `mc<minecraft>-STA|BET-<version>-bu<build>` (siehe [docs/REL
 - **Steuerung aus MRadmin:** Neustart oder Stopp mit Countdown und Grund, Notfall (ohne die Warte-Regeln), Abbrechen, geplante Neustarts 24 Stunden aussetzen - alles mit Eintrag im Protokoll. Ein normaler Neustart wartet weiter, bis niemand wartet und der Hauptserver bereit ist. Dazu die Liste aller Plugins dieses Servers für MRadmin.
 
 ### Behoben & geändert
+- **Anzeigetafel neu:** oben Zustand, Grund und großer Countdown mit Balken über die ganze Breite; unten links wechselnde Folien wie die große Kachel in MRadmin (Wartung, je Warnung eine Folie, Server-Infos mit Servername, „weg seit“ und üblicher Neustartdauer); unten rechts Uhrzeit, Datum und Anzahl Wartende. Neue Texte `screen-slide-…` und `screen-waiting`, die Fußzeilen-Texte `screen-footer-…` entfallen.
 - **Countdown in Bossbar und Tafel gleich:** Die Bossbar hinkte der Anzeigetafel bis zu einer Sekunde hinterher. Beide zählen jetzt im selben Takt, und alle Countdowns runden gleich (in der letzten Sekunde steht 0:01).
 - **Item „Information“:** Das Item in der Hand heißt immer „Information“ statt den Zustand im Namen zu tragen (neuer Text `info-item-name`). Der Zustand steht in der Bossbar und im Menü.
 - **Update im Warteraum blieb aus:** Nach einem heruntergeladenen Update startete der Warteraum zum Einspielen neu, sagte dem Starter aber nicht, dass es ein Neustart ist - der Server blieb aus. Jetzt startet er wieder und hält sich dabei an die Neustart-Regeln (keine Wartung, kein Hauptserver-Neustart in Kürze).

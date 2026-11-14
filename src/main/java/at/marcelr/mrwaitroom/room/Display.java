@@ -57,7 +57,9 @@ public final class Display implements Listener {
 
     public void start() {
         stop();
-        task = Bukkit.getScheduler().runTaskTimer(plugin, this::tick, 20L, 20L);
+        // 4 times a second (like the board), so bossbar and board show the same second at the same moment - the
+        // bossbar and the item are only sent again when they change.
+        task = Bukkit.getScheduler().runTaskTimer(plugin, this::tick, 20L, 5L);
     }
 
     public void stop() {
@@ -95,14 +97,21 @@ public final class Display implements Listener {
         }
     }
 
+    private int ticks;
+
     private void tick() {
         MainLink.View view = plugin.link().view();
         long now = System.currentTimeMillis();
-        countdown(view, now);
+        boolean second = ticks++ % 4 == 0;
+        if (second) {
+            countdown(view, now);
+        }
         for (Player player : Bukkit.getOnlinePlayers()) {
             show(player, view, now);
         }
-        InfoMenu.refreshOpen();
+        if (second) {
+            InfoMenu.refreshOpen();
+        }
     }
 
     /** Item and bossbar for one player. */
@@ -273,7 +282,7 @@ public final class Display implements Listener {
         return switch (view.phase()) {
             case RESTART -> {
                 long left = view.estimate() - since;
-                v.put("time", clock(Math.max(0, left)));
+                v.put("time", clock(Math.max(0, left) + 999));
                 float progress = (float) Math.clamp((double) since / Math.max(1, view.estimate()), 0, 1);
                 yield left > 0
                         ? new Line("restart", "join-restart", progress, tags(v))
@@ -282,7 +291,7 @@ public final class Display implements Listener {
             case STOP -> new Line("stop", "join-stop", 1f, tags(v));
             case CRASH -> {
                 long left = view.estimate() - since;
-                v.put("time", clock(Math.max(0, left)));
+                v.put("time", clock(Math.max(0, left) + 999));
                 float progress = (float) Math.clamp((double) since / Math.max(1, view.estimate()), 0, 1);
                 yield left > 0 ? new Line("crash", "join-crash", progress, tags(v))
                         : new Line("crash-late", "join-crash", 1f, tags(v));
@@ -301,7 +310,7 @@ public final class Display implements Listener {
                 if (mt == null || mt.end() <= 0) {
                     yield new Line("maintenance-open", "join-maintenance-open", 1f, tags(v));
                 }
-                v.put("time", clock(Math.max(0, mt.end() - now)));
+                v.put("time", clock(Math.max(0, mt.end() - now) + 999));
                 long start = mt.start() > 0 ? mt.start() : now;
                 float progress = (float) Math.clamp((double) (now - start) / Math.max(1, mt.end() - start), 0, 1);
                 yield new Line("maintenance", "join-maintenance", progress, tags(v));

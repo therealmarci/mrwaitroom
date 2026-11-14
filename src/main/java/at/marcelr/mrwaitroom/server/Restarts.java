@@ -262,6 +262,26 @@ public final class Restarts {
         Bukkit.shutdown();
     }
 
+    /**
+     * Restarts now to put in a downloaded update, if the rules allow it (otherwise it is tried again later). Without
+     * the starter the server just stops - whatever runs it brings it back, as before.
+     *
+     * @return true if the server goes down
+     */
+    public boolean restartForUpdate(String what) {
+        String reason = blocked();
+        if (reason != null && !reason.equals("no-starter")) {
+            return false;
+        }
+        String text = "Restarting the waiting room to put in " + what + " (nobody waits, the main server is ready).";
+        plugin.getLogger().info(text);
+        plugin.events().add("restart", text, at.marcelr.mrwaitroom.link.Events.WARN);
+        plugin.remote().announceRestart();
+        plugin.starter().prepare(true);
+        Bukkit.shutdown();
+        return true;
+    }
+
     /** mrserver restart|stop|cancel [time] [reason] - answered for the console. */
     private void request(String text) {
         String kind = text.split(" ", 2)[0];

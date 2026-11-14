@@ -314,16 +314,15 @@ public final class Remote {
 
     /**
      * Server thread, every 10 seconds: a downloaded update is put in by restarting - only while nobody waits and the
-     * main server is ready (then the waiting room is not needed).
+     * main server is ready (then the waiting room is not needed), and only when the restart rules allow it (no
+     * maintenance, no restart of the main server soon). The starter is told it is a restart, so it starts again.
      */
     private void restartWhenIdle() {
         if (staged == null || !plugin.settings().update().restartWhenIdle() || !Bukkit.getOnlinePlayers().isEmpty()
                 || plugin.link().view().phase() != MainLink.Phase.READY) {
             return;
         }
-        plugin.getLogger().info("Nobody waits and the main server is ready - restarting to put in " + plugin.getName()
-                + " " + staged + ".");
-        Bukkit.shutdown();
+        plugin.restarts().restartForUpdate(plugin.getName() + " " + staged);
     }
 
     private synchronized void ok(String id) {

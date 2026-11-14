@@ -10,6 +10,7 @@ veröffentlicht als `mc<minecraft>-STA|BET-<version>-bu<build>` (siehe [docs/REL
 ### Neu
 - **Leistung in MRadmin:** Der Warteraum öffnet einen eigenen Port für MRadmin (`agent.port`, Standard 8127, `0` = aus; `agent.bind` = Adresse, auf der er lauscht). MRadmin fragt dort jede Sekunde Leistung, Systeminfo und Lag-Chunks ab und zeigt sie wie beim Hauptserver. Geschützt mit `main.link-key`, den Port meldet der Warteraum selbst.
 - **Protokoll und Konsole in MRadmin:** MRadmin zeigt die Ereignisse dieses Servers (gestartet, Neustart, Hauptserver weg/wieder da, Konfiguration und Updates) und sein Server-Log der letzten 14 Tage, dazu die Konsole live mit Befehlen aus MRadmins Web-Konsole (dort mit denselben Rechten und Entsperren wie beim Hauptserver). Befehle lassen sich hier mit `agent.console-commands: false` abschalten.
+- **Steuerung aus MRadmin:** Neustart oder Stopp mit Countdown und Grund, Notfall (ohne die Warte-Regeln), Abbrechen, geplante Neustarts 24 Stunden aussetzen - alles mit Eintrag im Protokoll. Ein normaler Neustart wartet weiter, bis niemand wartet und der Hauptserver bereit ist. Dazu die Liste aller Plugins dieses Servers für MRadmin.
 
 ## [BET-0.1.1-bu001] - 2026-11-11
 

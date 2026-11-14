@@ -22,6 +22,10 @@ import java.util.List;
  * </ul>
  * A restart that is due but blocked waits until it is allowed - one by hand only while nobody waits (other reasons
  * refuse it at once), a planned one until the reasons are gone. Server thread.
+ * <p>
+ * From MRadmin's web interface (agent, since 1.6) like the main server: restart or stop after a delay with a reason
+ * ({@link #schedule}) - at the time a restart still waits for the rules above; a stop and an emergency (force) do not -
+ * cancel, and pause the planned restarts for 24 hours.
  */
 public final class Restarts {
 
@@ -39,6 +43,15 @@ public final class Restarts {
     private long plannedSince;
     /** The last planned time handled (so it is not due twice in the same minute). */
     private ZonedDateTime lastPlanned;
+    /** A countdown from MRadmin: when (epoch ms, 0 = none), restart or stop, why, by whom, ignoring the rules. */
+    private long dueAt;
+    private String dueKind = "restart";
+    private String dueReason = "";
+    private String dueBy = "";
+    private boolean dueForce;
+    /** Planned restarts paused until (epoch ms), by whom. */
+    private long pausedUntil;
+    private String pausedBy = "";
 
     public Restarts(MRwaitroom plugin) {
         this.plugin = plugin;
@@ -127,12 +140,74 @@ public final class Restarts {
         return null;
     }
 
-    /** Cancels a waiting restart (by hand and planned). */
+    /** Cancels a waiting restart (by hand and planned) and a countdown. */
     public boolean cancel() {
-        boolean any = manualSince > 0 || plannedSince > 0;
+        boolean any = manualSince > 0 || plannedSince > 0 || dueAt > 0;
         manualSince = 0;
         plannedSince = 0;
+        dueAt = 0;
         return any;
+    }
+
+    /**
+     * A countdown from MRadmin: restart or stop in {@code delay} ms. A restart without force is refused at once for the
+     * same reasons as one by hand (except waiting players - it waits for them at the time).
+     *
+     * @return null if accepted, otherwise why not (keys as {@link #blocked()}, or "running")
+     */
+    public String schedule(String kind, long delay, String reason, String by, boolean force) {
+        boolean stop = "stop".equals(kind);
+        if (dueAt > 0) {
+            return "running";
+        }
+        if (!stop && !force) {
+            String why = blocked();
+            if (why != null && !why.equals("players-waiting")) {
+                return why;
+            }
+        } else if (!stop && !plugin.starter().active()) {
+            return "no-starter";
+        }
+        dueAt = System.currentTimeMillis() + Math.max(0, delay);
+        dueKind = stop ? "stop" : "restart";
+        dueReason = reason == null ? "" : reason.strip();
+        dueBy = by == null || by.isBlank() ? "MRadmin" : by;
+        dueForce = force;
+        String text = by + (stop ? " stops" : " restarts") + " the waiting room in " + Math.max(0, delay / 1000) + " s"
+                + (force ? " (emergency)" : "") + (dueReason.isEmpty() ? "." : " - " + dueReason + ".");
+        plugin.getLogger().info(text);
+        plugin.events().add(stop ? "stop-ordered" : "restart-ordered", text, force ? at.marcelr.mrwaitroom.link.Events.BAD : at.marcelr.mrwaitroom.link.Events.INFO);
+        Bukkit.getScheduler().runTask(plugin, this::tick);
+        return null;
+    }
+
+    /** Pauses the planned restarts for 24 hours (a due planned one is dropped), or switches them on again. */
+    public void pause(boolean on, String by) {
+        pausedUntil = on ? System.currentTimeMillis() + 24 * 3_600_000L : 0;
+        pausedBy = on ? by : "";
+        if (on) {
+            plannedSince = 0;
+        }
+        String text = on ? by + " paused the planned restarts of the waiting room for 24 hours." : by + " switched the planned restarts of the waiting room on again.";
+        plugin.getLogger().info(text);
+        plugin.events().add(on ? "schedule-paused" : "schedule-resumed", text, at.marcelr.mrwaitroom.link.Events.INFO);
+    }
+
+    /** The state for MRadmin's page (agent): countdown, pause, planned restarts. */
+    public java.util.Map<String, Object> state() {
+        java.util.Map<String, Object> m = new java.util.LinkedHashMap<>();
+        m.put("dueAt", dueAt);
+        m.put("dueKind", dueKind);
+        m.put("dueReason", dueReason);
+        m.put("dueBy", dueBy);
+        m.put("dueForce", dueForce);
+        m.put("pausedUntil", pausedUntil > System.currentTimeMillis() ? pausedUntil : 0);
+        m.put("pausedBy", pausedBy);
+        m.put("restartTimes", plugin.settings().server().restartTimes().size());
+        m.put("nextPlanned", nextPlanned());
+        m.put("pending", pending());
+        m.put("blocked", blocked());
+        return m;
     }
 
     private void tick() {
@@ -140,7 +215,7 @@ public final class Restarts {
         // A planned time reached (checked every 5 seconds - the minute of the time counts).
         ZonedDateTime minute = ZonedDateTime.now(plugin.settings().zone()).withSecond(0).withNano(0);
         if (plugin.settings().server().restartTimes().contains(minute.toLocalTime())
-                && (lastPlanned == null || !lastPlanned.equals(minute))) {
+                && (lastPlanned == null || !lastPlanned.equals(minute)) && pausedUntil <= now) {
             lastPlanned = minute;
             if (plannedSince == 0) {
                 plannedSince = now;
@@ -151,6 +226,25 @@ public final class Restarts {
             plugin.getLogger().info("The restart by hand was given up - players kept waiting for 10 minutes.");
             plugin.events().add("restart-given-up", "The restart by hand was given up - players kept waiting for 10 minutes.", at.marcelr.mrwaitroom.link.Events.WARN);
             manualSince = 0;
+        }
+        // A countdown from MRadmin is over: a stop and an emergency go now, a restart waits for the rules.
+        if (dueAt > 0 && now >= dueAt) {
+            boolean stop = dueKind.equals("stop");
+            String why = dueReason.isEmpty() ? "" : " - " + dueReason;
+            dueAt = 0;
+            if (stop || dueForce) {
+                String text = (stop ? "Stopping" : "Restarting") + " the waiting room (by " + dueBy + why + ").";
+                plugin.getLogger().info(text);
+                plugin.events().add(stop ? "stop" : "restart", text, at.marcelr.mrwaitroom.link.Events.WARN);
+                if (!stop) {
+                    plugin.remote().announceRestart();
+                }
+                plugin.starter().prepare(!stop);
+                Bukkit.shutdown();
+                return;
+            }
+            manualSince = now;
+            manualBy = dueBy;
         }
         if (manualSince == 0 && plannedSince == 0) {
             return;

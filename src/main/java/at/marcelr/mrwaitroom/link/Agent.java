@@ -50,6 +50,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
  *   GET /agent/logscan?since&amp;until&amp;q&amp;keep&amp;buckets&amp;links&amp;ips   the older server log (logs/, up to 14 days): the newest
  *                                        "keep" lines, how many match and the chart bars by level - for MRadmin's page Log
  *   GET /agent/events?after=&lt;ms&gt;       what happened here (Events)
+ *   POST /agent/control {action, delay, reason, by, force}   restart | stop | cancel | pause | resume (Restarts) -
+ *                                        MRadmin checks the permission, the delays and the emergency sign-in before
+ *   GET /agent/plugins                   all plugins of this server (name, version, enabled) - shown in MRadmin
  * </pre>
  * A point has exactly the fields of MRadmin's health points (HealthMonitor.Point), so MRadmin keeps them like its own.
  */
@@ -234,6 +237,8 @@ public final class Agent {
                 case "GET /agent/console" -> send(exchange, 200, console(number(query.get("after"))));
                 case "POST /agent/command" -> command(exchange);
                 case "GET /agent/logscan" -> send(exchange, 200, logscan(query));
+                case "POST /agent/control" -> control(exchange);
+                case "GET /agent/plugins" -> send(exchange, 200, Map.of("plugins", plugins()));
                 case "GET /agent/events" -> send(exchange, 200, Map.of("events", plugin.events().after(number(query.get("after")))));
                 default -> send(exchange, 404, Map.of("error", "not-found"));
             }
@@ -252,7 +257,66 @@ public final class Agent {
         // The 1-minute average decides the lag warning (as on the main server - one spike does not count).
         result.put("tps1m", Math.min(20, round(Bukkit.getTPS()[0])));
         result.put("worlds", worlds);
+        result.put("control", controlState());
         return result;
+    }
+
+    /** Countdown, pause, planned restarts, starter and Paper - asked every second with the health. */
+    private Map<String, Object> controlState() {
+        try {
+            return Bukkit.getScheduler().callSyncMethod(plugin, () -> {
+                Map<String, Object> m = new LinkedHashMap<>(plugin.restarts().state());
+                m.put("starter", plugin.starter().active());
+                m.put("paper", at.marcelr.mrwaitroom.server.StarterBridge.paperBuild());
+                m.put("minecraft", Bukkit.getMinecraftVersion());
+                m.put("startedAt", ManagementFactory.getRuntimeMXBean().getStartTime());
+                m.put("players", Bukkit.getOnlinePlayers().size());
+                m.put("restarting", false);
+                return m;
+            }).get(2, TimeUnit.SECONDS);
+        } catch (Exception e) {
+            return Map.of();
+        }
+    }
+
+    private List<Map<String, Object>> plugins() {
+        List<Map<String, Object>> list = new ArrayList<>();
+        for (org.bukkit.plugin.Plugin p : Bukkit.getPluginManager().getPlugins()) {
+            list.add(Map.of("name", p.getName(), "version", p.getPluginMeta().getVersion(), "enabled", p.isEnabled()));
+        }
+        list.sort((a, b) -> String.valueOf(a.get("name")).compareToIgnoreCase(String.valueOf(b.get("name"))));
+        return list;
+    }
+
+    /** restart / stop / cancel / pause / resume from MRadmin's web interface. */
+    private void control(HttpExchange exchange) throws IOException {
+        com.google.gson.JsonObject body;
+        try {
+            body = com.google.gson.JsonParser.parseString(new String(exchange.getRequestBody().readNBytes(8192),
+                    StandardCharsets.UTF_8)).getAsJsonObject();
+        } catch (RuntimeException e) {
+            send(exchange, 400, Map.of("error", "bad-request"));
+            return;
+        }
+        String action = body.has("action") ? body.get("action").getAsString() : "";
+        long delay = body.has("delay") ? body.get("delay").getAsLong() : 0;
+        String reason = body.has("reason") ? body.get("reason").getAsString() : "";
+        String by = body.has("by") ? body.get("by").getAsString() : "MRadmin";
+        boolean force = body.has("force") && body.get("force").getAsBoolean();
+        String problem;
+        try {
+            problem = Bukkit.getScheduler().callSyncMethod(plugin, () -> switch (action) {
+                case "restart", "stop" -> plugin.restarts().schedule(action, delay, reason, by, force);
+                case "cancel" -> plugin.restarts().cancel() ? null : "none";
+                case "pause" -> { plugin.restarts().pause(true, by); yield null; }
+                case "resume" -> { plugin.restarts().pause(false, by); yield null; }
+                default -> "bad-request";
+            }).get(5, TimeUnit.SECONDS);
+        } catch (Exception e) {
+            send(exchange, 503, Map.of("error", "busy"));
+            return;
+        }
+        send(exchange, problem == null ? 200 : 409, problem == null ? Map.of() : Map.of("error", problem));
     }
 
     private Map<String, Object> console(long after) {

@@ -7,6 +7,8 @@ veröffentlicht als `mc<minecraft>-STA|BET-<version>-bu<build>` (siehe [docs/REL
 
 ## [Unveröffentlicht]
 
+## [BET-0.2.0-bu001] - 2026-11-15
+
 ### Neu
 - **Gruppe Bots für Zweitaccounts:** `mrwaitroom.groups.bots` (nicht für OPs, in keiner Team-Gruppe) - keine Rechte, warten und kehren zurück wie normale Spieler. Fertige LuckPerms-Gruppe „bots“ im MRadmin-Wiki unter Permissions.
 - **Leistung in MRadmin:** Der Warteraum öffnet einen eigenen Port für MRadmin (`agent.port`, Standard 8127, `0` = aus; `agent.bind` = Adresse, auf der er lauscht). MRadmin fragt dort jede Sekunde Leistung, Systeminfo und Lag-Chunks ab und zeigt sie wie beim Hauptserver. Geschützt mit `main.link-key`, den Port meldet der Warteraum selbst.

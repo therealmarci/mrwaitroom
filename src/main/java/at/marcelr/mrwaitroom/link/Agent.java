@@ -52,7 +52,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
  *   GET /agent/events?after=&lt;ms&gt;       what happened here (Events)
  *   POST /agent/control {action, delay, reason, by, force}   restart | stop | cancel | pause | resume (Restarts) -
  *                                        MRadmin checks the permission, the delays and the emergency sign-in before
- *   GET /agent/plugins                   all plugins of this server (name, version, enabled) - shown in MRadmin
+ *   GET /agent/plugins                   all plugins of this server (name, version, enabled, SHA-1 of the JAR) and the
+ *                                        Minecraft version - shown in MRadmin, which looks the JARs up on Modrinth
  * </pre>
  * A point has exactly the fields of MRadmin's health points (HealthMonitor.Point), so MRadmin keeps them like its own.
  */
@@ -77,6 +78,9 @@ public final class Agent {
     private final Deque<Point> points = new ArrayDeque<>();
     private final Map<String, int[]> failures = new ConcurrentHashMap<>();
     private volatile List<WorldInfo> worlds = List.of();
+    /** The players online (name, uuid, world, ping) - taken with every point, for MRadmin's network dashboard. */
+    private volatile List<Map<String, Object>> online = List.of();
+    private final JarHashes hashes = new JarHashes();
     private volatile List<Map<String, Object>> lag = List.of();
     private volatile long lagTime;
     private volatile long serverSize = -1;
@@ -196,6 +200,11 @@ public final class Agent {
                     world.getPlayerCount()));
         }
         worlds = List.copyOf(list);
+        List<Map<String, Object>> players = new ArrayList<>();
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            players.add(Map.of("uuid", p.getUniqueId().toString(), "name", p.getName(), "world", p.getWorld().getName(), "ping", p.getPing()));
+        }
+        online = List.copyOf(players);
         double ping = Bukkit.getOnlinePlayers().stream().mapToInt(Player::getPing).average().orElse(-1);
 
         Point point = new Point(now, round(tps), round(Bukkit.getAverageTickTime()), round(p95), round(max), cpu, cpuSystem,
@@ -238,7 +247,7 @@ public final class Agent {
                 case "POST /agent/command" -> command(exchange);
                 case "GET /agent/logscan" -> send(exchange, 200, logscan(query));
                 case "POST /agent/control" -> control(exchange);
-                case "GET /agent/plugins" -> send(exchange, 200, Map.of("plugins", plugins()));
+                case "GET /agent/plugins" -> send(exchange, 200, plugins());
                 case "GET /agent/events" -> send(exchange, 200, Map.of("events", plugin.events().after(number(query.get("after")))));
                 default -> send(exchange, 404, Map.of("error", "not-found"));
             }
@@ -257,6 +266,8 @@ public final class Agent {
         // The 1-minute average decides the lag warning (as on the main server - one spike does not count).
         result.put("tps1m", Math.min(20, round(Bukkit.getTPS()[0])));
         result.put("worlds", worlds);
+        result.put("players", online);
+        result.put("maxPlayers", Bukkit.getMaxPlayers());
         result.put("control", controlState());
         return result;
     }
@@ -279,13 +290,22 @@ public final class Agent {
         }
     }
 
-    private List<Map<String, Object>> plugins() {
+    private Map<String, Object> plugins() {
         List<Map<String, Object>> list = new ArrayList<>();
         for (org.bukkit.plugin.Plugin p : Bukkit.getPluginManager().getPlugins()) {
-            list.add(Map.of("name", p.getName(), "version", p.getPluginMeta().getVersion(), "enabled", p.isEnabled()));
+            Map<String, Object> m = new LinkedHashMap<>();
+            m.put("name", p.getName());
+            m.put("version", p.getPluginMeta().getVersion());
+            m.put("enabled", p.isEnabled());
+            // SHA-1 of the JAR: MRadmin asks Modrinth with it which project and version this is
+            String sha1 = hashes.sha1(p);
+            if (sha1 != null) {
+                m.put("sha1", sha1);
+            }
+            list.add(m);
         }
         list.sort((a, b) -> String.valueOf(a.get("name")).compareToIgnoreCase(String.valueOf(b.get("name"))));
-        return list;
+        return Map.of("plugins", list, "minecraft", Bukkit.getMinecraftVersion());
     }
 
     /** restart / stop / cancel / pause / resume from MRadmin's web interface. */

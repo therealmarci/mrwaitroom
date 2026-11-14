@@ -35,8 +35,8 @@ import static at.marcelr.mrwaitroom.Messages.tag;
 /**
  * What the waiting players see, renewed every second, each player in their own language:
  * <ul>
- *     <li>an item in the hotbar (selected) whose name says what is going on - it only changes when the situation
- *     changes: every change makes the game play the "take into hand" animation,</li>
+ *     <li>an item in the hotbar (selected) named "Information" - always the same (every change of the item makes the
+ *     game play the "take into hand" animation); what is going on is in the bossbar and the menu,</li>
  *     <li>a bossbar with the countdown, the reason and the progress, every second (display.bossbar),</li>
  *     <li>right-clicking the clock opens {@link InfoMenu} with all details,</li>
  *     <li>on joining one chat line with the details in a hover, plus the warnings that are on.</li>
@@ -112,7 +112,7 @@ public final class Display implements Listener {
         Line line = line(view, now);
         ItemStack item = new ItemStack(s.item());
         ItemMeta meta = item.getItemMeta();
-        meta.itemName(m.as(player, () -> m.get(line.item(), line.tags())).decoration(TextDecoration.ITALIC, false));
+        meta.itemName(m.as(player, () -> m.get("info-item-name")).decoration(TextDecoration.ITALIC, false));
         meta.lore(m.as(player, () -> m.lore("item-lore", line.tags())));
         item.setItemMeta(meta);
         // Only when it differs: setting the same item again would replay the "take into hand" animation.

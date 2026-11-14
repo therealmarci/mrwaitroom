@@ -15,7 +15,7 @@ Alle paar Sekunden (`main.poll-seconds`) prüft der Warteraum, ob der Minecraft-
 Die Bossbar (`display.bossbar`) ist immer gleich aufgebaut - **Zustand | Countdown** -, Grund und Einzelheiten stehen im Uhr-Menü. Sie füllt sich bis zur erwarteten Rückkehr bzw. bis zum Ende der Wartung. **Beim Betreten** kommt eine kurze Chatzeile mit Einzelheiten im Hover, dazu die Warnungen, die in MRadmin unter **Neuigkeiten** gerade aktiv sind.
 
 ## Die Uhr und ihr Menü
-Die **Uhr in der Hotbar** (`display.item`, bleibt ausgewählt auf `display.slot`) trägt den Zustand im Namen, z.B. „⏳ Neustart“ oder „🛠 Wartung bis 18:00“. **Rechtsklick** öffnet ein Menü mit allen Einzelheiten:
+Das Item **Information** in der Hotbar (`display.item`, bleibt ausgewählt auf `display.slot`) heißt immer gleich. **Rechtsklick** öffnet ein Menü mit dem Zustand (z.B. „⏳ Neustart“ oder „🛠 Wartung bis 18:00“) und allen Einzelheiten:
 
 | Feld | Inhalt |
 |---|---|
@@ -29,7 +29,7 @@ Die **Uhr in der Hotbar** (`display.item`, bleibt ausgewählt auf `display.slot`
 Das Menü aktualisiert sich jede Sekunde, solange es offen ist.
 
 > [!NOTE]
-> Der Name der Uhr ändert sich nur, wenn sich der Zustand ändert - jede Änderung am Item in der Hand spielt im Spiel eine Animation ab. Der Countdown läuft deshalb in der Bossbar. Das Inventar ist gesperrt.
+> Das Item in der Hand ändert sich nie - jede Änderung spielt im Spiel eine Animation ab. Zustand und Countdown stehen deshalb in der Bossbar. Das Inventar ist gesperrt.
 
 ## Countdown bei Neustarts
 Bei einem Neustart oder Absturz zählt die Bossbar von `return.estimate-seconds` herunter (Standard **2:00**). Ist der Hauptserver früher zurück, geht es früher los; dauert es länger, steht dort „gleich wieder da“.

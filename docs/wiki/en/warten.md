@@ -4,7 +4,7 @@ When the server restarts or a maintenance runs, you land in the **waiting room**
 
 ## What you see
 - **The bossbar** at the top tells you how long it takes, e.g. "Restart | 1:42". It fills up until the expected return.
-- **The clock in your hand** shows what is going on ("⏳ Restart", "🛠 Maintenance until 18:00"). A **right click** on the clock opens a menu with all details: reason, times, maintenance, warnings.
+- **The item "Information" in your hand:** a **right click** opens a menu with all details: what is going on ("⏳ Restart", "🛠 Maintenance until 18:00"), reason, times, maintenance, warnings.
 - **On joining** one line in the chat - hover over **[Info]** for details.
 
 ## Going back

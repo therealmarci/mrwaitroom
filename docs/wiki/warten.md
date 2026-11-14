@@ -4,7 +4,7 @@ Startet der Server neu oder läuft eine Wartung, landest du im **Warteraum** - d
 
 ## Was du siehst
 - **Die Bossbar** oben sagt dir, wie lange es noch dauert, z.B. „Neustart | 1:42“. Sie füllt sich bis zur erwarteten Rückkehr.
-- **Die Uhr in deiner Hand** zeigt, was los ist („⏳ Neustart“, „🛠 Wartung bis 18:00“). **Rechtsklick** auf die Uhr öffnet ein Menü mit allen Einzelheiten: Grund, Zeiten, Wartung, Warnungen.
+- **Das Item „Information“ in deiner Hand:** **Rechtsklick** öffnet ein Menü mit allen Einzelheiten: was los ist („⏳ Neustart“, „🛠 Wartung bis 18:00“), Grund, Zeiten, Wartung, Warnungen.
 - **Beim Betreten** eine Zeile im Chat - fahr mit der Maus über **[Info]** für Einzelheiten.
 
 ## Zurück

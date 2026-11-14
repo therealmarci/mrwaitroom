@@ -15,7 +15,7 @@ Every few seconds (`main.poll-seconds`) the waiting room checks whether the Mine
 The bossbar (`display.bossbar`) always has the same layout - **state | countdown** -, reason and details are in the clock menu. It fills up until the expected return or the end of the maintenance. **On joining** there is a short chat line with details in the hover, plus the warnings that are currently active in MRadmin under **News**.
 
 ## The clock and its menu
-The **clock in the hotbar** (`display.item`, stays selected on `display.slot`) carries the state in its name, e.g. "⏳ Restart" or "🛠 Maintenance until 18:00". A **right click** opens a menu with all details:
+The item **Information** in the hotbar (`display.item`, stays selected on `display.slot`) always has the same name. A **right click** opens a menu with the state (e.g. "⏳ Restart" or "🛠 Maintenance until 18:00") and all details:
 
 | Field | Content |
 |---|---|
@@ -29,7 +29,7 @@ The **clock in the hotbar** (`display.item`, stays selected on `display.slot`) c
 The menu renews every second while it is open.
 
 > [!NOTE]
-> The name of the clock only changes when the state changes - every change of the item in hand plays an animation in the game. That is why the countdown runs in the bossbar. The inventory is locked.
+> The item in hand never changes - every change plays an animation in the game. That is why the state and the countdown are in the bossbar. The inventory is locked.
 
 ## Countdown of restarts
 On a restart or crash the bossbar counts down from `return.estimate-seconds` (default **2:00**). If the main server is back earlier, players go back earlier; if it takes longer, it says "back in a moment".

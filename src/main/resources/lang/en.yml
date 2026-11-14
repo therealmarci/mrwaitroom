@@ -21,7 +21,7 @@ server-name: "the server"
 maintenance-no-title: "Maintenance"
 
 # ---------------------------------------------------------------- Hotbar item
-# Name of the clock - only changes when the situation changes (every change plays an animation in the game).
+# Name of the state in the info menu (the item in the hand is always called info-item-name).
 item-restart: "<yellow>⏳ Restart"
 item-restart-late: "<yellow>⏳ Restart"
 item-stop: "<red>■ Server is off"
@@ -32,6 +32,7 @@ item-ready: "<green>➜ Back to the server"
 item-returning: "<green>➜ Back to the server"
 item-maintenance: "<aqua>🛠 Maintenance until <white><end>"
 item-maintenance-open: "<aqua>🛠 Maintenance"
+info-item-name: "<aqua>ℹ Information"
 item-lore:
   - "<gray>You are waiting in the waiting room"
   - "<gray>and go back by yourself."

@@ -21,7 +21,7 @@ server-name: "der Server"
 maintenance-no-title: "Wartungsarbeiten"
 
 # ------------------------------------------------------------- Item in der Hotbar
-# Name der Uhr - ändert sich nur, wenn sich die Lage ändert (jede Änderung spielt im Spiel eine Animation ab).
+# Name des Zustands im Info-Menü (das Item in der Hand heißt immer info-item-name).
 item-restart: "<yellow>⏳ Neustart"
 item-restart-late: "<yellow>⏳ Neustart"
 item-stop: "<red>■ Server ist aus"
@@ -32,6 +32,7 @@ item-ready: "<green>➜ Zurück zum Server"
 item-returning: "<green>➜ Zurück zum Server"
 item-maintenance: "<aqua>🛠 Wartung bis <white><end>"
 item-maintenance-open: "<aqua>🛠 Wartung"
+info-item-name: "<aqua>ℹ Information"
 item-lore:
   - "<gray>Du wartest im Warteraum und kommst"
   - "<gray>automatisch zurück."

@@ -52,7 +52,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  *   GET /agent/events?after=&lt;ms&gt;       what happened here (Events)
  *   POST /agent/control {action, delay, reason, by, force}   restart | stop | cancel | pause | resume (Restarts) -
  *                                        MRadmin checks the permission, the delays and the emergency sign-in before
- *   GET /agent/plugins                   all plugins of this server (name, version, enabled, SHA-1 of the JAR) and the
+ *   GET /agent/plugins                   all plugins of this server (name, version, enabled, SHA-512 of the JAR) and the
  *                                        Minecraft version - shown in MRadmin, which looks the JARs up on Modrinth
  * </pre>
  * A point has exactly the fields of MRadmin's health points (HealthMonitor.Point), so MRadmin keeps them like its own.
@@ -297,10 +297,10 @@ public final class Agent {
             m.put("name", p.getName());
             m.put("version", p.getPluginMeta().getVersion());
             m.put("enabled", p.isEnabled());
-            // SHA-1 of the JAR: MRadmin asks Modrinth with it which project and version this is
-            String sha1 = hashes.sha1(p);
-            if (sha1 != null) {
-                m.put("sha1", sha1);
+            // SHA-512 of the JAR: MRadmin asks Modrinth with it which project and version this is
+            String sha512 = hashes.sha512(p);
+            if (sha512 != null) {
+                m.put("sha512", sha512);
             }
             list.add(m);
         }

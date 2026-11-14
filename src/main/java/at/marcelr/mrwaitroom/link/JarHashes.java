@@ -13,12 +13,12 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * SHA-1 of the JAR a plugin was loaded from (Modrinth finds project and version by it). Computed once per file state
+ * SHA-512 of the JAR a plugin was loaded from (Modrinth finds project and version by it). Computed once per file state
  * (path, size, modified). The same class lives in MRadmin (versions/JarHashes) - keep both the same.
  */
 public final class JarHashes {
 
-    private record Known(long size, long modified, String sha1) {
+    private record Known(long size, long modified, String sha512) {
     }
 
     private static final Method GET_FILE;
@@ -48,8 +48,8 @@ public final class JarHashes {
         }
     }
 
-    /** The SHA-1 (hex) of the plugin's JAR, or null. */
-    public String sha1(Plugin plugin) {
+    /** The SHA-512 (hex) of the plugin's JAR, or null. */
+    public String sha512(Plugin plugin) {
         File f = file(plugin);
         if (f == null) {
             return null;
@@ -57,18 +57,18 @@ public final class JarHashes {
         String key = f.getAbsolutePath();
         Known known = cache.get(key);
         if (known != null && known.size() == f.length() && known.modified() == f.lastModified()) {
-            return known.sha1();
+            return known.sha512();
         }
         try (InputStream in = Files.newInputStream(f.toPath())) {
-            MessageDigest digest = MessageDigest.getInstance("SHA-1");
+            MessageDigest digest = MessageDigest.getInstance("SHA-512");
             byte[] buffer = new byte[65536];
             int n;
             while ((n = in.read(buffer)) > 0) {
                 digest.update(buffer, 0, n);
             }
-            String sha1 = HexFormat.of().formatHex(digest.digest());
-            cache.put(key, new Known(f.length(), f.lastModified(), sha1));
-            return sha1;
+            String sha512 = HexFormat.of().formatHex(digest.digest());
+            cache.put(key, new Known(f.length(), f.lastModified(), sha512));
+            return sha512;
         } catch (Exception e) {
             return null;
         }

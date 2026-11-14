@@ -44,6 +44,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
  *   GET /agent/health?after=&lt;ms&gt;   points since then (one per second, the last 5 minutes are kept) + worlds
  *   GET /agent/system                    uptime, Java, cores, disk, server folder size, worlds, newest point
  *   GET /agent/lag                       the 5 chunks with the most entities (counted at most every 30 s)
+ *   GET /agent/console?after=n           console lines after n (the newest 1000 are kept) with their level
+ *   POST /agent/command {command, by}    runs a command as the console (agent.console-commands; MRadmin checks the
+ *                                        permission, the unlocking and its block list before)
+ *   GET /agent/logscan?since&amp;until&amp;q&amp;keep&amp;buckets&amp;links&amp;ips   the older server log (logs/, up to 14 days): the newest
+ *                                        "keep" lines, how many match and the chart bars by level - for MRadmin's page Log
+ *   GET /agent/events?after=&lt;ms&gt;       what happened here (Events)
  * </pre>
  * A point has exactly the fields of MRadmin's health points (HealthMonitor.Point), so MRadmin keeps them like its own.
  */
@@ -73,6 +79,7 @@ public final class Agent {
     private volatile long serverSize = -1;
     private volatile long sizeTime;
     private final AtomicBoolean measuring = new AtomicBoolean();
+    private final ConsoleTail console = new ConsoleTail(new File(".").getAbsoluteFile().toPath());
     private HttpServer server;
     private BukkitTask sampler;
     private BukkitTask tickCounter;
@@ -114,6 +121,7 @@ public final class Agent {
             plugin.getLogger().warning("Could not open the agent port " + s.port() + ": " + e.getMessage());
             return;
         }
+        console.start();
         lastSample = System.currentTimeMillis();
         ticks = 0;
         tickCounter = Bukkit.getScheduler().runTaskTimer(plugin, () -> ticks++, 1L, 1L);
@@ -129,6 +137,7 @@ public final class Agent {
             tickCounter.cancel();
             tickCounter = null;
         }
+        console.stop();
         if (server != null) {
             server.stop(0);
             server = null;
@@ -222,6 +231,10 @@ public final class Agent {
                 case "GET /agent/health" -> send(exchange, 200, health(number(query.get("after"))));
                 case "GET /agent/system" -> send(exchange, 200, system());
                 case "GET /agent/lag" -> send(exchange, 200, lag());
+                case "GET /agent/console" -> send(exchange, 200, console(number(query.get("after"))));
+                case "POST /agent/command" -> command(exchange);
+                case "GET /agent/logscan" -> send(exchange, 200, logscan(query));
+                case "GET /agent/events" -> send(exchange, 200, Map.of("events", plugin.events().after(number(query.get("after")))));
                 default -> send(exchange, 404, Map.of("error", "not-found"));
             }
         } catch (RuntimeException e) {
@@ -239,6 +252,89 @@ public final class Agent {
         // The 1-minute average decides the lag warning (as on the main server - one spike does not count).
         result.put("tps1m", Math.min(20, round(Bukkit.getTPS()[0])));
         result.put("worlds", worlds);
+        return result;
+    }
+
+    private Map<String, Object> console(long after) {
+        List<Map<String, Object>> lines = new ArrayList<>();
+        for (ConsoleTail.Line line : console.after(after, 500)) {
+            lines.add(Map.of("seq", line.seq(), "level", line.level(), "text", line.text()));
+        }
+        return Map.of("lines", lines, "last", console.last());
+    }
+
+    /** A command from MRadmin's web console - MRadmin has checked who may and its block list already. */
+    private void command(HttpExchange exchange) throws IOException {
+        if (!settings().consoleCommands()) {
+            send(exchange, 403, Map.of("error", "commands-off"));
+            return;
+        }
+        com.google.gson.JsonObject body;
+        try {
+            body = com.google.gson.JsonParser.parseString(new String(exchange.getRequestBody().readNBytes(8192),
+                    StandardCharsets.UTF_8)).getAsJsonObject();
+        } catch (RuntimeException e) {
+            send(exchange, 400, Map.of("error", "bad-request"));
+            return;
+        }
+        String command = body.has("command") ? body.get("command").getAsString().strip() : "";
+        String by = body.has("by") ? body.get("by").getAsString() : "?";
+        if (command.startsWith("/")) {
+            command = command.substring(1).strip();
+        }
+        if (command.isEmpty() || command.length() > 500 || command.contains("\n") || command.contains("\r")) {
+            send(exchange, 400, Map.of("error", "command-invalid"));
+            return;
+        }
+        String run = command;
+        try {
+            Bukkit.getScheduler().callSyncMethod(plugin, () -> {
+                plugin.getLogger().info(by + " (MRadmin web console): " + run);
+                return Bukkit.dispatchCommand(Bukkit.getConsoleSender(), run);
+            }).get(5, TimeUnit.SECONDS);
+        } catch (Exception e) {
+            send(exchange, 503, Map.of("error", "busy"));
+            return;
+        }
+        send(exchange, 200, Map.of());
+    }
+
+    /** The older server log, counted and paged on this server - only the page is sent (like MRadmin's page Log). */
+    private Map<String, Object> logscan(Map<String, String> q) {
+        long now = System.currentTimeMillis();
+        long since = Math.max(0, number(q.get("since")));
+        long until = number(q.get("until")) <= 0 ? now + 1 : number(q.get("until"));
+        int keep = (int) Math.clamp(number(q.get("keep")), 0, 20_100);
+        int buckets = (int) Math.clamp(number(q.get("buckets")), 0, 200);
+        long step = buckets <= 0 ? 1 : Math.max(1, (until - since + buckets - 1) / buckets);
+        int[][] bars = new int[buckets][4];
+        List<Map<String, Object>> lines = new ArrayList<>();
+        int[] total = {0};
+        java.time.ZoneId zone = java.time.ZoneId.systemDefault();
+        try {
+            new LogFiles(new File(".").getAbsoluteFile().toPath().resolve("logs"), zone).scan(java.time.LocalDate.now(zone),
+                    since, until, q.get("q"), "1".equals(q.get("links")), "1".equals(q.get("ips")), line -> {
+                        total[0]++;
+                        if (buckets > 0) {
+                            int i = (int) Math.clamp((line.key() - since) / step, 0, buckets - 1);
+                            bars[i][switch (line.level()) {
+                                case "warn" -> 2;
+                                case "error" -> 3;
+                                default -> 1;
+                            }]++;
+                        }
+                        if (lines.size() < keep) {
+                            lines.add(Map.of("key", line.key(), "level", line.level(), "text", line.text()));
+                        }
+                        return true;
+                    });
+        } catch (IOException e) {
+            // a file vanished while reading - what was found so far
+        }
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("lines", lines);
+        result.put("total", total[0]);
+        result.put("bars", bars);
         return result;
     }
 

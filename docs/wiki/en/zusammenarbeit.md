@@ -24,8 +24,8 @@ The waiting room reports to MRadmin every 30 seconds (version, configuration, fo
 
 The waiting room fetches configuration and updates itself. MRadmin cannot send it any other files - only tell it which official version to download.
 
-## Performance in MRadmin
-MRadmin shows the performance (TPS, tick time, CPU, memory, players, worlds) of the waiting room like the one of the main server - under **Server → Waiting room → Performance**, with recording and lag warning. For this the waiting room opens a port of its own (`agent.port`, default 8127, `0` = off) that MRadmin asks every second - protected with the same key (`main.link-key`). The waiting room reports the port itself, MRadmin needs no setting.
+## Performance, log and console in MRadmin
+MRadmin shows the waiting room like the main server - under **Server → Waiting room**: **Performance** (TPS, tick time, CPU, memory, players, worlds, with recording and lag warning), **Log** (events of this server and its server log of the last 14 days) and **Console** (output live, commands with the same rules as for the main server; `agent.console-commands: false` switches commands off here). For this the waiting room opens a port of its own (`agent.port`, default 8127, `0` = off) that MRadmin asks every second - protected with the same key (`main.link-key`). The waiting room reports the port itself, MRadmin needs no setting.
 
 > [!TIP]
 > With `agent.bind` on the internal address (e.g. `10.0.0.6`) the port cannot be reached from outside. In the firewall only let the main server through to the waiting room.

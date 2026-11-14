@@ -24,8 +24,8 @@ Der Warteraum meldet sich alle 30 Sekunden bei MRadmin (Version, Konfiguration, 
 
 Konfiguration und Updates holt der Warteraum selbst ab. MRadmin kann ihm keine fremden Dateien schicken - nur sagen, welche offizielle Version er laden soll.
 
-## Leistung in MRadmin
-MRadmin zeigt Leistung (TPS, Tick-Zeit, CPU, Arbeitsspeicher, Spieler, Welten) des Warteraums wie die des Hauptservers - unter **Server → Warteraum → Leistung**, mit Aufzeichnung und Lag-Warnung. Dafür öffnet der Warteraum einen eigenen Port (`agent.port`, Standard 8127, `0` = aus), den MRadmin jede Sekunde abfragt - geschützt mit demselben Schlüssel (`main.link-key`). Den Port meldet der Warteraum selbst, MRadmin braucht keine Einstellung.
+## Leistung, Protokoll und Konsole in MRadmin
+MRadmin zeigt den Warteraum wie den Hauptserver - unter **Server → Warteraum**: **Leistung** (TPS, Tick-Zeit, CPU, Arbeitsspeicher, Spieler, Welten, mit Aufzeichnung und Lag-Warnung), **Protokoll** (Ereignisse dieses Servers und sein Server-Log der letzten 14 Tage) und **Konsole** (Ausgabe live, Befehle mit denselben Regeln wie beim Hauptserver; `agent.console-commands: false` schaltet Befehle hier ab). Dafür öffnet der Warteraum einen eigenen Port (`agent.port`, Standard 8127, `0` = aus), den MRadmin jede Sekunde abfragt - geschützt mit demselben Schlüssel (`main.link-key`). Den Port meldet der Warteraum selbst, MRadmin braucht keine Einstellung.
 
 > [!TIP]
 > Mit `agent.bind` auf der internen Adresse (z.B. `10.0.0.6`) ist der Port von außen nicht erreichbar. In der Firewall nur den Hauptserver zum Warteraum durchlassen.

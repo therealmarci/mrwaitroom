@@ -239,9 +239,11 @@ public final class Remote {
             Files.move(temp, path, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
             plugin.reload();
             plugin.getLogger().info("Took the configuration from MRadmin and reloaded.");
+            plugin.events().add("config", "Configuration taken from MRadmin and reloaded.", at.marcelr.mrwaitroom.link.Events.INFO);
             ok(id);
         } catch (IOException | InvalidConfigurationException | RuntimeException e) {
             plugin.getLogger().warning("Could not take the configuration from MRadmin: " + e.getMessage());
+            plugin.events().add("config-failed", "Could not take the configuration from MRadmin: " + e.getMessage(), at.marcelr.mrwaitroom.link.Events.BAD);
             fail(id, e.getMessage() == null ? e.getClass().getSimpleName() : e.getMessage());
         }
         Bukkit.getScheduler().runTaskAsynchronously(plugin, this::report);
@@ -284,9 +286,11 @@ public final class Remote {
             staged = version;
             plugin.getLogger().info("Downloaded " + plugin.getName() + " " + version + " (checksum ok) - it is put in on the"
                     + " next start.");
+            plugin.events().add("update-ready", "Downloaded " + plugin.getName() + " " + version + " - put in on the next start.", at.marcelr.mrwaitroom.link.Events.INFO);
             ok(id);
         } catch (IOException | NoSuchAlgorithmException | RuntimeException e) {
             plugin.getLogger().warning("Update from MRadmin failed: " + e.getMessage());
+            plugin.events().add("update-failed", "Update from MRadmin failed: " + e.getMessage(), at.marcelr.mrwaitroom.link.Events.BAD);
             fail(id, e.getMessage() == null ? e.getClass().getSimpleName() : e.getMessage());
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();

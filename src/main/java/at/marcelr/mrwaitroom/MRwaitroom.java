@@ -60,6 +60,7 @@ public final class MRwaitroom extends JavaPlugin implements Listener {
     private final at.marcelr.mrwaitroom.room.Rights rights = new at.marcelr.mrwaitroom.room.Rights(this);
     private final at.marcelr.mrwaitroom.room.AdminMode adminMode = new at.marcelr.mrwaitroom.room.AdminMode(this);
     private final at.marcelr.mrwaitroom.link.Agent agent = new at.marcelr.mrwaitroom.link.Agent(this);
+    private final at.marcelr.mrwaitroom.link.Events events = new at.marcelr.mrwaitroom.link.Events();
     private UpdateChecker updateChecker;
 
     @Override
@@ -74,6 +75,7 @@ public final class MRwaitroom extends JavaPlugin implements Listener {
             ConfigUpdater.set(this, "xaero.world-id", id);
             loadConfiguration();
         }
+        events.add("started", "Waiting room started (" + getPluginMeta().getVersion() + ").", at.marcelr.mrwaitroom.link.Events.GOOD);
         room.load();
         screen.load();
         updateChecker = new UpdateChecker(this);
@@ -139,6 +141,11 @@ public final class MRwaitroom extends JavaPlugin implements Listener {
         restarts.start();
         agent.start();
         updateChecker.start();
+    }
+
+    /** What happened on this server, for MRadmin's page Log. */
+    public at.marcelr.mrwaitroom.link.Events events() {
+        return events;
     }
 
     /** The port through which MRadmin reads this server (performance, console, log). */

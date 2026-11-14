@@ -121,6 +121,7 @@ public final class Restarts {
         manualBy = by;
         plugin.getLogger().info(by + " asked for a restart of the waiting room"
                 + (reason == null ? "." : " - it happens once nobody waits."));
+        plugin.events().add("restart-ordered", by + " asked for a restart of the waiting room.", at.marcelr.mrwaitroom.link.Events.INFO);
         // Not right here: the caller first confirms the order (MRadmin), the report before going down carries it.
         Bukkit.getScheduler().runTask(plugin, this::tick);
         return null;
@@ -148,6 +149,7 @@ public final class Restarts {
         }
         if (manualSince > 0 && now - manualSince > MANUAL_WAIT) {
             plugin.getLogger().info("The restart by hand was given up - players kept waiting for 10 minutes.");
+            plugin.events().add("restart-given-up", "The restart by hand was given up - players kept waiting for 10 minutes.", at.marcelr.mrwaitroom.link.Events.WARN);
             manualSince = 0;
         }
         if (manualSince == 0 && plannedSince == 0) {
@@ -158,6 +160,7 @@ public final class Restarts {
             return;
         }
         plugin.getLogger().info("Restarting the waiting room (" + (manualSince > 0 ? "by " + manualBy : "planned") + ").");
+        plugin.events().add("restart", "Restarting the waiting room (" + (manualSince > 0 ? "by " + manualBy : "planned") + ").", at.marcelr.mrwaitroom.link.Events.WARN);
         manualSince = 0;
         plannedSince = 0;
         plugin.remote().announceRestart();
@@ -177,6 +180,7 @@ public final class Restarts {
             case "stop" -> {
                 plugin.starter().answer("OK - stopping the waiting room.");
                 plugin.getLogger().info("Stopping the waiting room (console, mrserver).");
+                plugin.events().add("stop", "Stopping the waiting room (console, mrserver).", at.marcelr.mrwaitroom.link.Events.WARN);
                 plugin.starter().prepare(false);
                 Bukkit.shutdown();
             }

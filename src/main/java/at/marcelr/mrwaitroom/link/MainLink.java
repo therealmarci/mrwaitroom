@@ -175,6 +175,7 @@ public final class MainLink {
         }
         if (withLink && wasLinkOk && !linkOk && open) {
             plugin.getLogger().warning("MRadmin on the main server does not answer (" + error + ").");
+            plugin.events().add("link-lost", "MRadmin on the main server does not answer (" + error + ").", at.marcelr.mrwaitroom.link.Events.WARN);
         }
         // Up = the port answers (or MRadmin does); while MRadmin says it is going down it counts as down.
         boolean isUp = (open || fresh != null) && !(fresh != null && fresh.stopping());
@@ -197,6 +198,7 @@ public final class MainLink {
                 downKind = kindOf(status, now);
                 changed = true;
                 plugin.getLogger().info("Main server is down (" + downKind + ").");
+                plugin.events().add("main-down", "Main server is down (" + downKind + ").", at.marcelr.mrwaitroom.link.Events.WARN);
             }
             readySince = 0;
         } else if (isReady) {
@@ -211,6 +213,7 @@ public final class MainLink {
                 }
                 if (!downKind.equals("unknown")) {
                     plugin.getLogger().info("Main server is ready again after " + (took / 1000) + " s.");
+                    plugin.events().add("main-up", "Main server is ready again after " + (took / 1000) + " s.", at.marcelr.mrwaitroom.link.Events.GOOD);
                 }
                 downSince = 0;
                 changed = true;

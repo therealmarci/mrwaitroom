@@ -139,6 +139,8 @@ public final class Remote {
         host.addProperty("blocked", plugin.restarts().blocked());
         host.addProperty("paperUpdate", plugin.settings().server().paperUpdate());
         host.addProperty("restarting", restarting);
+        // MRadmin reads performance, console and log here (agent; it takes the address this report comes from).
+        host.addProperty("agentPort", plugin.agent().port());
         o.add("host", host);
         List<String> sentDone;
         List<Map<String, String>> sentFailed;

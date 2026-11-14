@@ -8,7 +8,7 @@
 # ==============================================================================
 
 # Do not change - tells the plugin which settings need to be carried over on updates.
-config-version: 6
+config-version: 7
 
 
 # ------------------------------------------------------------------------------
@@ -41,6 +41,19 @@ main:
   link-key: ""
   # How often to ask (seconds).
   poll-seconds: 2
+
+
+# ------------------------------------------------------------------------------
+#   2b) READ BY MRADMIN
+# ------------------------------------------------------------------------------
+agent:
+  # MRadmin on the main server shows performance, console and log of this server like its own. It reads them through
+  # this port, protected with main.link-key, and finds it by itself (this server reports it). 0 = off.
+  port: 8127
+  # Address to listen on - best the address in the internal network (e.g. "10.0.152.101"). "" = all addresses.
+  bind: ""
+  # Console commands from MRadmin's web interface (there with the same permission and unlocking as on the main server).
+  console-commands: true
 
 
 # ------------------------------------------------------------------------------

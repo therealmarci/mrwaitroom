@@ -59,6 +59,7 @@ public final class MRwaitroom extends JavaPlugin implements Listener {
     private final at.marcelr.mrwaitroom.room.Lobby lobby = new at.marcelr.mrwaitroom.room.Lobby(this);
     private final at.marcelr.mrwaitroom.room.Rights rights = new at.marcelr.mrwaitroom.room.Rights(this);
     private final at.marcelr.mrwaitroom.room.AdminMode adminMode = new at.marcelr.mrwaitroom.room.AdminMode(this);
+    private final at.marcelr.mrwaitroom.link.Agent agent = new at.marcelr.mrwaitroom.link.Agent(this);
     private UpdateChecker updateChecker;
 
     @Override
@@ -99,6 +100,7 @@ public final class MRwaitroom extends JavaPlugin implements Listener {
         restarts.start();
         screen.start();
         adminMode.start();
+        agent.start();
         if (settings.main().linkUrl().isEmpty()) {
             getLogger().info("No main.link-url set - the waiting room only sees whether the main server is up.");
         } else if (settings.main().linkKey().isEmpty()) {
@@ -108,6 +110,7 @@ public final class MRwaitroom extends JavaPlugin implements Listener {
 
     @Override
     public void onDisable() {
+        agent.stop();
         link.stop();
         display.stop();
         returner.stop();
@@ -134,7 +137,13 @@ public final class MRwaitroom extends JavaPlugin implements Listener {
         remote.start();
         starter.start();
         restarts.start();
+        agent.start();
         updateChecker.start();
+    }
+
+    /** The port through which MRadmin reads this server (performance, console, log). */
+    public at.marcelr.mrwaitroom.link.Agent agent() {
+        return agent;
     }
 
     private void loadConfiguration() {

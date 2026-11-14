@@ -70,6 +70,23 @@ sections:
         unit: {de: Sekunden, en: seconds}
         name: {de: Nachfragen alle, en: Ask every}
         help: {de: "Wie oft der Warteraum den Hauptserver prüft und bei MRadmin nachfragt. Kürzer = schnellere Rückkehr, länger = weniger Anfragen. 2 Sekunden passen fast immer.", en: "How often the waiting room checks the main server and asks MRadmin. Shorter = faster return, longer = fewer requests. 2 seconds fit almost always."}
+      - key: agent.port
+        heading: {de: "Für MRadmin lesbar", en: "Readable by MRadmin"}
+        type: int
+        min: 0
+        max: 65535
+        name: {de: Port für MRadmin, en: Port for MRadmin}
+        help: {de: "Über diesen Port zeigt MRadmin Leistung, Konsole und Protokoll dieses Servers wie die eigenen. Geschützt mit dem Schlüssel oben, MRadmin findet ihn von selbst. 0 = aus.", en: "Through this port MRadmin shows performance, console and log of this server like its own. Protected with the key above, MRadmin finds it by itself. 0 = off."}
+      - key: agent.bind
+        type: string
+        advanced: true
+        max-length: 100
+        name: {de: Lauschen auf Adresse, en: Listen on address}
+        help: {de: "Am besten die Adresse im internen Netz (z.B. 10.0.152.101), dann ist der Port von außen nicht erreichbar. Leer = alle Adressen dieses Rechners.", en: "Best the address in the internal network (e.g. 10.0.152.101), then the port cannot be reached from outside. Empty = all addresses of this machine."}
+      - key: agent.console-commands
+        type: bool
+        name: {de: Befehle aus MRadmins Konsole, en: Commands from MRadmin's console}
+        help: {de: "Erlaubt Befehle über die Web-Konsole von MRadmin (dort nur mit dem Recht und nach dem Entsperren wie beim Hauptserver). Aus = die Konsole zeigt nur die Ausgabe.", en: "Allows commands through MRadmin's web console (there only with the permission and after unlocking as on the main server). Off = the console only shows the output."}
 
   - id: return
     name: {de: Zurückschicken, en: Going back}

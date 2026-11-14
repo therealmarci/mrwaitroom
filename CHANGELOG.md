@@ -7,6 +7,9 @@ veröffentlicht als `mc<minecraft>-STA|BET-<version>-bu<build>` (siehe [docs/REL
 
 ## [Unveröffentlicht]
 
+### Neu
+- **Leistung in MRadmin:** Der Warteraum öffnet einen eigenen Port für MRadmin (`agent.port`, Standard 8127, `0` = aus; `agent.bind` = Adresse, auf der er lauscht). MRadmin fragt dort jede Sekunde Leistung, Systeminfo und Lag-Chunks ab und zeigt sie wie beim Hauptserver. Geschützt mit `main.link-key`, den Port meldet der Warteraum selbst. `agent.console-commands` ist für die Konsole vorbereitet.
+
 ## [BET-0.1.1-bu001] - 2026-11-11
 
 ### Neu

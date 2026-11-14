@@ -21,8 +21,13 @@ public record Settings(
         DisplaySettings display,
         XaeroSettings xaero,
         UpdateSettings update,
-        ServerSettings server
+        ServerSettings server,
+        AgentSettings agent
 ) {
+
+    /** Section agent: the port through which MRadmin reads this server (0 = off). */
+    public record AgentSettings(int port, String bind, boolean consoleCommands) {
+    }
 
     /** Section server: starter settings and planned restarts (only with MRadmin's starter). */
     public record ServerSettings(String memoryMin, String memoryMax, String javaFlags, String paperUpdate,
@@ -146,7 +151,9 @@ public record Settings(
                 "restart".equalsIgnoreCase(c.getString("server.plain-stop", "stop").trim()) ? "restart" : "stop",
                 Math.clamp(c.getInt("server.hang-seconds", 180), 0, 3600));
 
-        return new Settings(zone, main, back, room, display, xaero, update, serverSettings);
+        AgentSettings agent = new AgentSettings(Math.clamp(c.getInt("agent.port", 8127), 0, 65535),
+                c.getString("agent.bind", "").trim(), c.getBoolean("agent.console-commands", true));
+        return new Settings(zone, main, back, room, display, xaero, update, serverSettings, agent);
     }
 
     /** "05:30", or a number: YAML 1.1 reads an unquoted 5:30 as 330 (minutes) - counted back. */

@@ -60,7 +60,7 @@ A world of its own (`room.world`) with the [lobby](lobby.md) and the [board](lob
 ## Restarts of the waiting room
 With MRadmin's starter (`mrserver setup --role waitroom`) the waiting room restarts:
 
-- **by hand:** in MRadmin on **Server → Overview** (tile **Waiting room server**, **Restart**) or with `mrserver restart` in the console of the machine,
+- **by hand:** in MRadmin on **Server → Waiting room → Control** (tile **Waiting room server**, **Restart**) or with `mrserver restart` in the console of the machine,
 - **planned:** every day at the times in `server.restart-times`.
 
 But only when it is not needed: the main server is ready, **no maintenance** runs, **no restart of the main server** comes within the next 15 minutes and **nobody waits**. Otherwise it refuses a restart by hand with the reason (except waiting players - then it restarts once they are back), and a planned restart waits until everything fits. `mrserver stop` stops it without these checks, `mrserver cancel` cancels a waiting restart.

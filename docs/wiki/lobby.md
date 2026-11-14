@@ -24,6 +24,8 @@ Eine Wand aus **4 × 2 Rahmen** zeigt den Wartenden, was los ist - jeder sieht s
 - **unten links** eine Kachel mit wechselnden Folien (alle 6 Sekunden, Segmentleiste oben wie die große Kachel in MRadmin) - nur Folien mit Inhalt: die laufende bzw. nächste **Wartung** (Titel, Beginn und Ende), je eine Folie pro **Warnung** aus MRadmin und die **Server-Infos** (Name deines Servers aus MRadmin, wie lange der Hauptserver weg ist, wie lange ein Neustart etwa dauert),
 - **unten rechts** Uhrzeit, Datum und wie viele gerade warten.
 
+Warnungen aus MRadmin stehen deutlich hervor: Sie kommen zuerst, ihre Folie ist dunkelrot mit rotem Rahmen und großer Überschrift, und die Uhr-Kachel zeigt oben eine rote Leiste „n Warnungen“, solange eine aktiv ist.
+
 ### Aufhängen
 
 1. Häng 8 Rahmen an eine Wand: 4 nebeneinander, 2 übereinander, alle in dieselbe Richtung (leer).

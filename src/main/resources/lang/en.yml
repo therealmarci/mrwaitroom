@@ -140,6 +140,8 @@ screen-slide-up: "Main server is running"
 screen-slide-estimate: "A restart takes about <estimate>"
 screen-waiting: "<count> waiting"
 screen-waiting-one: "1 waiting"
+screen-alerts: "<count> warnings"
+screen-alerts-one: "1 warning"
 
 # -------------------------------------------------------------------- Going back
 kick-refused: "<red>You cannot join the server right now.<newline><newline><gray>It turned you away several times (e.g. whitelist or ban)."

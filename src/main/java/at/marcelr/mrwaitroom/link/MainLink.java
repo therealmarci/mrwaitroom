@@ -74,6 +74,11 @@ public final class MainLink {
     private long downSince;
     /** restart, stop, crash - or unknown (down since the waiting room started, no answer before). */
     private String downKind = "unknown";
+    /**
+     * Whether the port was closed at least once since the main server went down. Until then an open port is the old
+     * server still saving its worlds while it shuts down - not the new one starting.
+     */
+    private boolean closedSinceDown = true;
     private long readySince;
     private final List<Long> durations = new ArrayList<>();
     private boolean up = true;
@@ -177,8 +182,10 @@ public final class MainLink {
             plugin.getLogger().warning("MRadmin on the main server does not answer (" + error + ").");
             plugin.events().add("link-lost", "MRadmin on the main server does not answer (" + error + ").", at.marcelr.mrwaitroom.link.Events.WARN);
         }
-        // Up = the port answers (or MRadmin does); while MRadmin says it is going down it counts as down.
-        boolean isUp = (open || fresh != null) && !(fresh != null && fresh.stopping());
+        if (!open) {
+            closedSinceDown = true;
+        }
+        boolean isUp = countsUp(open, fresh, downSince != 0, closedSinceDown);
         // Ready = MRadmin says so; without MRadmin: the port answers.
         boolean isReady;
         if (!isUp) {
@@ -195,6 +202,7 @@ public final class MainLink {
         if (!isUp) {
             if (downSince == 0) {
                 downSince = now;
+                closedSinceDown = !open;
                 downKind = kindOf(status, now);
                 changed = true;
                 plugin.getLogger().info("Main server is down (" + downKind + ").");
@@ -237,6 +245,22 @@ public final class MainLink {
         if (changed) {
             save();
         }
+    }
+
+    /**
+     * Whether the main server counts as up: MRadmin answers and does not say it is going down - or, without an answer of
+     * MRadmin, its port is open. After it went down, an open port only counts once it was closed in between: during a
+     * long shutdown (big worlds are saved) the port stays open after MRadmin has gone quiet, and the display would
+     * jump from "restart" to "starting" and back.
+     *
+     * @param down            the main server counts as down right now (since a moment ago)
+     * @param closedSinceDown the port was closed at least once since then
+     */
+    static boolean countsUp(boolean open, MainStatus fresh, boolean down, boolean closedSinceDown) {
+        if (fresh != null) {
+            return !fresh.stopping();
+        }
+        return open && (!down || closedSinceDown);
     }
 
     private Phase phase(long now) {

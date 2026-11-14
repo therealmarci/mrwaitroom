@@ -24,6 +24,8 @@ A wall of **4 × 2 item frames** shows the waiting players what is going on - ev
 - **bottom left** a tile with changing slides (every 6 seconds, segment bar at the top like the big tile in MRadmin) - only slides with content: the running or next **maintenance** (title, start and end), one slide per **warning** from MRadmin and the **server infos** (name of your server from MRadmin, how long the main server has been gone, how long a restart takes about),
 - **bottom right** the time, the date and how many are waiting.
 
+Warnings from MRadmin stand out: they come first, their slide is dark red with a red frame and a big heading, and the clock tile shows a red bar "n warnings" at the top while one is on.
+
 ### Hanging it up
 
 1. Hang 8 item frames on a wall: 4 side by side, 2 on top of each other, all facing the same way (empty).

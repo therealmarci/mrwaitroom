@@ -56,6 +56,7 @@ public final class Board {
     private static final byte GOLD = color(230, 140, 40);
     private static final byte GREEN = color(90, 200, 90);
     private static final byte AQUA = color(80, 190, 220);
+    private static final byte DARK_RED = color(90, 22, 22);
 
     /**
      * A drawn picture; {@code version} grows with every change, {@code tiles} is a fingerprint per map (row by row),
@@ -121,8 +122,9 @@ public final class Board {
     record Slide(String kind, String color, List<String> lines) {
     }
 
+    /** alerts: "2 Warnungen" while warnings are on, else empty. */
     record Texts(String title, String text, String detail, String time, String label, List<Slide> slides,
-                 String clock, String date, String waiting) {
+                 String clock, String date, String waiting, String alerts) {
     }
 
     private Texts texts(Messages m, Display.Line line, MainLink.View view, String language, long now) {
@@ -130,17 +132,19 @@ public final class Board {
         MainStatus status = view.status();
         MainStatus.Maintenance mt = status == null ? null : status.maintenance();
         List<Slide> slides = new ArrayList<>();
+        // Warnings first (one slide each) - they matter most.
+        int alertCount = 0;
+        if (status != null) {
+            for (Map<String, String> alert : status.alerts()) {
+                slides.add(new Slide(plain(m.get("screen-slide-alert")), "red", List.of(MainStatus.in(alert, language))));
+                alertCount++;
+            }
+        }
         // Maintenance: the running one (its countdown is in the head then) or the next one.
         if (mt != null && (mt.active() || mt.start() > now)) {
             String when = plain(m.get(mt.end() > 0 ? "screen-slide-maintenance-when" : "screen-slide-maintenance-open", line.tags()));
             slides.add(new Slide(plain(m.get(mt.active() ? "screen-slide-maintenance-active" : "screen-slide-maintenance-next")),
                     "aqua", List.of(plain(m.get("screen-slide-maintenance-title", line.tags())), when)));
-        }
-        // One slide per warning that is on (from MRadmin).
-        if (status != null) {
-            for (Map<String, String> alert : status.alerts()) {
-                slides.add(new Slide(plain(m.get("screen-slide-alert")), "red", List.of(MainStatus.in(alert, language))));
-            }
         }
         // Server infos: always there.
         boolean down = view.downSince() > 0;
@@ -153,7 +157,9 @@ public final class Board {
         int waiting = org.bukkit.Bukkit.getOnlinePlayers().size();
         return new Texts(part(parts, 0), part(parts, 1), part(parts, 2), part(parts, 3), part(parts, 4), List.copyOf(slides),
                 DateTimeFormatter.ofPattern("HH:mm").format(time), DateTimeFormatter.ofPattern("EE dd.MM.", locale).format(time),
-                plain(m.get(waiting == 1 ? "screen-waiting-one" : "screen-waiting", Messages.tag("count", String.valueOf(waiting)))));
+                plain(m.get(waiting == 1 ? "screen-waiting-one" : "screen-waiting", Messages.tag("count", String.valueOf(waiting)))),
+                alertCount == 0 ? "" : plain(m.get(alertCount == 1 ? "screen-alerts-one" : "screen-alerts",
+                        Messages.tag("count", String.valueOf(alertCount)))));
     }
 
     private static long now() {
@@ -221,7 +227,7 @@ public final class Board {
         p.frame(0, 0, WIDTH, HEIGHT, LINE);
 
         // ---- Head: colour strip, state, text, reason - the countdown on the right.
-        p.rect(0, 0, 6, 130, accent);
+        p.rect(0, 0, 6, HEIGHT, accent);
         int left = 20;
         int countWidth = 150;
         int mainWidth = WIDTH - left - countWidth - 24;
@@ -261,6 +267,13 @@ public final class Board {
         if (!t.slides().isEmpty()) {
             Slide current = t.slides().get(Math.min(slide, t.slides().size() - 1));
             byte tone = color(current.color());
+            boolean alert = current.color().equals("red");
+            if (alert) {
+                // A warning: dark red tile, thick red frame - it has to stand out.
+                p.rect(8, ty, sw, th, DARK_RED);
+                p.frame(8, ty, sw, th, RED);
+                p.frame(9, ty + 1, sw - 2, th - 2, RED);
+            }
             // Segments: one per slide, the current one fills up second by second.
             int n = t.slides().size();
             int gap = 4;
@@ -271,17 +284,26 @@ public final class Board {
                 int fill = i < slide ? segWidth : i == slide ? segWidth * step / SLIDE_SECONDS : 0;
                 p.rect(sx, ty + 10, fill, 3, i == slide ? tone : GRAY);
             }
-            p.text(20, ty + 22, current.kind(), 1, tone);
-            int ly = ty + 38;
+            int ly;
+            if (alert) {
+                // "!" badge and a big heading
+                p.rect(20, ty + 20, 16, 16, RED);
+                p.text(26, ty + 24, "!", 1, WHITE);
+                p.text(44, ty + 20, current.kind(), 2, WHITE);
+                ly = ty + 46;
+            } else {
+                p.text(20, ty + 22, current.kind(), 1, tone);
+                ly = ty + 38;
+            }
             int lineWidth = sw - 32;
             boolean first = true;
             for (String l : current.lines()) {
                 int scale = first ? 2 : 1;
-                for (String w : Pixels.wrap(l, lineWidth, scale, first && current.lines().size() == 1 ? 3 : 1)) {
+                for (String w : Pixels.wrap(l, lineWidth, scale, first && current.lines().size() == 1 ? (alert ? 2 : 3) : 1)) {
                     if (ly + Pixels.FONT_HEIGHT * scale > ty + th - 6) {
                         break;
                     }
-                    p.text(20, ly, w, scale, first ? WHITE : GRAY);
+                    p.text(20, ly, w, scale, first ? WHITE : alert ? WHITE : GRAY);
                     ly += Pixels.FONT_HEIGHT * scale + (first ? 8 : 6);
                 }
                 first = false;
@@ -293,9 +315,15 @@ public final class Board {
         int rw = WIDTH - rx - 8;
         p.rect(rx, ty, rw, th, PANEL);
         p.frame(rx, ty, rw, th, LINE);
-        int clockScale = Pixels.fit(t.clock(), rw - 16, 4);
-        p.textCentered(rx, rw, ty + 18, t.clock(), clockScale, WHITE);
-        p.textCentered(rx, rw, ty + 18 + Pixels.FONT_HEIGHT * clockScale + 10, t.date(), 1, GRAY);
+        int top = ty + 18;
+        if (!t.alerts().isEmpty()) {
+            p.rect(rx, ty, rw, 18, RED);
+            p.textCentered(rx, rw, ty + 5, t.alerts(), 1, WHITE);
+            top = ty + 26;
+        }
+        int clockScale = Pixels.fit(t.clock(), rw - 16, t.alerts().isEmpty() ? 4 : 3);
+        p.textCentered(rx, rw, top, t.clock(), clockScale, WHITE);
+        p.textCentered(rx, rw, top + Pixels.FONT_HEIGHT * clockScale + 8, t.date(), 1, GRAY);
         p.textCentered(rx, rw, ty + th - 26, t.waiting(), Pixels.fit(t.waiting(), rw - 16, 2), accent);
         return p;
     }

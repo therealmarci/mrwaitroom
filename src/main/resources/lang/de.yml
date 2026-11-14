@@ -140,6 +140,8 @@ screen-slide-up: "Hauptserver läuft"
 screen-slide-estimate: "Ein Neustart dauert etwa <estimate>"
 screen-waiting: "<count> warten"
 screen-waiting-one: "1 wartet"
+screen-alerts: "<count> Warnungen"
+screen-alerts-one: "1 Warnung"
 
 # -------------------------------------------------------------------- Rückkehr
 kick-refused: "<red>Du kannst den Server gerade nicht betreten.<newline><newline><gray>Er hat dich mehrmals abgewiesen (z.B. Whitelist oder Sperre)."
